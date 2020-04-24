@@ -332,14 +332,14 @@ macro(build_openblas)
     set(OPENBLAS_INCLUDE_DIR "${OPENBLAS_PREFIX}/include")
     set(OPENBLAS_STATIC_LIB
             "${OPENBLAS_PREFIX}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}openblas${CMAKE_STATIC_LIBRARY_SUFFIX}")
-    set(OPENBLAS_REAL_STATIC_LIB
-            "${OPENBLAS_PREFIX}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}openblas-r0.3.9${CMAKE_STATIC_LIBRARY_SUFFIX}")
-    set(OPENBLAS_REAL_SHARED_LIB
+#    set(OPENBLAS_REAL_STATIC_LIB
+#            "${OPENBLAS_PREFIX}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}openblas-r0.3.9${CMAKE_STATIC_LIBRARY_SUFFIX}")
+    set(OPENBLAS_SHARED_LIB
             "${OPENBLAS_PREFIX}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}openblas-r0.3.9${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
     set(OPENBLAS_MAKE_ARGS
             #"${MAKE_BUILD_ARGS} "
-            "TARGET=CORE2 DYNAMIC_ARCH=1 DYNAMIC_OLDER=1 USE_THREAD=0 USE_OPENMP=0 FC=gfortran CC=gcc "
+            " TARGET=CORE2 DYNAMIC_ARCH=1 DYNAMIC_OLDER=1 USE_THREAD=0 USE_OPENMP=0 FC=gfortran CC=gcc "
             "COMMON_OPT=\"-O2 -g -fPIC -s\" "
             "FCOMMON_OPT=\"-O2 -g -fPIC -frecursive -s\" "
             "NMAX=\"NUM_THREADS=128\" "
@@ -352,25 +352,27 @@ macro(build_openblas)
             URL
             ${OPENBLAS_SOURCE_URL}
             ${EP_LOG_OPTIONS}
-            CONFIGURE_COMMAND
-            ""
             BUILD_IN_SOURCE
             1
             BUILD_COMMAND
             ${MAKE}
-            ${OPENBLAS_MAKE_ARGS}
+            #${OPENBLAS_MAKE_ARGS}
+            ${MAKE_BUILD_ARGS}
             INSTALL_COMMAND
             ${MAKE}
             PREFIX=${OPENBLAS_PREFIX}
             install
             BUILD_BYPRODUCTS
+            ${OPENBLAS_SHARED_LIB}
             ${OPENBLAS_STATIC_LIB})
 
     file(MAKE_DIRECTORY "${OPENBLAS_INCLUDE_DIR}")
-    add_library(openblas STATIC IMPORTED)
+#    add_library(openblas STATIC IMPORTED)
+    add_library(openblas SHARED IMPORTED)
     set_target_properties(
             openblas
-            PROPERTIES IMPORTED_LOCATION "${OPENBLAS_STATIC_LIB}"
+#            PROPERTIES IMPORTED_LOCATION "${OPENBLAS_STATIC_LIB}"
+            PROPERTIES IMPORTED_LOCATION "${OPENBLAS_SHARED_LIB}"
             INTERFACE_INCLUDE_DIRECTORIES "${OPENBLAS_INCLUDE_DIR}")
 
     add_dependencies(openblas openblas_ep)
