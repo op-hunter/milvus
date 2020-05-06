@@ -315,7 +315,13 @@ endif ()
 
 # ----------------------------------------------------------------------
 # OpenBLAS
-set(OPENBLAS_PREFIX "${INDEX_BINARY_DIR}/openblas_ep-prefix/src/openblas_ep")
+if (KNOWHERE_WITH_OPENBLAS STREQUAL "ON")
+    message("openblas prefix: ${INDEX_BINARY_DIR}/openblas_ep-prefix/src/openblas_ep")
+    set(OPENBLAS_PREFIX "${INDEX_BINARY_DIR}/openblas_ep-prefix/src/openblas_ep")
+elseif(KNOWHERE_WITH_OPENBLAS STREQUAL "OFF")
+    message("openblas prefix: ${OpenBLAS_LIB}")
+    set(OPENBLAS_PREFIX "${OpenBLAS_LIB}")
+endif()
 macro(build_openblas)
     message(STATUS "Building OpenBLAS-${OPENBLAS_VERSION} from source")
     set(OPENBLAS_INCLUDE_DIR "${OPENBLAS_PREFIX}/include")
@@ -375,7 +381,7 @@ macro(build_openblas)
     add_dependencies(openblas openblas_ep)
 endmacro()
 
-if (KNOWHERE_WITH_OPENBLAS)
+if (KNOWHERE_WITH_OPENBLAS STREQUAL "ON")
     resolve_dependency(OpenBLAS)
     get_target_property(OPENBLAS_INCLUDE_DIR openblas INTERFACE_INCLUDE_DIRECTORIES)
     include_directories(SYSTEM "${OPENBLAS_INCLUDE_DIR}")
@@ -526,6 +532,7 @@ macro(build_faiss)
     else ()
         message(STATUS "Build Faiss with OpenBlas/LAPACK")
         set(FAISS_CONFIGURE_ARGS ${FAISS_CONFIGURE_ARGS}
+#                "LDFLAGS=-L${OPENBLAS_PREFIX}/lib")
                 "LDFLAGS=-L${OPENBLAS_PREFIX}/lib -L${LAPACK_PREFIX}/lib")
     endif ()
 
@@ -592,11 +599,19 @@ macro(build_faiss)
                 PROPERTIES
                 INTERFACE_LINK_LIBRARIES "${MKL_LIBS}")
     else ()
-        set_target_properties(
-                faiss
-                PROPERTIES
+        if (KNOWHERE_WITH_OPENBLAS STREQUAL "ON")
+                set_target_properties(
+                    faiss
+                    PROPERTIES
 #                INTERFACE_LINK_LIBRARIES ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
-                INTERFACE_LINK_LIBRARIES "openblas")
+                    INTERFACE_LINK_LIBRARIES "openblas")
+        elseif (KNOWHERE_WITH_OPENBLAS STREQUAL "OFF")
+                set_target_properties(
+                    faiss
+                    PROPERTIES
+                    INTERFACE_LINK_LIBRARIES ${OpenBLAS_LIBRARIES})
+#                    INTERFACE_LINK_LIBRARIES ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
+        endif()
     endif ()
 
 
@@ -610,6 +625,12 @@ if (KNOWHERE_WITH_FAISS AND NOT TARGET faiss_ep)
         resolve_dependency(MKL)
     else ()
         message("faiss with no mkl")
+        if (KNOWHERE_WITH_OPENBLAS STREQUAL "OFF")
+            message("KNOWHERE_WITH_OPENBLAS equals: ${KNOWHERE_WITH_OPENBLAS}")
+            set(BLA_VENDOR OpenBLAS)
+            find_package(OpenBLAS REQUIRED)
+#            find_package(LAPACK REQUIRED)
+        endif()
     endif ()
 
     resolve_dependency(FAISS)

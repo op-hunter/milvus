@@ -321,18 +321,25 @@ install(FILES
         ${CMAKE_BINARY_DIR}/fiu_ep-prefix/src/fiu_ep/lib/${CMAKE_SHARED_LIBRARY_PREFIX}fiu${CMAKE_SHARED_LIBRARY_SUFFIX}.1.00
         DESTINATION lib)
 
-if (CMAKE_BUILD_TYPE STREQUAL "Release")
-    install(FILES
+set(USE_USER_BLAS)
+message("USE_USER_BLAS has been set to null")
+# install openblas lib
+if (USE_USER_BLAS STREQUAL "OFF")
+    if (CMAKE_BUILD_TYPE STREQUAL "Release")
+        install(FILES
             ${CMAKE_BINARY_DIR}/src/index/openblas_ep-prefix/src/openblas_ep/lib/${CMAKE_SHARED_LIBRARY_PREFIX}openblas${CMAKE_SHARED_LIBRARY_SUFFIX}
             ${CMAKE_BINARY_DIR}/src/index/openblas_ep-prefix/src/openblas_ep/lib/${CMAKE_SHARED_LIBRARY_PREFIX}openblas${CMAKE_SHARED_LIBRARY_SUFFIX}.0
             ${CMAKE_BINARY_DIR}/src/index/openblas_ep-prefix/src/openblas_ep/lib/${CMAKE_SHARED_LIBRARY_PREFIX}openblas${CMAKE_SHARED_LIBRARY_SUFFIX}.0.3
             DESTINATION lib)
-elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    install(FILES
+    elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        install(FILES
             ${CMAKE_BINARY_DIR}/src/index/openblas_ep-prefix/src/openblas_ep/lib/${CMAKE_SHARED_LIBRARY_PREFIX}openblas_d${CMAKE_SHARED_LIBRARY_SUFFIX}
             ${CMAKE_BINARY_DIR}/src/index/openblas_ep-prefix/src/openblas_ep/lib/${CMAKE_SHARED_LIBRARY_PREFIX}openblas_d${CMAKE_SHARED_LIBRARY_SUFFIX}.0
             ${CMAKE_BINARY_DIR}/src/index/openblas_ep-prefix/src/openblas_ep/lib/${CMAKE_SHARED_LIBRARY_PREFIX}openblas_d${CMAKE_SHARED_LIBRARY_SUFFIX}.0.3
             DESTINATION lib)
+    else()
+        message("unknown CMAKE_BUILD_TYPE")
+    endif()
 else()
-    message("unknown CMAKE_BUILD_TYPE")
+    message("src/use system openblas lib because of USE_USER_BLAS = ${USE_USER_BLAS}")
 endif()

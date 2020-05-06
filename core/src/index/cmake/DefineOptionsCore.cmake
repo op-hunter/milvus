@@ -73,7 +73,16 @@ define_option(KNOWHERE_BOOST_HEADER_ONLY "Use only BOOST headers" OFF)
 
 define_option(KNOWHERE_WITH_ARROW "Build with ARROW" OFF)
 
-define_option(KNOWHERE_WITH_OPENBLAS "Build with OpenBLAS library" ON)
+if (OpenBLAS_FOUND STREQUAL "ON")
+    message("Build with OpenBLAS library OFF")
+    define_option(KNOWHERE_WITH_OPENBLAS "Build with OpenBLAS library" OFF)
+elseif(OpenBLAS_FOUND STREQUAL "OFF")
+    message("Build with OpenBLAS library ON")
+    define_option(KNOWHERE_WITH_OPENBLAS "Build with OpenBLAS library" ON)
+else()
+    message("DefineOptionsCore.cmake: error OpenBLAS_FOUND value: ${OpenBLAS_FOUND}")
+endif()
+#define_option(KNOWHERE_WITH_OPENBLAS "Build with OpenBLAS library" OFF)
 
 define_option(KNOWHERE_WITH_FAISS "Build with FAISS library" ON)
 
