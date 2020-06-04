@@ -709,10 +709,13 @@ ExecutionEngineImpl::BuildIndex(const std::string& location, EngineType engine_t
 void
 MapAndCopyResult(const knowhere::DatasetPtr& dataset, const std::vector<milvus::segment::doc_id_t>& uids, int64_t nq,
                  int64_t k, float* distances, int64_t* labels) {
+
+    TimeRecorder rc(LogOut("[%s][%ld] ExeutionEngineImpl::MapAndCopyResult", "wtf", 0));
     int64_t* res_ids = dataset->Get<int64_t*>(knowhere::meta::IDS);
     float* res_dist = dataset->Get<float*>(knowhere::meta::DISTANCE);
 
     memcpy(distances, res_dist, sizeof(float) * nq * k);
+    rc.RecordSection("memcpy finished");
 
     /* map offsets to ids */
     int64_t num = nq * k;
@@ -724,9 +727,12 @@ MapAndCopyResult(const knowhere::DatasetPtr& dataset, const std::vector<milvus::
             labels[i] = -1;
         }
     }
+    rc.RecordSection("for loop finished");
 
     free(res_ids);
+    rc.RecordSection("free res_ids finished");
     free(res_dist);
+    rc.RecordSection("free res_dist finished");
 }
 
 template <typename T>

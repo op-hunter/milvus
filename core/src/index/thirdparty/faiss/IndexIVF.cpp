@@ -305,6 +305,7 @@ void IndexIVF::search (idx_t n, const float *x, idx_t k, float *distances, idx_t
     double t0 = getmillisecs();
     quantizer->search (n, x, nprobe, coarse_dis.get(), idx.get());
     indexIVF_stats.quantization_time += getmillisecs() - t0;
+    printf("cpu IndexIVF::search quantization_time is: %ld\n", (long)(getmillisecs() - t0));
 
     t0 = getmillisecs();
     invlists->prefetch_lists (idx.get(), n * nprobe);
@@ -312,6 +313,7 @@ void IndexIVF::search (idx_t n, const float *x, idx_t k, float *distances, idx_t
     search_preassigned (n, x, k, idx.get(), coarse_dis.get(),
                         distances, labels, false, nullptr, bitset);
     indexIVF_stats.search_time += getmillisecs() - t0;
+    printf("cpu IndexIVF::search search_time is: %ld\n", (long)(getmillisecs() - t0));
 }
 
 void IndexIVF::get_vector_by_id (idx_t n, const idx_t *xid, float *x, ConcurrentBitsetPtr bitset) {
