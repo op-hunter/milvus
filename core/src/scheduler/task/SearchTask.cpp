@@ -31,6 +31,10 @@
 #include "utils/TimeRecorder.h"
 #include "utils/ValidationUtil.h"
 
+#ifdef ENABLE_CPU_PROFILING
+#include <gperftools/profiler.h>
+#endif
+
 namespace milvus {
 namespace scheduler {
 
@@ -232,6 +236,12 @@ XSearchTask::Execute() {
     if (auto job = job_.lock()) {
         auto search_job = std::static_pointer_cast<scheduler::SearchJob>(job);
 
+        if (file_->file_type_ == 1) {
+            #ifdef ENABLE_CPU_PROFILING
+                    std::string fname = "/tmp/search_" + CommonUtil::GetCurrentTimeStr() + ".profiling";
+                    ProfilerStart(fname.c_str());
+            #endif
+        }
         if (index_engine_ == nullptr) {
             search_job->SearchDone(index_id_);
             return;
@@ -341,6 +351,11 @@ XSearchTask::Execute() {
 
         // step 4: notify to send result to client
         search_job->SearchDone(index_id_);
+        if (file_->file_type_ == 1) {
+            #ifdef ENABLE_CPU_PROFILING
+                    ProfilerStop();
+            #endif
+        }
     }
 
     rc.ElapseFromBegin("totally cost");

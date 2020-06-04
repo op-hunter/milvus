@@ -136,10 +136,10 @@ SearchRequest::OnExecute() {
         rc.RecordSection("check validation");
 
         // step 7: search vectors
-#ifdef ENABLE_CPU_PROFILING
-        std::string fname = "/tmp/search_" + CommonUtil::GetCurrentTimeStr() + ".profiling";
-        ProfilerStart(fname.c_str());
-#endif
+//#ifdef ENABLE_CPU_PROFILING
+//        std::string fname = "/tmp/search_" + CommonUtil::GetCurrentTimeStr() + ".profiling";
+//        ProfilerStart(fname.c_str());
+//#endif
 
         engine::ResultIds result_ids;
         engine::ResultDistances result_distances;
@@ -154,9 +154,9 @@ SearchRequest::OnExecute() {
 
         rc.RecordSection("query vectors from engine");
 
-#ifdef ENABLE_CPU_PROFILING
-        ProfilerStop();
-#endif
+//#ifdef ENABLE_CPU_PROFILING
+//        ProfilerStop();
+//#endif
         fiu_do_on("SearchRequest.OnExecute.query_fail", status = Status(milvus::SERVER_UNEXPECTED_ERROR, ""));
         if (!status.ok()) {
             LOG_SERVER_ERROR_ << LogOut("[%s][%ld] Query fail: %s", "search", 0, status.message().c_str());
