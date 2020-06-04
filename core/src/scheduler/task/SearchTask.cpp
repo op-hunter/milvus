@@ -9,7 +9,6 @@
 // is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 // or implied. See the License for the specific language governing permissions and limitations under the License.
 
-#include "utils/CommonUtil.h"
 #include "scheduler/task/SearchTask.h"
 
 #include <fiu-local.h>
@@ -39,6 +38,7 @@
 namespace milvus {
 namespace scheduler {
 
+static size_t debug_idx = 0;
 static constexpr size_t PARALLEL_REDUCE_THRESHOLD = 10000;
 static constexpr size_t PARALLEL_REDUCE_BATCH = 1000;
 
@@ -239,7 +239,7 @@ XSearchTask::Execute() {
 
         if (file_->file_type_ == 1) {
             #ifdef ENABLE_CPU_PROFILING
-                    std::string fname = "/tmp/search_" + CommonUtil::GetCurrentTimeStr() + ".profiling";
+                    std::string fname = "/tmp/search_" + std::to_string(++ debug_idx) + ".profiling";
                     ProfilerStart(fname.c_str());
             #endif
         }
