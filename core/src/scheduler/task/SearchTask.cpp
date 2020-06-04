@@ -31,6 +31,7 @@
 #include "utils/TimeRecorder.h"
 #include "utils/ValidationUtil.h"
 
+#include "utils/CommonUtil.h"
 #ifdef ENABLE_CPU_PROFILING
 #include <gperftools/profiler.h>
 #endif
