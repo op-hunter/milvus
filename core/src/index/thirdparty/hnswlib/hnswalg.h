@@ -37,6 +37,8 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
         }
 
         max_elements_ = max_elements;
+        mem_stats_ += max_elements * sizeof(int);
+        mem_stats_ += max_elements * sizeof(std::mutex);
 
         has_deletions_=false;
         data_size_ = s->get_data_size();
@@ -64,6 +66,7 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
         cur_element_count = 0;
 
         visited_list_pool_ = new VisitedListPool(1, max_elements);
+        mem_stats_ += (max_elements + 2) * sizeof(short int);
 
 
 
@@ -565,13 +568,17 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
 
 
         delete visited_list_pool_;
+        mem_stats_ = 0;
         visited_list_pool_ = new VisitedListPool(1, new_max_elements);
+        mem_stats_ += (new_max_elements + 2) * sizeof(short int);
 
 
 
         element_levels_.resize(new_max_elements);
+        mem_stats_ += new_max_elements * sizeof(int);
 
         std::vector<std::mutex>(new_max_elements).swap(link_list_locks_);
+        mem_stats_ += new_max_elements * sizeof(link_list_locks_[0]);
 
 
         // Reallocate base layer
