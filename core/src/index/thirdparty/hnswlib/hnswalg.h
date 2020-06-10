@@ -99,7 +99,7 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
 
         // linxj: delete
         delete space;
-        printf("hnsw index total malloc %zu bytes\n", mem_stats_);
+        printf("hnsw index total malloc %lld bytes\n", mem_stats_);
     }
 
     // linxj: use for free resource
@@ -107,7 +107,7 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
     size_t metric_type_; // 0:l2, 1:ip
 
     // cmli: statistics of memory usage
-    size_t mem_stats_ = 0;
+    long long int mem_stats_ = 0;
     // cmli: statistics of levels
     std::vector<int> level_stats_;
 
