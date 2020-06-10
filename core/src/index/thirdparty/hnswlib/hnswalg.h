@@ -108,6 +108,9 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
 
     // cmli: statistics of memory usage
     size_t mem_stats_ = 0;
+    // cmli: statistics of levels
+    std::vector<int> level_stats_;
+
 
     size_t max_elements_;
     size_t cur_element_count;
@@ -992,6 +995,16 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
             curlevel = level;
 
         element_levels_[cur_c] = curlevel;
+        if (curlevel > level_stats_.size()) {
+            level_stats_.resize(curlevel);
+        }
+        level_stats_[curlevel] ++;
+        if (cur_element_count == max_elements_) {
+            for (auto i = 0; i < level_stats_.size(); ++ i) {
+                printf("%d ", level_stats_[i]);
+            }
+            printf("\n");
+        }
 
         std::unique_lock <std::mutex> templock(global);
         int maxlevelcopy = maxlevel_;
