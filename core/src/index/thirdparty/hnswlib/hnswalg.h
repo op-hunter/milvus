@@ -46,6 +46,9 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
         dist_func_param_ = s->get_dist_func_param();
         M_ = M;
         maxM_ = M_;
+        cmli_cnt_ = 0;
+        cmli_cnt2_ = 0;
+        cmli_time_ = 0.0;
         maxM0_ = M_ * 2;
         ef_construction_ = std::max(ef_construction,M_);
         ef_ = 10;
@@ -104,6 +107,9 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
         // linxj: delete
         delete space;
         printf("hnsw index total malloc %lld bytes\n", mem_stats_);
+        printf("cmli_cnt: %zd\n", cmli_cnt_);
+        printf("effective cmli_cnt: %zd\n", cmli_cnt2_);
+        printf("cmli_time: %.3fms, cmli_avg_time: %.3fms\n", cmli_time_, cmli_time_ / cmli_cnt2_);
     }
 
     // linxj: use for free resource
@@ -124,6 +130,9 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
     size_t M_;
     size_t maxM_;
     size_t maxM0_;
+    size_t cmli_cnt_;
+    size_t cmli_cnt2_;
+    double cmli_time_;
     size_t ef_construction_;
 
     double mult_, revSize_;
@@ -483,7 +492,12 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
                                          dist_func_param_), data[j]);
                 }
 
+                if (candidates.size() >= Mcurmax) cmli_cnt2_ ++;
+                auto t0 = std::chrono::high_resolution_clock::now();
                 getNeighborsByHeuristic2(candidates, Mcurmax);
+                auto t1 = std::chrono::high_resolution_clock::now();
+                cmli_time_ += (double)std::chrono::duration_cast<std::chrono::milliseconds>( t1 - t0 ).count();
+                cmli_cnt_ ++;
 
                 int indx = 0;
                 while (candidates.size() > 0) {
