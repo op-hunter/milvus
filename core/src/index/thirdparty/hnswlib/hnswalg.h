@@ -81,6 +81,7 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
         size_links_per_element_ = maxM_ * sizeof(tableint) + sizeof(linklistsizeint);
         mult_ = 1 / log(1.0 * M_);
         revSize_ = 1.0 / mult_;
+        level_stats_.resize(10);
     }
 
     struct CompareByFirst {
@@ -1002,16 +1003,6 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
             curlevel = level;
 
         element_levels_[cur_c] = curlevel;
-        if (curlevel >= level_stats_.size()) {
-            level_stats_.resize(curlevel + 1);
-        }
-        level_stats_[curlevel] ++;
-        if (cur_element_count == max_elements_) {
-            for (auto i = 0; i < level_stats_.size(); ++ i) {
-                printf("%d ", level_stats_[i]);
-            }
-            printf("\n");
-        }
 
         std::unique_lock <std::mutex> templock(global);
         int maxlevelcopy = maxlevel_;
@@ -1019,6 +1010,17 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
             templock.unlock();
         tableint currObj = enterpoint_node_;
         tableint enterpoint_copy = enterpoint_node_;
+        if (curlevel >= level_stats_.size()) {
+            level_stats_.resize(curlevel << 1);
+        }
+        level_stats_[curlevel] ++;
+        if (cur_element_count == max_elements_) {
+            printf("max level: %d\n", std::max(curlevel, maxlevel_));
+            for (auto i = 0; i < level_stats_.size(); ++ i) {
+                printf("%d ", level_stats_[i]);
+            }
+            printf("\n");
+        }
 
         memset(data_level0_memory_ + cur_c * size_data_per_element_ + offsetLevel0_, 0, size_data_per_element_);
 
