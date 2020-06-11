@@ -89,6 +89,7 @@ IndexHNSW::Train(const DatasetPtr& dataset_ptr, const Config& config) {
         }
         index_ = std::make_shared<hnswlib::HierarchicalNSW<float>>(space, rows, config[IndexParams::M].get<int64_t>(),
                                                                    config[IndexParams::efConstruction].get<int64_t>());
+        std::cout << "hnsw index has already created" << std::endl;
     } catch (std::exception& e) {
         KNOWHERE_THROW_MSG(e.what());
     }
@@ -122,12 +123,15 @@ IndexHNSW::Add(const DatasetPtr& dataset_ptr, const Config& config) {
     //         }
     //     }
 
+    std::cout << "start build hnsw index" << std::endl;
     index_->addPoint(p_data, p_ids[0]);
+    std::cout << "the first point add finished" << std::endl;
 #pragma omp parallel for
     for (int i = 1; i < rows; ++i) {
         faiss::BuilderSuspend::check_wait();
         index_->addPoint(((float*)p_data + Dim() * i), p_ids[i]);
     }
+    std::cout << "HNSW.Add finished" << std::endl;
 }
 
 DatasetPtr
