@@ -1006,8 +1006,8 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
             curlevel = level;
 
         element_levels_[cur_c] = curlevel;
-        if (curlevel > level_stats_.size()) {
-            level_stats_.resize(curlevel);
+        if (curlevel >= level_stats_.size()) {
+            level_stats_.resize(curlevel + 1);
         }
         level_stats_[curlevel] ++;
         if (cur_element_count == max_elements_) {
