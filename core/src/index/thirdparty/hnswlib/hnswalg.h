@@ -362,8 +362,12 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
 
     void getNeighborsByHeuristic2(
             std::priority_queue<std::pair<dist_t, tableint>, std::vector<std::pair<dist_t, tableint>>, CompareByFirst> &top_candidates,
-            const size_t M) {
+            const size_t M, tableint *ret, size_t &ret_len) {
         if (top_candidates.size() < M) {
+            while (top_candidates.size() > 0) {
+                ret[ret_len ++] = top_candidates.top().second;
+                top_candidates.pop();
+            }
             return;
         }
         std::priority_queue<std::pair<dist_t, tableint>> queue_closest;
@@ -392,15 +396,16 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
             }
             if (good) {
                 return_list.push_back(curent_pair);
+                ret[ret_len ++] = curent_pair.second;
             }
 
 
         }
 
-        for (std::pair<dist_t, tableint> curent_pair : return_list) {
-
-            top_candidates.emplace(-curent_pair.first, curent_pair.second);
-        }
+//        for (std::pair<dist_t, tableint> curent_pair : return_list) {
+//
+//            top_candidates.emplace(-curent_pair.first, curent_pair.second);
+//        }
     }
 
 
@@ -417,20 +422,22 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
     };
 
     void mutuallyConnectNewElement(const void *data_point, tableint cur_c,
-                                   std::priority_queue<std::pair<dist_t, tableint>, std::vector<std::pair<dist_t, tableint>>, CompareByFirst> top_candidates,
+                                   std::priority_queue<std::pair<dist_t, tableint>, std::vector<std::pair<dist_t, tableint>>, CompareByFirst> &top_candidates,
                                    int level) {
 
         size_t Mcurmax = level ? maxM_ : maxM0_;
-        getNeighborsByHeuristic2(top_candidates, M_);
-        if (top_candidates.size() > M_)
+//        std::vector<tableint> selectedNeighbors;
+//        selectedNeighbors.reserve(M_);
+        tableint *selectedNeighbors = (tableint*)malloc(sizeof(tableint) * M_);
+        size_t selectedNeighbors_size = 0;
+        getNeighborsByHeuristic2(top_candidates, M_, selectedNeighbors, selectedNeighbors_size);
+        if (selectedNeighbors_size > M_)
             throw std::runtime_error("Should be not be more than M_ candidates returned by the heuristic");
 
-        std::vector<tableint> selectedNeighbors;
-        selectedNeighbors.reserve(M_);
-        while (top_candidates.size() > 0) {
-            selectedNeighbors.push_back(top_candidates.top().second);
-            top_candidates.pop();
-        }
+//        while (top_candidates.size() > 0) {
+//            selectedNeighbors.push_back(top_candidates.top().second);
+//            top_candidates.pop();
+//        }
 
         {
             linklistsizeint *ll_cur;
@@ -442,11 +449,11 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
             if (*ll_cur) {
                 throw std::runtime_error("The newly inserted element should have blank link list");
             }
-            setListCount(ll_cur,selectedNeighbors.size());
+            setListCount(ll_cur,(unsigned short)selectedNeighbors_size);
             tableint *data = (tableint *) (ll_cur + 1);
 
 
-            for (size_t idx = 0; idx < selectedNeighbors.size(); idx++) {
+            for (size_t idx = 0; idx < selectedNeighbors_size; idx++) {
                 if (data[idx])
                     throw std::runtime_error("Possible memory corruption");
                 if (level > element_levels_[selectedNeighbors[idx]])
@@ -456,7 +463,7 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
 
             }
         }
-        for (size_t idx = 0; idx < selectedNeighbors.size(); idx++) {
+        for (size_t idx = 0; idx < selectedNeighbors_size; idx++) {
 
             std::unique_lock <std::mutex> lock(link_list_locks_[selectedNeighbors[idx]]);
 
@@ -495,18 +502,18 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
                 }
 
                 if (candidates.size() >= Mcurmax) cmli_cnt2_ ++;
+                size_t indx = 0;
                 auto t0 = std::chrono::high_resolution_clock::now();
-                getNeighborsByHeuristic2(candidates, Mcurmax);
+                getNeighborsByHeuristic2(candidates, Mcurmax, data, indx);
                 auto t1 = std::chrono::high_resolution_clock::now();
                 cmli_time_ += (double)std::chrono::duration_cast<std::chrono::milliseconds>( t1 - t0 ).count();
                 cmli_cnt_ ++;
 
-                int indx = 0;
-                while (candidates.size() > 0) {
-                    data[indx] = candidates.top().second;
-                    candidates.pop();
-                    indx++;
-                }
+//                while (candidates.size() > 0) {
+//                    data[indx] = candidates.top().second;
+//                    candidates.pop();
+//                    indx++;
+//                }
                 setListCount(ll_other, indx);
                 // Nearest K:
                 /*int indx = -1;
@@ -1100,9 +1107,9 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
                     if (top_candidates.size() > ef_construction_)
                         top_candidates.pop();
                 }
-                mutuallyConnectNewElement(data_point, cur_c, top_candidates, level);
-
                 currObj = top_candidates.top().second;
+
+                mutuallyConnectNewElement(data_point, cur_c, top_candidates, level);
             }
         } else {
             // Do nothing for the first element
