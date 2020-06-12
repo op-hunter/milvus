@@ -1022,6 +1022,17 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
 
         element_levels_[cur_c] = curlevel;
 
+        // prepose non-concurrent operation
+        memset(data_level0_memory_ + cur_c * size_data_per_element_ + offsetLevel0_, 0, size_data_per_element_);
+        memcpy(getDataByInternalId(cur_c), data_point, data_size_);
+        if (curlevel) {
+            linkLists_[cur_c] = (char *) malloc(size_links_per_element_ * curlevel + 1);
+            if (linkLists_[cur_c] == nullptr)
+                throw std::runtime_error("Not enough memory: addPoint failed to allocate linklist");
+            memset(linkLists_[cur_c], 0, size_links_per_element_ * curlevel + 1);
+        }
+
+
         std::unique_lock <std::mutex> templock(global);
         int maxlevelcopy = maxlevel_;
         if (curlevel <= maxlevelcopy)
@@ -1040,18 +1051,11 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
             printf("\n");
         }
 
-        memset(data_level0_memory_ + cur_c * size_data_per_element_ + offsetLevel0_, 0, size_data_per_element_);
-
         // Initialisation of the data and label
 //        memcpy(getExternalLabeLp(cur_c), &label, sizeof(labeltype));
-        memcpy(getDataByInternalId(cur_c), data_point, data_size_);
 
         if (curlevel) {
-            linkLists_[cur_c] = (char *) malloc(size_links_per_element_ * curlevel + 1);
             mem_stats_ += size_links_per_element_ * curlevel + 1;
-            if (linkLists_[cur_c] == nullptr)
-                throw std::runtime_error("Not enough memory: addPoint failed to allocate linklist");
-            memset(linkLists_[cur_c], 0, size_links_per_element_ * curlevel + 1);
         }
 
         if ((signed)currObj != -1) {
