@@ -3,6 +3,8 @@
 #include <mutex>
 #include <string.h>
 
+#include <deque>
+
 namespace hnswlib {
 typedef unsigned short int vl_type;
 

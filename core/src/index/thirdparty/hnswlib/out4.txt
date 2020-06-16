@@ -1,0 +1,115 @@
+start load sift data ...
+dim: 128, rows: 1000000
+load data costs: 172ms 
+the first vector: 
+0 16 35 5 32 31 14 10 11 78 55 10 45 83 11 6 14 57 102 75 20 8 3 5 67 17 19 26 5 0 1 22 60 26 7 1 18 22 84 53 85 119 119 4 24 18 7 7 1 81 106 102 72 30 6 0 9 1 9 119 72 1 4 33 119 29 6 1 0 1 14 52 119 30 3 0 0 55 92 111 2 5 4 9 22 89 96 14 1 0 1 82 59 16 20 5 25 14 11 4 0 0 1 26 47 23 4 0 0 4 38 83 30 14 9 4 9 17 23 41 0 0 2 8 19 25 23 1 
+the last vector: 
+114 31 0 0 0 0 0 10 129 48 5 13 13 0 0 7 0 23 62 41 51 8 2 0 0 44 78 2 1 3 3 0 103 45 14 1 3 8 5 43 129 28 2 8 4 3 6 98 2 15 37 18 6 12 28 8 2 9 23 2 0 37 45 4 69 4 4 0 5 44 43 41 129 1 0 0 0 34 65 129 2 0 0 0 0 129 129 13 0 0 4 4 3 129 129 2 18 19 10 0 2 10 12 10 35 5 0 0 0 37 117 57 33 37 18 1 0 74 88 3 4 16 66 31 3 25 16 0 
+max level: 5
+936994 59130 3626 234 12 1 0 0 0 0 
+build index costs: 35214ms 
+the 1th query result: dist = 0, id = 0
+the 2th query result: dist = 50892, id = 413056
+the 3th query result: dist = 18724, id = 0
+the 4th query result: dist = 46816, id = 678272
+the 5th query result: dist = 53695, id = 567552
+the 6th query result: dist = 46977, id = 319232
+the 7th query result: dist = 24320, id = 0
+the 8th query result: dist = 50498, id = 852224
+the 9th query result: dist = 53014, id = 887168
+the 10th query result: dist = 56032, id = 515328
+the 11th query result: dist = 57192, id = 445440
+the 12th query result: dist = 60893, id = 588416
+the 13th query result: dist = 52991, id = 376960
+the 14th query result: dist = 49058, id = 963456
+the 15th query result: dist = 52335, id = 413056
+the 16th query result: dist = 61785, id = 382208
+the 17th query result: dist = 66295, id = 815616
+the 18th query result: dist = 64610, id = 861056
+the 19th query result: dist = 57732, id = 630528
+the 20th query result: dist = 54285, id = 588416
+the 21th query result: dist = 46258, id = 887168
+the 22th query result: dist = 65505, id = 167680
+the 23th query result: dist = 70605, id = 947456
+the 24th query result: dist = 62376, id = 382208
+the 25th query result: dist = 68332, id = 430336
+the 26th query result: dist = 59393, id = 879744
+the 27th query result: dist = 65088, id = 799616
+the 28th query result: dist = 67710, id = 722432
+the 29th query result: dist = 79934, id = 240000
+the 30th query result: dist = 55421, id = 685184
+the 31th query result: dist = 54888, id = 515328
+the 32th query result: dist = 35503, id = 230784
+the 33th query result: dist = 44286, id = 308096
+the 34th query result: dist = 0, id = 128
+the 35th query result: dist = 62062, id = 219648
+the 36th query result: dist = 15977, id = 8832
+the 37th query result: dist = 26073, id = 803584
+the 38th query result: dist = 33952, id = 204288
+the 39th query result: dist = 51198, id = 8832
+the 40th query result: dist = 66845, id = 632832
+the 41th query result: dist = 53661, id = 219648
+the 42th query result: dist = 15857, id = 8832
+the 43th query result: dist = 86939, id = 701696
+the 44th query result: dist = 82716, id = 245760
+the 45th query result: dist = 22205, id = 803584
+the 46th query result: dist = 21023, id = 745728
+the 47th query result: dist = 30883, id = 161920
+the 48th query result: dist = 36895, id = 305280
+the 49th query result: dist = 15597, id = 803584
+the 50th query result: dist = 11219, id = 220032
+the 51th query result: dist = 58885, id = 76288
+the 52th query result: dist = 55262, id = 850304
+the 53th query result: dist = 56945, id = 778624
+the 54th query result: dist = 57388, id = 55552
+the 55th query result: dist = 59457, id = 493568
+the 56th query result: dist = 67120, id = 432000
+the 57th query result: dist = 39988, id = 325632
+the 58th query result: dist = 24714, id = 343936
+the 59th query result: dist = 32591, id = 363904
+the 60th query result: dist = 25023, id = 265472
+the 61th query result: dist = 27540, id = 297856
+the 62th query result: dist = 27821, id = 902912
+the 63th query result: dist = 29510, id = 297856
+the 64th query result: dist = 74188, id = 653440
+the 65th query result: dist = 65567, id = 850304
+the 66th query result: dist = 75177, id = 680960
+the 67th query result: dist = 0, id = 256
+the 68th query result: dist = 33378, id = 36736
+the 69th query result: dist = 25730, id = 152960
+the 70th query result: dist = 47310, id = 397952
+the 71th query result: dist = 52453, id = 658304
+the 72th query result: dist = 45691, id = 909440
+the 73th query result: dist = 70947, id = 172928
+the 74th query result: dist = 52164, id = 618112
+the 75th query result: dist = 56464, id = 592640
+the 76th query result: dist = 51014, id = 587648
+the 77th query result: dist = 71507, id = 245760
+the 78th query result: dist = 36941, id = 782592
+the 79th query result: dist = 26523, id = 246912
+the 80th query result: dist = 37151, id = 363904
+the 81th query result: dist = 20648, id = 439936
+the 82th query result: dist = 8749, id = 384
+the 83th query result: dist = 73187, id = 679040
+the 84th query result: dist = 72834, id = 527744
+the 85th query result: dist = 84785, id = 293248
+the 86th query result: dist = 51709, id = 228992
+the 87th query result: dist = 64330, id = 549632
+the 88th query result: dist = 71960, id = 251136
+the 89th query result: dist = 52738, id = 732544
+the 90th query result: dist = 60917, id = 922624
+the 91th query result: dist = 51380, id = 470272
+the 92th query result: dist = 31012, id = 20864
+the 93th query result: dist = 29993, id = 316544
+the 94th query result: dist = 64093, id = 446976
+the 95th query result: dist = 51690, id = 7680
+the 96th query result: dist = 65890, id = 279168
+the 97th query result: dist = 54189, id = 50048
+the 98th query result: dist = 58008, id = 768768
+the 99th query result: dist = 11996, id = 439936
+the 100th query result: dist = 0, id = 384
+query 100 times costs: 5ms 
+hnsw index total malloc 190628323 bytes
+cmli_cnt: 883317
+effective cmli_cnt: 883335
+cmli_time: 83.000ms, cmli_avg_time: 0.000ms

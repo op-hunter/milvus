@@ -1,0 +1,115 @@
+start load sift data ...
+dim: 128, rows: 1000000
+load data costs: 159ms 
+the first vector: 
+0 16 35 5 32 31 14 10 11 78 55 10 45 83 11 6 14 57 102 75 20 8 3 5 67 17 19 26 5 0 1 22 60 26 7 1 18 22 84 53 85 119 119 4 24 18 7 7 1 81 106 102 72 30 6 0 9 1 9 119 72 1 4 33 119 29 6 1 0 1 14 52 119 30 3 0 0 55 92 111 2 5 4 9 22 89 96 14 1 0 1 82 59 16 20 5 25 14 11 4 0 0 1 26 47 23 4 0 0 4 38 83 30 14 9 4 9 17 23 41 0 0 2 8 19 25 23 1 
+the last vector: 
+114 31 0 0 0 0 0 10 129 48 5 13 13 0 0 7 0 23 62 41 51 8 2 0 0 44 78 2 1 3 3 0 103 45 14 1 3 8 5 43 129 28 2 8 4 3 6 98 2 15 37 18 6 12 28 8 2 9 23 2 0 37 45 4 69 4 4 0 5 44 43 41 129 1 0 0 0 34 65 129 2 0 0 0 0 129 129 13 0 0 4 4 3 129 129 2 18 19 10 0 2 10 12 10 35 5 0 0 0 37 117 57 33 37 18 1 0 74 88 3 4 16 66 31 3 25 16 0 
+max level: 5
+936990 59130 3627 234 12 1 0 0 0 0 
+build index costs: 13503ms 
+the 1th query result: dist = 0, id = 0
+the 2th query result: dist = 0, id = 128
+the 3th query result: dist = 0, id = 256
+the 4th query result: dist = 0, id = 384
+the 5th query result: dist = 0, id = 512
+the 6th query result: dist = 0, id = 640
+the 7th query result: dist = 0, id = 768
+the 8th query result: dist = 0, id = 896
+the 9th query result: dist = 0, id = 1024
+the 10th query result: dist = 0, id = 1152
+the 11th query result: dist = 0, id = 1280
+the 12th query result: dist = 0, id = 1408
+the 13th query result: dist = 0, id = 1536
+the 14th query result: dist = 0, id = 1664
+the 15th query result: dist = 0, id = 1792
+the 16th query result: dist = 0, id = 1920
+the 17th query result: dist = 0, id = 2048
+the 18th query result: dist = 0, id = 2176
+the 19th query result: dist = 0, id = 2304
+the 20th query result: dist = 0, id = 2432
+the 21th query result: dist = 0, id = 2560
+the 22th query result: dist = 0, id = 2688
+the 23th query result: dist = 0, id = 2816
+the 24th query result: dist = 0, id = 2944
+the 25th query result: dist = 0, id = 3072
+the 26th query result: dist = 0, id = 3200
+the 27th query result: dist = 0, id = 3328
+the 28th query result: dist = 0, id = 3456
+the 29th query result: dist = 0, id = 3584
+the 30th query result: dist = 0, id = 3712
+the 31th query result: dist = 0, id = 3840
+the 32th query result: dist = 0, id = 3968
+the 33th query result: dist = 0, id = 4096
+the 34th query result: dist = 0, id = 4224
+the 35th query result: dist = 0, id = 4352
+the 36th query result: dist = 0, id = 4480
+the 37th query result: dist = 0, id = 4608
+the 38th query result: dist = 0, id = 4736
+the 39th query result: dist = 0, id = 4864
+the 40th query result: dist = 0, id = 4992
+the 41th query result: dist = 0, id = 5120
+the 42th query result: dist = 0, id = 5248
+the 43th query result: dist = 0, id = 5376
+the 44th query result: dist = 0, id = 5504
+the 45th query result: dist = 0, id = 5632
+the 46th query result: dist = 0, id = 5760
+the 47th query result: dist = 0, id = 5888
+the 48th query result: dist = 0, id = 6016
+the 49th query result: dist = 0, id = 6144
+the 50th query result: dist = 0, id = 6272
+the 51th query result: dist = 0, id = 6400
+the 52th query result: dist = 0, id = 6528
+the 53th query result: dist = 0, id = 6656
+the 54th query result: dist = 0, id = 6784
+the 55th query result: dist = 0, id = 6912
+the 56th query result: dist = 0, id = 7040
+the 57th query result: dist = 0, id = 7168
+the 58th query result: dist = 0, id = 7296
+the 59th query result: dist = 0, id = 7424
+the 60th query result: dist = 0, id = 7552
+the 61th query result: dist = 0, id = 7680
+the 62th query result: dist = 0, id = 7808
+the 63th query result: dist = 0, id = 7936
+the 64th query result: dist = 0, id = 8064
+the 65th query result: dist = 0, id = 8192
+the 66th query result: dist = 0, id = 8320
+the 67th query result: dist = 0, id = 8448
+the 68th query result: dist = 0, id = 8576
+the 69th query result: dist = 0, id = 8704
+the 70th query result: dist = 0, id = 8832
+the 71th query result: dist = 0, id = 8960
+the 72th query result: dist = 0, id = 9088
+the 73th query result: dist = 0, id = 9216
+the 74th query result: dist = 0, id = 9344
+the 75th query result: dist = 0, id = 9472
+the 76th query result: dist = 0, id = 9600
+the 77th query result: dist = 0, id = 9728
+the 78th query result: dist = 0, id = 9856
+the 79th query result: dist = 0, id = 9984
+the 80th query result: dist = 0, id = 10112
+the 81th query result: dist = 0, id = 10240
+the 82th query result: dist = 0, id = 10368
+the 83th query result: dist = 0, id = 10496
+the 84th query result: dist = 0, id = 10624
+the 85th query result: dist = 0, id = 10752
+the 86th query result: dist = 0, id = 10880
+the 87th query result: dist = 0, id = 11008
+the 88th query result: dist = 0, id = 11136
+the 89th query result: dist = 0, id = 11264
+the 90th query result: dist = 0, id = 11392
+the 91th query result: dist = 0, id = 11520
+the 92th query result: dist = 0, id = 11648
+the 93th query result: dist = 0, id = 11776
+the 94th query result: dist = 0, id = 11904
+the 95th query result: dist = 0, id = 12032
+the 96th query result: dist = 0, id = 12160
+the 97th query result: dist = 0, id = 12288
+the 98th query result: dist = 0, id = 12416
+the 99th query result: dist = 0, id = 12544
+the 100th query result: dist = 0, id = 12672
+query 100 times costs: 3ms 
+hnsw index total malloc 190628460 bytes
+cmli_cnt: 687043
+effective cmli_cnt: 686961
+cmli_time: 62.000ms, cmli_avg_time: 0.000ms

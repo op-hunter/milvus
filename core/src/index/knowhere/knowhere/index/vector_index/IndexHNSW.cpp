@@ -18,7 +18,7 @@
 #include <vector>
 
 #include "faiss/BuilderSuspend.h"
-#include "hnswlib/hnswalg.h"
+#include "hnswlib/hnswalg3.h"
 #include "hnswlib/space_ip.h"
 #include "hnswlib/space_l2.h"
 #include "knowhere/common/Exception.h"
@@ -105,6 +105,14 @@ IndexHNSW::Add(const DatasetPtr& dataset_ptr, const Config& config) {
 
     GETTENSORWITHIDS(dataset_ptr)
 
+    std::chrono::high_resolution_clock::time_point ts, te;
+    ts = std::chrono::high_resolution_clock::now();
+    FILE *pf = fopen("/tmp/hnsw_raw_data.txt", "w");
+    fwrite(p_data, sizeof(float), (size_t)rows * dim, pf);
+    fclose(pf);
+    te = std::chrono::high_resolution_clock::now();
+    std::cout << "save raw data costs: " << std::chrono::duration_cast<std::chrono::milliseconds>(te - ts).count() << " ms" << std::endl;
+
     //     if (normalize) {
     //         std::vector<float> ep_norm_vector(Dim());
     //         normalize_vector((float*)(p_data), ep_norm_vector.data(), Dim());
@@ -123,13 +131,15 @@ IndexHNSW::Add(const DatasetPtr& dataset_ptr, const Config& config) {
     //         }
     //     }
 
+    auto base = index_->getCurrentElementCount();
     std::cout << "start build hnsw index" << std::endl;
-    index_->addPoint(p_data, p_ids[0]);
+    index_->addPoint(const_cast<void*>(p_data), p_ids[0], base, 0);
     std::cout << "the first point add finished" << std::endl;
 #pragma omp parallel for
     for (int i = 1; i < rows; ++i) {
         faiss::BuilderSuspend::check_wait();
-        index_->addPoint(((float*)p_data + Dim() * i), p_ids[i]);
+//        index_->addPoint(((float*)p_data + Dim() * i), p_ids[i]);
+        index_->addPoint(const_cast<void*>(p_data), p_ids[i], base, i);
     }
     std::cout << "HNSW.Add finished" << std::endl;
 }
@@ -140,6 +150,16 @@ IndexHNSW::Query(const DatasetPtr& dataset_ptr, const Config& config) {
         KNOWHERE_THROW_MSG("index not initialize or trained");
     }
     GETTENSOR(dataset_ptr)
+    float *tmp_data = (float*)malloc(size_t(1000000) * 128 * sizeof(float));
+
+    std::chrono::high_resolution_clock::time_point ts, te;
+    ts = std::chrono::high_resolution_clock::now();
+    FILE *pf = fopen("/tmp/hnsw_raw_data.txt", "r");
+    fread(tmp_data, sizeof(float), (size_t)1000000 * 128, pf);
+    fclose(pf);
+    te = std::chrono::high_resolution_clock::now();
+    std::cout << "read raw data costs: " << std::chrono::duration_cast<std::chrono::milliseconds>(te - ts).count() << " ms" << std::endl;
+
 
     size_t k = config[meta::TOPK].get<int64_t>();
     size_t id_size = sizeof(int64_t) * k;
@@ -165,7 +185,7 @@ IndexHNSW::Query(const DatasetPtr& dataset_ptr, const Config& config) {
         // } else {
         //     ret = index_->searchKnn((float*)single_query, config[meta::TOPK].get<int64_t>(), compare);
         // }
-        ret = index_->searchKnn((float*)single_query, k, compare, blacklist);
+        ret = index_->searchKnn((float*)single_query, k, compare, blacklist, tmp_data);
 
         while (ret.size() < k) {
             ret.emplace_back(std::make_pair(-1, -1));
@@ -190,6 +210,7 @@ IndexHNSW::Query(const DatasetPtr& dataset_ptr, const Config& config) {
     auto ret_ds = std::make_shared<Dataset>();
     ret_ds->Set(meta::IDS, p_id);
     ret_ds->Set(meta::DISTANCE, p_dist);
+    free(tmp_data);
     return ret_ds;
 }
 

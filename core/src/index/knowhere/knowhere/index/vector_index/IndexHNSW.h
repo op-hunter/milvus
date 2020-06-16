@@ -18,6 +18,7 @@
 
 #include "knowhere/common/Exception.h"
 #include "knowhere/index/vector_index/VecIndex.h"
+#include <iostream>
 
 namespace milvus {
 namespace knowhere {
@@ -26,6 +27,7 @@ class IndexHNSW : public VecIndex {
  public:
     IndexHNSW() {
         index_type_ = IndexEnum::INDEX_HNSW;
+        std::cout << "IndexHNSW instance created, address: " << this << std::endl;
     }
 
     BinarySet

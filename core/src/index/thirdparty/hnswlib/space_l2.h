@@ -6,7 +6,7 @@ namespace hnswlib {
 
 static float
 L2Sqr(const void *pVect1, const void *pVect2, const void *qty_ptr) {
-#if 0 /* use FAISS distance calculation algorithm instead */
+#if 1 /* use FAISS distance calculation algorithm instead */
     //return *((float *)pVect2);
     size_t qty = *((size_t *) qty_ptr);
     float res = 0;
