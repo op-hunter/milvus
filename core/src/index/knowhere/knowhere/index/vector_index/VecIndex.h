@@ -22,6 +22,7 @@
 #include "knowhere/index/Index.h"
 #include "knowhere/index/vector_index/IndexType.h"
 
+#include <iostream>
 namespace milvus {
 namespace knowhere {
 
@@ -29,8 +30,14 @@ class VecIndex : public Index {
  public:
     virtual void
     BuildAll(const DatasetPtr& dataset_ptr, const Config& config) {
+        std::chrono::high_resolution_clock::time_point ts, te;
+        ts = std::chrono::high_resolution_clock::now();
         Train(dataset_ptr, config);
+        te = std::chrono::high_resolution_clock::now();
+        std::cout << "Train costs: " << std::chrono::duration_cast<std::chrono::milliseconds>(te - ts).count() << " ms" << std::endl;
         Add(dataset_ptr, config);
+        ts = std::chrono::high_resolution_clock::now();
+        std::cout << "Add costs: " << std::chrono::duration_cast<std::chrono::milliseconds>(ts - te).count() << " ms" << std::endl;
     }
 
     virtual void

@@ -49,7 +49,7 @@ IndexHNSW::Serialize(const Config& config) {
         std::shared_ptr<uint8_t[]> data(writer.data_);
 
         BinarySet res_set;
-        res_set.Append("HNSW", data, writer.total);
+        res_set.Append("HNSW", data, writer.rp);
         return res_set;
     } catch (std::exception& e) {
         KNOWHERE_THROW_MSG(e.what());
@@ -133,13 +133,14 @@ IndexHNSW::Add(const DatasetPtr& dataset_ptr, const Config& config) {
 
     auto base = index_->getCurrentElementCount();
     std::cout << "start build hnsw index" << std::endl;
-    index_->addPoint(const_cast<void*>(p_data), p_ids[0], base, 0);
+    auto pp_data = const_cast<void*>(p_data);
+    index_->addPoint(pp_data, p_ids[0], base, 0);
     std::cout << "the first point add finished" << std::endl;
 #pragma omp parallel for
     for (int i = 1; i < rows; ++i) {
         faiss::BuilderSuspend::check_wait();
 //        index_->addPoint(((float*)p_data + Dim() * i), p_ids[i]);
-        index_->addPoint(const_cast<void*>(p_data), p_ids[i], base, i);
+        index_->addPoint(pp_data, p_ids[i], base, i);
     }
     std::cout << "HNSW.Add finished" << std::endl;
 }
