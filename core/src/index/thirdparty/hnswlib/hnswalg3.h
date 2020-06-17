@@ -56,8 +56,8 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
         level_generator_.seed(random_seed);
 
         size_links_level0_ = maxM0_ * sizeof(tableint) + sizeof(linklistsizeint);
-        size_data_per_element_ = size_links_level0_ + sizeof(labeltype); // + data_size_;;
-        label_offset_ = size_links_level0_;
+        size_data_per_element_ = size_links_level0_; // + sizeof(labeltype); + data_size_;;
+//        label_offset_ = size_links_level0_;
 
         data_level0_memory_ = (char *) malloc(max_elements_ * size_data_per_element_);
         mem_stats_ += max_elements_ * size_data_per_element_;
@@ -156,13 +156,14 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
     bool has_deletions_;
 
 
-    size_t label_offset_;
+//    size_t label_offset_;
     DISTFUNC<dist_t> fstdistfunc_;
     void *dist_func_param_;
 //    std::unordered_map<labeltype, tableint> label_lookup_;
 
     std::default_random_engine level_generator_;
 
+    /*
     inline labeltype getExternalLabel(tableint internal_id) const {
         labeltype return_label;
         memcpy(&return_label,(data_level0_memory_ + internal_id * size_data_per_element_ + label_offset_), sizeof(labeltype));
@@ -173,7 +174,6 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
         memcpy((data_level0_memory_ + internal_id * size_data_per_element_ + label_offset_), &label, sizeof(labeltype));
     }
 
-    /*
     inline labeltype *getExternalLabeLp(tableint internal_id) const {
         return (labeltype *) (data_level0_memory_ + internal_id * size_data_per_element_ + label_offset_);
     }
@@ -638,7 +638,7 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
         writeBinaryPOD(output, max_elements_);
         writeBinaryPOD(output, cur_element_count);
         writeBinaryPOD(output, size_data_per_element_);
-        writeBinaryPOD(output, label_offset_);
+//        writeBinaryPOD(output, label_offset_);
 //        writeBinaryPOD(output, offsetData_);
         writeBinaryPOD(output, maxlevel_);
         writeBinaryPOD(output, enterpoint_node_);
@@ -685,7 +685,7 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
             max_elements = max_elements_;
         max_elements_ = max_elements;
         readBinaryPOD(input, size_data_per_element_);
-        readBinaryPOD(input, label_offset_);
+//        readBinaryPOD(input, label_offset_);
 //        readBinaryPOD(input, offsetData_);
         readBinaryPOD(input, maxlevel_);
         readBinaryPOD(input, enterpoint_node_);
@@ -792,7 +792,7 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
         writeBinaryPOD(output, max_elements_);
         writeBinaryPOD(output, cur_element_count);
         writeBinaryPOD(output, size_data_per_element_);
-        writeBinaryPOD(output, label_offset_);
+//        writeBinaryPOD(output, label_offset_);
 //        writeBinaryPOD(output, offsetData_);
         writeBinaryPOD(output, maxlevel_);
         writeBinaryPOD(output, enterpoint_node_);
@@ -834,7 +834,7 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
             max_elements = max_elements_;
         max_elements_ = max_elements;
         readBinaryPOD(input, size_data_per_element_);
-        readBinaryPOD(input, label_offset_);
+//        readBinaryPOD(input, label_offset_);
 //        readBinaryPOD(input, offsetData_);
         readBinaryPOD(input, maxlevel_);
         readBinaryPOD(input, enterpoint_node_);
@@ -1038,7 +1038,6 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
 
         // prepose non-concurrent operation
         memset(data_level0_memory_ + cur_c * size_data_per_element_, 0, size_data_per_element_);
-        setExternalLabel(cur_c, label);
 //        memcpy(getDataByInternalId(cur_c), data_point, data_size_);
         if (curlevel) {
             linkLists_[cur_c] = (char *) malloc(size_links_per_element_ * curlevel + 1);
@@ -1182,7 +1181,7 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
         while (top_candidates.size() > 0) {
             std::pair<dist_t, tableint> rez = top_candidates.top();
 //            result.push(std::pair<dist_t, labeltype>(rez.first, getExternalLabel(rez.second)));
-            result.push(std::pair<dist_t, labeltype>(rez.first, getExternalLabel(rez.second)));
+            result.push(std::pair<dist_t, labeltype>(rez.first, rez.second));
             top_candidates.pop();
         }
         return result;
