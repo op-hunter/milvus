@@ -159,5 +159,11 @@ NSG_NM::Dim() {
     return index_->dimension;
 }
 
+NSG_NM::~NSG_NM() {
+    if (pdata_ != nullptr) {
+        free(pdata_);
+    }
+}
+
 }  // namespace knowhere
 }  // namespace milvus

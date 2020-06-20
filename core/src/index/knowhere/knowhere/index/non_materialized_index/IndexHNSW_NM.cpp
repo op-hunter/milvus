@@ -208,5 +208,11 @@ IndexHNSW_NM::Dim() {
     return (*(size_t*)index_->dist_func_param_);
 }
 
+IndexHNSW_NM::~IndexHNSW_NM() {
+    if (pdata_ != nullptr) {
+        free(pdata_);
+    }
+}
+
 }  // namespace knowhere
 }  // namespace milvus

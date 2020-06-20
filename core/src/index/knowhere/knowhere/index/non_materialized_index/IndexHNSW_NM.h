@@ -29,6 +29,8 @@ class IndexHNSW_NM : public VecIndex {
         index_type_ = IndexEnum::INDEX_HNSW;
     }
 
+    ~IndexHNSW_NM();
+
     BinarySet
     Serialize(const Config& config = Config()) override;
 

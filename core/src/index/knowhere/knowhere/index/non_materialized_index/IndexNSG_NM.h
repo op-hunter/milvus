@@ -34,6 +34,8 @@ class NSG_NM : public VecIndex {
         index_type_ = IndexEnum::INDEX_NSG;
     }
 
+    ~NSG_NM();
+
     BinarySet
     Serialize(const Config& config = Config()) override;
 
