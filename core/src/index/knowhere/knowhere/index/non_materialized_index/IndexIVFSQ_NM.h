@@ -14,7 +14,7 @@
 #include <memory>
 #include <utility>
 
-#include "knowhere/index/offset_index/IndexIVF_NM.h"
+#include "knowhere/index/non_materialized_index/IndexIVF_NM.h"
 
 namespace milvus {
 namespace knowhere {

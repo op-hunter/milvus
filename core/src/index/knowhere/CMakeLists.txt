@@ -42,12 +42,12 @@ set(external_srcs
         knowhere/common/Timer.cpp
         )
 
-set(non_materialized_index
-        knowhere/index/offset_index/IndexHNSW_NM.cpp
-        knowhere/index/offset_index/IndexIVF_NM.cpp
-        knowhere/index/offset_index/IndexNSG_NM.cpp
-        knowhere/index/offset_index/OffsetBaseIndex.cpp
-        knowhere/index/offset_index/impl/nsg_nm/NSGIO_NM.cpp
+set(non_materialized_index_srcs
+        knowhere/index/non_materialized_index/IndexHNSW_NM.cpp
+        knowhere/index/non_materialized_index/IndexIVF_NM.cpp
+        knowhere/index/non_materialized_index/IndexNSG_NM.cpp
+        knowhere/index/non_materialized_index/OffsetBaseIndex.cpp
+        knowhere/index/non_materialized_index/impl/nsg_nm/NSGIO_NM.cpp
         )
 
 set(index_srcs
@@ -73,7 +73,7 @@ set(index_srcs
         knowhere/index/vector_index/IndexType.cpp
         knowhere/index/vector_index/VecIndexFactory.cpp
         knowhere/index/vector_index/IndexAnnoy.cpp
-        ${non_materialized_index}
+        ${non_materialized_index_srcs}
         )
 
 if (MILVUS_SUPPORT_SPTAG)

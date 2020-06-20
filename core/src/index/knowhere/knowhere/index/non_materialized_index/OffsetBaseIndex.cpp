@@ -13,7 +13,7 @@
 #include <fiu-local.h>
 
 #include "knowhere/common/Exception.h"
-#include "knowhere/index/offset_index/OffsetBaseIndex.h"
+#include "knowhere/index/non_materialized_index/OffsetBaseIndex.h"
 #include "knowhere/index/vector_index/IndexType.h"
 #include "knowhere/index/vector_index/helpers/FaissIO.h"
 

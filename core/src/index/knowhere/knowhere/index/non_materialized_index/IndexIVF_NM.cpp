@@ -33,7 +33,7 @@
 #include "faiss/BuilderSuspend.h"
 #include "knowhere/common/Exception.h"
 #include "knowhere/common/Log.h"
-#include "knowhere/index/offset_index/IndexIVF_NM.h"
+#include "knowhere/index/non_materialized_index/IndexIVF_NM.h"
 #include "knowhere/index/vector_index/adapter/VectorAdapter.h"
 #include "knowhere/index/vector_index/helpers/IndexParameter.h"
 #ifdef MILVUS_GPU_VERSION
