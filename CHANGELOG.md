@@ -11,6 +11,7 @@ Please mark all change in change log and use the issue from GitHub
 -   \#2403 MySQL max_idle_time is 10 by default
 -   \#2450 The deleted vectors may be found on GPU
 -   \#2456 openblas library install failed
+-   \#2649 search parameter of annoy has conflict with document
 
 ## Feature
 
