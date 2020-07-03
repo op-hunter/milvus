@@ -4,7 +4,8 @@
 #include <algorithm>
 #include "/usr/include/hdf5/serial/hdf5.h"
 #include "/usr/include/hdf5/serial/H5Cpp.h"
-#include "hnswalg2.h"
+//#include "hnswalg2.h"
+#include "hnswalg_sq8.h"
 //#include "hnswalg.h"
 
 using namespace hnswlib;
@@ -74,10 +75,10 @@ int main() {
     std::shared_ptr<HierarchicalNSW<float>> hnsw_index = std::make_shared<HierarchicalNSW<float>>(space, nb, M, efConstruction);
 
     ts = std::chrono::high_resolution_clock::now();
-    hnsw_index->addPoint(pdata, 0);
+    hnsw_index->addPoint(pdata, 0, 0, 0);
 #pragma omp parallel for
     for (int i = 1; i < nb; ++ i) {
-        hnsw_index->addPoint(pdata, i);
+        hnsw_index->addPoint(pdata, i, 0, i);
 //        hnsw_index->addPoint(pdata + i * dim, i);
     }
     te = std::chrono::high_resolution_clock::now();
@@ -93,6 +94,7 @@ int main() {
 
     std::mutex print_lock;
     ts = std::chrono::high_resolution_clock::now();
+    int correct_cnt = 0;
 //#pragma omp parallel for
     for (int i = 0; i < nq; ++ i) {
         std::vector<P> ret;
@@ -101,8 +103,11 @@ int main() {
         {
             std::unique_lock <std::mutex> lock(print_lock);
             std::cout << "the " << i + 1 << "th query result: dist = " << ret[0].first << ", id = " << ret[0].second << std::endl;
+            if (i == ret[0].second || ret[0].first < 1e-5)
+                correct_cnt ++;
         }
     }
     te = std::chrono::high_resolution_clock::now();
     std::cout << "query " << nq << " times costs: " << std::chrono::duration_cast<std::chrono::milliseconds>(te - ts).count() << "ms " << std::endl;
+    std::cout << "correct rate: " << correct_cnt << "% " << std::endl;
 }

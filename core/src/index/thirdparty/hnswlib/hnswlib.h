@@ -83,10 +83,10 @@ namespace hnswlib {
     public:
         virtual void addPoint(void *datapoint, labeltype label, size_t base, size_t offset)=0;
 //        virtual void addPoint(const void *datapoint, labeltype label)=0;
-        virtual std::priority_queue<std::pair<dist_t, labeltype >> searchKnn(const void *, size_t, faiss::ConcurrentBitsetPtr bitset, dist_t *pdata) const = 0;
+        virtual std::priority_queue<std::pair<dist_t, labeltype >> searchKnn(const void *, size_t, faiss::ConcurrentBitsetPtr bitset, void *pdata) const = 0;
 //        virtual std::priority_queue<std::pair<dist_t, labeltype >> searchKnn(const void *, size_t, faiss::ConcurrentBitsetPtr bitset) const = 0;
         template <typename Comp>
-        std::vector<std::pair<dist_t, labeltype>> searchKnn(const void*, size_t, Comp, faiss::ConcurrentBitsetPtr bitset, dist_t *pdata) {
+        std::vector<std::pair<dist_t, labeltype>> searchKnn(const void*, size_t, Comp, faiss::ConcurrentBitsetPtr bitset, void *pdata) {
 //        std::vector<std::pair<dist_t, labeltype>> searchKnn(const void*, size_t, Comp, faiss::ConcurrentBitsetPtr bitset) {
         }
         virtual void saveIndex(const std::string &location)=0;
@@ -98,4 +98,4 @@ namespace hnswlib {
 #include "space_l2.h"
 #include "space_ip.h"
 #include "bruteforce.h"
-#include "hnswalg3.h"
+#include "hnswalg_sq8.h"

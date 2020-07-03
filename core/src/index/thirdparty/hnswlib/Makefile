@@ -1,5 +1,5 @@
 
-TARGETS = hnsw_test
+TARGETS = hnsw_test hnsw_sq8_test
 
 CXX             = g++ -std=c++11
 CXXCPP          = g++ -std=c++11 -E
@@ -8,10 +8,19 @@ CXXFLAGS        = -fPIC -m64 -Wno-sign-compare  -O3 -fPIC -DELPP_THREAD_SAFE -fo
 LDFLAGS         = -L/usr/local/openblas/lib
 LIBS            = -lhdf5_serial
 
+all : hnsw_test hnsw_sq8_test
+
+.PHONY : all
+
 hnsw_test : hnsw_test.cpp ../faiss/libfaiss.a
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $@ $^ $(LDFLAGS) -I/home/zilliz/workspace/dev/milvus/milvus/core/src/index/knowhere/knowhere/index/vector_index/helpers/ -I/home/zilliz/workspace/dev/milvus/milvus/core/src/index/thirdparty/faiss/ $(LIBS)
 
-.PHONY : clean
+hnsw_sq8_test : hnsw_sq8_test.cpp ../faiss/libfaiss.a
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $@ $^ $(LDFLAGS) -I/home/zilliz/workspace/dev/milvus/milvus/core/src/index/knowhere/knowhere/index/vector_index/helpers/ -I/home/zilliz/workspace/dev/milvus/milvus/core/src/index/thirdparty/faiss/ $(LIBS)
+
+#%: %.cpp ../faiss/libfaiss.a
+	#$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $@ $^ $(LDFLAGS) -I/home/zilliz/workspace/dev/milvus/milvus/core/src/index/knowhere/knowhere/index/vector_index/helpers/ -I/home/zilliz/workspace/dev/milvus/milvus/core/src/index/thirdparty/faiss/ $(LIBS)
+
 clean:
 	rm -f $(TARGETS)
 

@@ -6,7 +6,7 @@ namespace hnswlib {
 
 static float
 InnerProduct(const void *pVect1, const void *pVect2, const void *qty_ptr) {
-#if 0 /* use FAISS distance calculation algorithm instead */
+#if 1 /* use FAISS distance calculation algorithm instead */
     size_t qty = *((size_t *) qty_ptr);
     float res = 0;
     for (unsigned i = 0; i < qty; i++) {
