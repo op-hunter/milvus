@@ -18,7 +18,8 @@
 #include <vector>
 
 #include "faiss/BuilderSuspend.h"
-#include "hnswlib/hnswalg3.h"
+//#include "hnswlib/hnswalg3.h"
+//#include "hnswlib/hnswalg_faiss_sq8.h"
 #include "hnswlib/space_ip.h"
 #include "hnswlib/space_l2.h"
 #include "knowhere/common/Exception.h"
@@ -36,7 +37,6 @@ namespace knowhere {
 //     norm = 1.0f / (sqrtf(norm) + 1e-30f);
 //     for (int i = 0; i < dim; i++) norm_array[i] = data[i] * norm;
 // }
-
 BinarySet
 IndexHNSW::Serialize(const Config& config) {
     if (!index_) {
@@ -62,7 +62,7 @@ IndexHNSW::Load(const BinarySet& index_binary) {
         auto binary = index_binary.GetByName("HNSW");
 
         MemoryIOReader reader;
-        reader.total = binary->size;
+        reader.total = (size_t)binary->size;
         reader.data_ = binary->data.get();
 
         hnswlib::SpaceInterface<float>* space;
@@ -82,14 +82,15 @@ IndexHNSW::Train(const DatasetPtr& dataset_ptr, const Config& config) {
 
         hnswlib::SpaceInterface<float>* space;
         if (config[Metric::TYPE] == Metric::L2) {
-            space = new hnswlib::L2Space(dim);
+            space = new hnswlib::L2Space((size_t)dim);
         } else if (config[Metric::TYPE] == Metric::IP) {
-            space = new hnswlib::InnerProductSpace(dim);
+            space = new hnswlib::InnerProductSpace((size_t)dim);
             normalize = true;
+        } else {
+            space = nullptr;
         }
         index_ = std::make_shared<hnswlib::HierarchicalNSW<float>>(space, rows, config[IndexParams::M].get<int64_t>(),
                                                                    config[IndexParams::efConstruction].get<int64_t>());
-        std::cout << "hnsw index has already created" << std::endl;
     } catch (std::exception& e) {
         KNOWHERE_THROW_MSG(e.what());
     }
@@ -105,44 +106,14 @@ IndexHNSW::Add(const DatasetPtr& dataset_ptr, const Config& config) {
 
     GETTENSORWITHIDS(dataset_ptr)
 
-    std::chrono::high_resolution_clock::time_point ts, te;
-    ts = std::chrono::high_resolution_clock::now();
-    FILE *pf = fopen("/tmp/hnsw_raw_data.txt", "w");
-    fwrite(p_data, sizeof(float), (size_t)rows * dim, pf);
-    fclose(pf);
-    te = std::chrono::high_resolution_clock::now();
-    std::cout << "save raw data costs: " << std::chrono::duration_cast<std::chrono::milliseconds>(te - ts).count() << " ms" << std::endl;
-
-    //     if (normalize) {
-    //         std::vector<float> ep_norm_vector(Dim());
-    //         normalize_vector((float*)(p_data), ep_norm_vector.data(), Dim());
-    //         index_->addPoint((void*)(ep_norm_vector.data()), p_ids[0]);
-    // #pragma omp parallel for
-    //         for (int i = 1; i < rows; ++i) {
-    //             std::vector<float> norm_vector(Dim());
-    //             normalize_vector((float*)(p_data + Dim() * i), norm_vector.data(), Dim());
-    //             index_->addPoint((void*)(norm_vector.data()), p_ids[i]);
-    //         }
-    //     } else {
-    //         index_->addPoint((void*)(p_data), p_ids[0]);
-    // #pragma omp parallel for
-    //         for (int i = 1; i < rows; ++i) {
-    //             index_->addPoint((void*)(p_data + Dim() * i), p_ids[i]);
-    //         }
-    //     }
-
     auto base = index_->getCurrentElementCount();
-    std::cout << "start build hnsw index" << std::endl;
     auto pp_data = const_cast<void*>(p_data);
-    index_->addPoint(pp_data, p_ids[0], base, 0);
-    std::cout << "the first point add finished" << std::endl;
+    index_->addPoint(pp_data, p_ids[0], base, (size_t)0);
 #pragma omp parallel for
     for (int i = 1; i < rows; ++i) {
         faiss::BuilderSuspend::check_wait();
-//        index_->addPoint(((float*)p_data + Dim() * i), p_ids[i]);
-        index_->addPoint(pp_data, p_ids[i], base, i);
+        index_->addPoint(pp_data, p_ids[i], base, (size_t)i);
     }
-    std::cout << "HNSW.Add finished" << std::endl;
 }
 
 DatasetPtr
@@ -151,7 +122,7 @@ IndexHNSW::Query(const DatasetPtr& dataset_ptr, const Config& config) {
         KNOWHERE_THROW_MSG("index not initialize or trained");
     }
     GETTENSOR(dataset_ptr)
-    float *tmp_data = (float*)malloc(size_t(1000000) * 128 * sizeof(float));
+    auto *tmp_data = (float*)malloc(size_t(1000000) * 128 * sizeof(float));
 
     std::chrono::high_resolution_clock::time_point ts, te;
     ts = std::chrono::high_resolution_clock::now();
@@ -196,7 +167,7 @@ IndexHNSW::Query(const DatasetPtr& dataset_ptr, const Config& config) {
 
         if (normalize) {
             std::transform(ret.begin(), ret.end(), std::back_inserter(dist),
-                           [](const std::pair<float, int64_t>& e) { return float(1 - e.first); });
+                           [](const std::pair<float, int64_t>& e) { return (1 - e.first); });
         } else {
             std::transform(ret.begin(), ret.end(), std::back_inserter(dist),
                            [](const std::pair<float, int64_t>& e) { return e.first; });

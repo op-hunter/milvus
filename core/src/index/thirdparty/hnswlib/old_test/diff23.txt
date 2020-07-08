@@ -1,0 +1,182 @@
+11d10
+< //#include "/home/zilliz/workspace/dev/milvus/milvus/core/src/index/knowhere/knowhere/index/vector_index/helpers/FaissIO.h"
+46d44
+<         printf("init hnsw, data_size = %zu\n", data_size_);
+61,62c59,60
+<         size_data_per_element_ = size_links_level0_; // + data_size_ + sizeof(labeltype);
+< //        label_offset_ = size_links_level0_ + data_size_;
+---
+>         size_data_per_element_ = size_links_level0_; // + sizeof(labeltype); + data_size_;;
+> //        label_offset_ = size_links_level0_;
+182d179
+<     */
+184,186c181,184
+< //    inline char *getDataByInternalId(tableint internal_id) const {
+< //        return (data_level0_memory_ + internal_id * size_data_per_element_ + offsetData_);
+< //    }
+---
+>     inline char *getDataByInternalId(tableint internal_id) const {
+>         return (data_level0_memory_ + internal_id * size_data_per_element_ + offsetData_);
+>     }
+>     */
+188c186
+<     inline char *getDataById(void *pdata, tableint offset) const {
+---
+>     inline char *getDataByInternalId(void *pdata, tableint offset) const {
+209c207
+<             dist_t dist = fstdistfunc_(data_point, getDataById(pdata, ep_id), dist_func_param_);
+---
+>             dist_t dist = fstdistfunc_(data_point, getDataByInternalId(pdata, ep_id), dist_func_param_);
+242,243c240,241
+<             _mm_prefetch(getDataById(pdata, *datal), _MM_HINT_T0);
+<             _mm_prefetch(getDataById(pdata, *(datal + 1)), _MM_HINT_T0);
+---
+>             _mm_prefetch(getDataByInternalId(pdata, *datal), _MM_HINT_T0);
+>             _mm_prefetch(getDataByInternalId(pdata, *(datal + 1)), _MM_HINT_T0);
+251c249
+<                 _mm_prefetch(getDataById(pdata, *(datal + j + 1)), _MM_HINT_T0);
+---
+>                 _mm_prefetch(getDataByInternalId(pdata, *(datal + j + 1)), _MM_HINT_T0);
+255c253
+<                 char *currObj1 = (getDataById(pdata, candidate_id));
+---
+>                 char *currObj1 = (getDataByInternalId(pdata, candidate_id));
+261c259
+<                     _mm_prefetch(getDataById(pdata, candidateSet.top().second), _MM_HINT_T0);
+---
+>                     _mm_prefetch(getDataByInternalId(pdata, candidateSet.top().second), _MM_HINT_T0);
+293c291
+<             dist_t dist = fstdistfunc_(data_point, getDataById(pdata, ep_id), dist_func_param_);
+---
+>             dist_t dist = fstdistfunc_(data_point, getDataByInternalId(pdata, ep_id), dist_func_param_);
+321c319,320
+<             _mm_prefetch(getDataById(pdata, *(data + 1)), _MM_HINT_T0);
+---
+> //            _mm_prefetch(data_level0_memory_ + (*(data + 1)) * size_data_per_element_ + offsetData_, _MM_HINT_T0);
+>             _mm_prefetch(getDataByInternalId(pdata, *(data + 1)), _MM_HINT_T0);
+330c329
+<                 _mm_prefetch(getDataById(pdata, *(data + j + 1)),
+---
+>                 _mm_prefetch(getDataByInternalId(pdata, *(data + j + 1)),
+337c336
+<                     char *currObj1 = (getDataById(pdata, candidate_id));
+---
+>                     char *currObj1 = (getDataByInternalId(pdata, candidate_id));
+391,392c390,391
+<                         fstdistfunc_(getDataById(pdata, second_pair.second),
+<                                      getDataById(pdata, curent_pair.second),
+---
+>                         fstdistfunc_(getDataByInternalId(pdata, second_pair.second),
+>                                      getDataByInternalId(pdata, curent_pair.second),
+494c493
+<                 dist_t d_max = fstdistfunc_(getDataById(pdata, cur_c), getDataById(pdata, selectedNeighbors[idx]),
+---
+>                 dist_t d_max = fstdistfunc_(getDataByInternalId(pdata, cur_c), getDataByInternalId(pdata, selectedNeighbors[idx]),
+502c501
+<                             fstdistfunc_(getDataById(pdata, data[j]), getDataById(pdata, selectedNeighbors[idx]),
+---
+>                             fstdistfunc_(getDataByInternalId(pdata, data[j]), getDataByInternalId(pdata, selectedNeighbors[idx]),
+549c548
+<         dist_t curdist = fstdistfunc_(query_data, getDataById(pdata, enterpoint_node_), dist_func_param_);
+---
+>         dist_t curdist = fstdistfunc_(query_data, getDataByInternalId(pdata, enterpoint_node_), dist_func_param_);
+563c562
+<                     dist_t d = fstdistfunc_(query_data, getDataById(pdata, cand), dist_func_param_);
+---
+>                     dist_t d = fstdistfunc_(query_data, getDataByInternalId(pdata, cand), dist_func_param_);
+576c575
+<                                                                                                          ef_);
+---
+>                                                                                                          ef_, pdata);
+581c580
+<                                                                                                           ef_);
+---
+>                                                                                                           ef_, pdata);
+635c634
+< //        writeBinaryPOD(output, data_size_);
+---
+>         writeBinaryPOD(output, data_size_);
+637a637
+> //        writeBinaryPOD(output, offsetLevel0_);
+667c667
+< //        readBinaryPOD(input, data_size_);
+---
+>         readBinaryPOD(input, data_size_);
+678a679
+> //        readBinaryPOD(input, offsetLevel0_);
+699,700c700
+<         data_size_ = space->get_data_size();
+<         printf("load index of hnsw, data_size = %zu\n", data_size_);
+---
+>         // data_size_ = s->get_data_size();
+790a791
+> //        writeBinaryPOD(output, offsetLevel0_);
+826a828
+> //        readBinaryPOD(input, offsetLevel0_);
+924a927
+>     /*
+934c937
+<         char* data_ptrv = getDataById(pdata, internal_id);
+---
+>         char* data_ptrv = getDataByInternalId(pdata, internal_id);
+943a947
+>     */
+999,1000c1003,1004
+<     void addPoint(void *data_point, labeltype label) {
+<         addPoint(data_point, label,-1);
+---
+>     size_t getCurrentElementCount() {
+>         return cur_element_count;
+1003c1007,1011
+<     tableint addPoint(void *data_point, labeltype label, int level) {
+---
+>     void addPoint(void *data_point, labeltype label, size_t base, size_t offset) {
+>         addPoint(data_point, label,-1, base, offset);
+>     }
+> 
+>     tableint addPoint(void *data_point, labeltype label, int level, size_t base, size_t offset) {
+1012c1020
+<             cur_c = tableint(label);
+---
+>             cur_c = tableint(base + offset);
+1071c1079
+<                 dist_t curdist = fstdistfunc_(getDataById(data_point, (tableint)label), getDataById(data_point, currObj), dist_func_param_);
+---
+>                 dist_t curdist = fstdistfunc_(getDataByInternalId(data_point, (tableint)offset), getDataByInternalId(data_point, currObj), dist_func_param_);
+1086c1094
+<                             dist_t d = fstdistfunc_(getDataById(data_point, (tableint)label), getDataById(data_point, cand), dist_func_param_);
+---
+>                             dist_t d = fstdistfunc_(getDataByInternalId(data_point, tableint(offset)), getDataByInternalId(data_point, cand), dist_func_param_);
+1103c1111
+<                         currObj, getDataById(data_point, (tableint)label), level, data_point);
+---
+>                         currObj, getDataByInternalId(data_point, (tableint)offset), level, data_point);
+1105c1113
+<                     top_candidates.emplace(fstdistfunc_(getDataById(data_point, (tableint)label), getDataById(data_point, enterpoint_copy), dist_func_param_), enterpoint_copy);
+---
+>                     top_candidates.emplace(fstdistfunc_(getDataByInternalId(data_point, (tableint)offset), getDataByInternalId(data_point, enterpoint_copy), dist_func_param_), enterpoint_copy);
+1111c1119
+<                 mutuallyConnectNewElement(getDataById(data_point, (tableint)label), cur_c, top_candidates, level, data_point);
+---
+>                 mutuallyConnectNewElement(getDataByInternalId(data_point, (tableint)offset), cur_c, top_candidates, level, data_point);
+1133c1141
+<         dist_t curdist = fstdistfunc_(query_data, getDataById(pdata, enterpoint_node_), dist_func_param_);
+---
+>         dist_t curdist = fstdistfunc_(query_data, getDataByInternalId(pdata, enterpoint_node_), dist_func_param_);
+1148c1156
+<                     dist_t d = fstdistfunc_(query_data, getDataById(pdata, cand), dist_func_param_);
+---
+>                     dist_t d = fstdistfunc_(query_data, getDataByInternalId(pdata, cand), dist_func_param_);
+1170,1172d1177
+< 
+< //        std::vector<std::pair<dist_t, labeltype >> output;
+< //        printf("top %d:\n", ef_);
+1174d1178
+< //            output.push_back(top_candidates.top());
+1177,1182d1180
+< //        using P = std::pair<float, int64_t>;
+< //        std::sort(output.begin(), output.end(), [](const P &v1, const P &v2) { return v1.first < v2.first; });
+< //        for (auto p : output) {
+< //            printf("(%f, %d) ", p.first, p.second);
+< //        }
+< //        printf("\n");

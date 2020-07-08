@@ -29,6 +29,7 @@
 
 #include <string.h>
 #include <faiss/utils/ConcurrentBitset.h>
+//#include "/home/zilliz/workspace/dev/milvus/milvus/core/src/index/thirdparty/faiss/utils/ConcurrentBitset.h"
 
 namespace hnswlib {
     typedef int64_t labeltype;
@@ -98,4 +99,6 @@ namespace hnswlib {
 #include "space_l2.h"
 #include "space_ip.h"
 #include "bruteforce.h"
-#include "hnswalg_sq8.h"
+#include "hnswalg_faiss_sq8.h"
+//#include "hnswalg_sq8.h"
+//#include "hnswalg3.h"

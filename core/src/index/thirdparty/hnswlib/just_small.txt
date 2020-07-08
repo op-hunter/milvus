@@ -1,0 +1,21 @@
+start load sift data ...
+dim: 3, rows: 100
+load data costs: 0ms 
+the first vector: 
+0 1 2 
+the last vector: 
+297 298 299 
+max level: 1
+94 6 0 0 0 0 0 0 0 0 
+build index costs: 1ms 
+the 1th query result: dist = 0, id = 0
+the 2th query result: dist = 0, id = 1
+the 3th query result: dist = 0, id = 2
+the 4th query result: dist = 0, id = 3
+the 5th query result: dist = 0, id = 4
+query 5 times costs: 0ms 
+correct rate: 5% 
+hnsw index total malloc 19018 bytes
+cmli_cnt: 1
+effective cmli_cnt: 1
+cmli_time: 0.000ms, cmli_avg_time: 0.000ms

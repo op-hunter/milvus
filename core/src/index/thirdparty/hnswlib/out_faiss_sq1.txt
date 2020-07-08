@@ -1,0 +1,116 @@
+start load sift data ...
+dim: 128, rows: 1000000
+load data costs: 149ms 
+the first vector: 
+0 16 35 5 32 31 14 10 11 78 55 10 45 83 11 6 14 57 102 75 20 8 3 5 67 17 19 26 5 0 1 22 60 26 7 1 18 22 84 53 85 119 119 4 24 18 7 7 1 81 106 102 72 30 6 0 9 1 9 119 72 1 4 33 119 29 6 1 0 1 14 52 119 30 3 0 0 55 92 111 2 5 4 9 22 89 96 14 1 0 1 82 59 16 20 5 25 14 11 4 0 0 1 26 47 23 4 0 0 4 38 83 30 14 9 4 9 17 23 41 0 0 2 8 19 25 23 1 
+the last vector: 
+114 31 0 0 0 0 0 10 129 48 5 13 13 0 0 7 0 23 62 41 51 8 2 0 0 44 78 2 1 3 3 0 103 45 14 1 3 8 5 43 129 28 2 8 4 3 6 98 2 15 37 18 6 12 28 8 2 9 23 2 0 37 45 4 69 4 4 0 5 44 43 41 129 1 0 0 0 34 65 129 2 0 0 0 0 129 129 13 0 0 4 4 3 129 129 2 18 19 10 0 2 10 12 10 35 5 0 0 0 37 117 57 33 37 18 1 0 74 88 3 4 16 66 31 3 25 16 0 
+max level: 5
+936980 59126 3626 234 12 1 0 0 0 0 
+build index costs: 24843ms 
+the 1th query result: dist = 5.5347, id = 214417
+the 2th query result: dist = 136086, id = 214417
+the 3th query result: dist = 18782.3, id = 214417
+the 4th query result: dist = 146664, id = 214417
+the 5th query result: dist = 77560.1, id = 214417
+the 6th query result: dist = 178106, id = 214417
+the 7th query result: dist = 24360.2, id = 214417
+the 8th query result: dist = 110891, id = 214417
+the 9th query result: dist = 86088.9, id = 214417
+the 10th query result: dist = 111623, id = 214417
+the 11th query result: dist = 90442.4, id = 214417
+the 12th query result: dist = 137051, id = 214417
+the 13th query result: dist = 104479, id = 214417
+the 14th query result: dist = 200954, id = 214417
+the 15th query result: dist = 142626, id = 214417
+the 16th query result: dist = 146774, id = 214417
+the 17th query result: dist = 92640, id = 214417
+the 18th query result: dist = 157243, id = 214417
+the 19th query result: dist = 87643.7, id = 214417
+the 20th query result: dist = 126503, id = 214417
+the 21th query result: dist = 91096.8, id = 214417
+the 22th query result: dist = 110636, id = 214417
+the 23th query result: dist = 386493, id = 214417
+the 24th query result: dist = 144984, id = 214417
+the 25th query result: dist = 399896, id = 214417
+the 26th query result: dist = 415894, id = 214417
+the 27th query result: dist = 427177, id = 214417
+the 28th query result: dist = 132635, id = 214417
+the 29th query result: dist = 184788, id = 214417
+the 30th query result: dist = 91080.8, id = 214417
+the 31th query result: dist = 113646, id = 214417
+the 32th query result: dist = 121677, id = 214417
+the 33th query result: dist = 150453, id = 214417
+the 34th query result: dist = 207898, id = 214417
+the 35th query result: dist = 432333, id = 214417
+the 36th query result: dist = 373572, id = 214417
+the 37th query result: dist = 461364, id = 214417
+the 38th query result: dist = 423802, id = 214417
+the 39th query result: dist = 363709, id = 214417
+the 40th query result: dist = 371373, id = 214417
+the 41th query result: dist = 432839, id = 214417
+the 42th query result: dist = 372466, id = 214417
+the 43th query result: dist = 380638, id = 214417
+the 44th query result: dist = 402470, id = 214417
+the 45th query result: dist = 459462, id = 214417
+the 46th query result: dist = 417764, id = 214417
+the 47th query result: dist = 449258, id = 214417
+the 48th query result: dist = 402913, id = 214417
+the 49th query result: dist = 458304, id = 214417
+the 50th query result: dist = 417985, id = 214417
+the 51th query result: dist = 132116, id = 214417
+the 52th query result: dist = 146298, id = 214417
+the 53th query result: dist = 134827, id = 214417
+the 54th query result: dist = 129587, id = 214417
+the 55th query result: dist = 134625, id = 214417
+the 56th query result: dist = 172811, id = 214417
+the 57th query result: dist = 112819, id = 214417
+the 58th query result: dist = 91214.9, id = 214417
+the 59th query result: dist = 117925, id = 214417
+the 60th query result: dist = 101851, id = 214417
+the 61th query result: dist = 111135, id = 214417
+the 62th query result: dist = 99101, id = 214417
+the 63th query result: dist = 108115, id = 214417
+the 64th query result: dist = 183575, id = 214417
+the 65th query result: dist = 169589, id = 214417
+the 66th query result: dist = 166761, id = 214417
+the 67th query result: dist = 117973, id = 214417
+the 68th query result: dist = 450805, id = 214417
+the 69th query result: dist = 411937, id = 214417
+the 70th query result: dist = 142798, id = 214417
+the 71th query result: dist = 101879, id = 214417
+the 72th query result: dist = 145693, id = 214417
+the 73th query result: dist = 180644, id = 214417
+the 74th query result: dist = 80524.8, id = 214417
+the 75th query result: dist = 81894.1, id = 214417
+the 76th query result: dist = 104964, id = 214417
+the 77th query result: dist = 376624, id = 214417
+the 78th query result: dist = 114813, id = 214417
+the 79th query result: dist = 89061.5, id = 214417
+the 80th query result: dist = 104278, id = 214417
+the 81th query result: dist = 459628, id = 214417
+the 82th query result: dist = 416707, id = 214417
+the 83th query result: dist = 170099, id = 214417
+the 84th query result: dist = 408261, id = 214417
+the 85th query result: dist = 383450, id = 214417
+the 86th query result: dist = 105760, id = 214417
+the 87th query result: dist = 102444, id = 214417
+the 88th query result: dist = 327820, id = 214417
+the 89th query result: dist = 131243, id = 214417
+the 90th query result: dist = 129436, id = 214417
+the 91th query result: dist = 183689, id = 214417
+the 92th query result: dist = 121472, id = 214417
+the 93th query result: dist = 130348, id = 214417
+the 94th query result: dist = 417950, id = 214417
+the 95th query result: dist = 415187, id = 214417
+the 96th query result: dist = 357451, id = 214417
+the 97th query result: dist = 404331, id = 214417
+the 98th query result: dist = 407462, id = 214417
+the 99th query result: dist = 460213, id = 214417
+the 100th query result: dist = 417607, id = 214417
+query 100 times costs: 12ms 
+correct rate: 0% 
+hnsw index total malloc 190628047 bytes
+cmli_cnt: 119147
+effective cmli_cnt: 119151
+cmli_time: 28.000ms, cmli_avg_time: 0.000ms
