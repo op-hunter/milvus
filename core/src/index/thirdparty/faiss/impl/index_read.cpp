@@ -45,10 +45,11 @@
 #include <faiss/IndexBinaryIVF.h>
 #include <faiss/IndexBinaryHash.h>
 
+#include </home/zilliz/workspace/dev/milvus/milvus/core/src/metrics/SystemInfo.h>
 
 
 namespace faiss {
-
+using namespace milvus;
 /*************************************************************
  * I/O macros
  *
@@ -439,6 +440,9 @@ static ArrayInvertedLists *set_array_invlist(
 
 static IndexIVFPQ *read_ivfpq (IOReader *f, uint32_t h, int io_flags)
 {
+    auto used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("enter read_ivfpq\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     bool legacy = h == fourcc ("IvQR") || h == fourcc ("IvPQ");
 
     IndexIVFPQR *ivfpqr =
@@ -448,9 +452,21 @@ static IndexIVFPQ *read_ivfpq (IOReader *f, uint32_t h, int io_flags)
 
     std::vector<std::vector<Index::idx_t> > ids;
     read_ivf_header (ivpq, f, legacy ? &ids : nullptr);
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("after read_ivf_header\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     READ1 (ivpq->by_residual);
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("after READ1(ivpq->by_residual)\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     READ1 (ivpq->code_size);
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("after READ1(ivpq->code_size)\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     read_ProductQuantizer (&ivpq->pq, f);
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("after read_ProductQuantizer (&ivpq->pq, f)\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
 
     if (legacy) {
         ArrayInvertedLists *ail = set_array_invlist (ivpq, ids);
@@ -458,19 +474,39 @@ static IndexIVFPQ *read_ivfpq (IOReader *f, uint32_t h, int io_flags)
             READVECTOR (ail->codes[i]);
     } else {
         read_InvertedLists (ivpq, f, io_flags);
+        used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+        printf("after read_InvertedLists (ivpq, f, io_flags)\n");
+        printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     }
 
     if (ivpq->is_trained) {
         // precomputed table not stored. It is cheaper to recompute it
         ivpq->use_precomputed_table = 0;
         if (ivpq->by_residual)
+        {
             ivpq->precompute_table ();
+            used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+            printf("after ivpq->precompute_table ()\n");
+            printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
+        }
         if (ivfpqr) {
             read_ProductQuantizer (&ivfpqr->refine_pq, f);
+            used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+            printf("after read_ProductQuantizer (&ivfpqr->refine_pq, f)\n");
+            printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
             READVECTOR (ivfpqr->refine_codes);
+            used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+            printf("after READVECTOR (ivfpqr->refine_codes)\n");
+            printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
             READ1 (ivfpqr->k_factor);
+            used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+            printf("after READ1 (ivfpqr->k_factor)\n");
+            printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
         }
     }
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("before return read_ivfpq\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     return ivpq;
 }
 
@@ -478,9 +514,11 @@ int read_old_fmt_hack = 0;
 
 Index *read_index (IOReader *f, int io_flags) {
     Index * idx = nullptr;
+    printf("enter read_index\n");
     uint32_t h;
     READ1 (h);
     if (h == fourcc ("IxFI") || h == fourcc ("IxF2") || h == fourcc("IxFl")) {
+        printf("1\n");
         IndexFlat *idxf;
         if (h == fourcc ("IxFI")) {
             idxf = new IndexFlatIP ();
@@ -490,11 +528,18 @@ Index *read_index (IOReader *f, int io_flags) {
             idxf = new IndexFlat ();
         }
         read_index_header (idxf, f);
+        auto used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+        printf("read_index_header (idxf, f)\n");
+        printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
         READVECTOR (idxf->xb);
+        used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+        printf("READVECTOR (idxf->xb)\n");
+        printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
         FAISS_THROW_IF_NOT (idxf->xb.size() == idxf->ntotal * idxf->d);
         // leak!
         idx = idxf;
     } else if (h == fourcc("IxHE") || h == fourcc("IxHe")) {
+        printf("2\n");
         IndexLSH * idxl = new IndexLSH ();
         read_index_header (idxl, f);
         READ1 (idxl->nbits);
@@ -526,6 +571,7 @@ Index *read_index (IOReader *f, int io_flags) {
     } else if (h == fourcc ("IxPQ") || h == fourcc ("IxPo") ||
                h == fourcc ("IxPq")) {
         // IxPQ and IxPo were merged into the same IndexPQ object
+        printf("3\n");
         IndexPQ * idxp =new IndexPQ ();
         read_index_header (idxp, f);
         read_ProductQuantizer (&idxp->pq, f);
@@ -543,6 +589,7 @@ Index *read_index (IOReader *f, int io_flags) {
         }
         idx = idxp;
     } else if (h == fourcc ("IvFl") || h == fourcc("IvFL")) { // legacy
+        printf("4\n");
         IndexIVFFlat * ivfl = new IndexIVFFlat ();
         std::vector<std::vector<Index::idx_t> > ids;
         read_ivf_header (ivfl, f, &ids);
@@ -564,6 +611,7 @@ Index *read_index (IOReader *f, int io_flags) {
         }
         idx = ivfl;
     } else if (h == fourcc ("IwFd")) {
+        printf("5\n");
         IndexIVFFlatDedup * ivfl = new IndexIVFFlatDedup ();
         read_ivf_header (ivfl, f);
         ivfl->code_size = ivfl->d * sizeof(float);
@@ -579,12 +627,14 @@ Index *read_index (IOReader *f, int io_flags) {
         read_InvertedLists (ivfl, f, io_flags);
         idx = ivfl;
     } else if (h == fourcc ("IwFl")) {
+        printf("6\n");
         IndexIVFFlat * ivfl = new IndexIVFFlat ();
         read_ivf_header (ivfl, f);
         ivfl->code_size = ivfl->d * sizeof(float);
         read_InvertedLists (ivfl, f, io_flags);
         idx = ivfl;
     } else if (h == fourcc ("IxSQ")) {
+        printf("7\n");
         IndexScalarQuantizer * idxs = new IndexScalarQuantizer ();
         read_index_header (idxs, f);
         read_ScalarQuantizer (&idxs->sq, f);
@@ -592,6 +642,7 @@ Index *read_index (IOReader *f, int io_flags) {
         idxs->code_size = idxs->sq.code_size;
         idx = idxs;
     } else if (h == fourcc ("IxLa")) {
+        printf("8\n");
         int d, nsq, scale_nbit, r2;
         READ1 (d);
         READ1 (nsq);
@@ -602,6 +653,7 @@ Index *read_index (IOReader *f, int io_flags) {
         READVECTOR (idxl->trained);
         idx = idxl;
     } else if(h == fourcc ("IvSQ")) { // legacy
+        printf("9\n");
         IndexIVFScalarQuantizer * ivsc = new IndexIVFScalarQuantizer();
         std::vector<std::vector<Index::idx_t> > ids;
         read_ivf_header (ivsc, f, &ids);
@@ -612,6 +664,7 @@ Index *read_index (IOReader *f, int io_flags) {
             READVECTOR (ail->codes[i]);
         idx = ivsc;
     } else if(h == fourcc ("IwSQ") || h == fourcc ("IwSq")) {
+        printf("10\n");
         IndexIVFScalarQuantizer * ivsc = new IndexIVFScalarQuantizer();
         read_ivf_header (ivsc, f);
         read_ScalarQuantizer (&ivsc->sq, f);
@@ -624,6 +677,7 @@ Index *read_index (IOReader *f, int io_flags) {
         read_InvertedLists (ivsc, f, io_flags);
         idx = ivsc;
     } else if (h == fourcc("ISqH")) {
+        printf("11\n");
         IndexIVFSQHybrid *ivfsqhbyrid = new IndexIVFSQHybrid();
         read_ivf_header(ivfsqhbyrid, f);
         read_ScalarQuantizer(&ivfsqhbyrid->sq, f);
@@ -632,6 +686,7 @@ Index *read_index (IOReader *f, int io_flags) {
         read_InvertedLists(ivfsqhbyrid, f, io_flags);
         idx = ivfsqhbyrid;
     } else if(h == fourcc ("IwSh")) {
+        printf("12\n");
         IndexIVFSpectralHash *ivsp = new IndexIVFSpectralHash ();
         read_ivf_header (ivsp, f);
         ivsp->vt = read_VectorTransform (f);
@@ -646,10 +701,12 @@ Index *read_index (IOReader *f, int io_flags) {
         idx = ivsp;
     } else if(h == fourcc ("IvPQ") || h == fourcc ("IvQR") ||
               h == fourcc ("IwPQ") || h == fourcc ("IwQR")) {
+        printf("13\n");
 
         idx = read_ivfpq (f, h, io_flags);
 
     } else if(h == fourcc ("IxPT")) {
+        printf("14\n");
         IndexPreTransform * ixpt = new IndexPreTransform();
         ixpt->own_fields = true;
         read_index_header (ixpt, f);
@@ -665,11 +722,13 @@ Index *read_index (IOReader *f, int io_flags) {
         ixpt->index = read_index (f, io_flags);
         idx = ixpt;
     } else if(h == fourcc ("Imiq")) {
+        printf("15\n");
         MultiIndexQuantizer * imiq = new MultiIndexQuantizer ();
         read_index_header (imiq, f);
         read_ProductQuantizer (&imiq->pq, f);
         idx = imiq;
     } else if(h == fourcc ("IxRF")) {
+        printf("16\n");
         IndexRefineFlat *idxrf = new IndexRefineFlat ();
         read_index_header (idxrf, f);
         idxrf->base_index = read_index(f, io_flags);
@@ -680,6 +739,7 @@ Index *read_index (IOReader *f, int io_flags) {
         READ1 (idxrf->k_factor);
         idx = idxrf;
     } else if(h == fourcc ("IxMp") || h == fourcc ("IxM2")) {
+        printf("17\n");
         bool is_map2 = h == fourcc ("IxM2");
         IndexIDMap * idxmap = is_map2 ? new IndexIDMap2 () : new IndexIDMap ();
         read_index_header (idxmap, f);
@@ -691,6 +751,7 @@ Index *read_index (IOReader *f, int io_flags) {
         }
         idx = idxmap;
     } else if (h == fourcc ("Ix2L")) {
+        printf("18\n");
         Index2Layer * idxp = new Index2Layer ();
         read_index_header (idxp, f);
         idxp->q1.quantizer = read_index (f, io_flags);
@@ -704,6 +765,7 @@ Index *read_index (IOReader *f, int io_flags) {
         idx = idxp;
     } else if(h == fourcc("IHNf") || h == fourcc("IHNp") ||
               h == fourcc("IHNs") || h == fourcc("IHN2")) {
+        printf("19\n");
         IndexHNSW *idxhnsw = nullptr;
         if (h == fourcc("IHNf")) idxhnsw = new IndexHNSWFlat ();
         if (h == fourcc("IHNp")) idxhnsw = new IndexHNSWPQ ();
@@ -721,6 +783,7 @@ Index *read_index (IOReader *f, int io_flags) {
         FAISS_THROW_FMT("Index type 0x%08x not supported\n", h);
         idx = nullptr;
     }
+    printf("return read_index\n");
     return idx;
 }
 

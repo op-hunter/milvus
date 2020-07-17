@@ -433,6 +433,10 @@ DBImpl::PreloadCollection(const std::shared_ptr<server::Context>& context, const
         return SHUTDOWN_ERROR;
     }
 
+    printf("DBImpl::PreloadCollection entered\n");
+    printf("=================================================grogeous dividing line=============================================\n");
+    auto used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     // step 1: get all collection files from parent collection
     meta::FilesHolder files_holder;
 #if 0
@@ -472,12 +476,16 @@ DBImpl::PreloadCollection(const std::shared_ptr<server::Context>& context, const
     int64_t cache_usage = cache::CpuCacheMgr::GetInstance()->CacheUsage();
     int64_t available_size = cache_total - cache_usage;
 
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("before step 3, after FilesToSearchEx, current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     // step 3: load file one by one
     milvus::engine::meta::SegmentsSchema& files_array = files_holder.HoldFiles();
     LOG_ENGINE_DEBUG_ << "Begin pre-load collection:" + collection_id + ", totally " << files_array.size()
                       << " files need to be pre-loaded";
     TimeRecorderAuto rc("Pre-load collection:" + collection_id);
+    int file_cnt = 0;
     for (auto& file : files_array) {
+        file_cnt ++;
         // client break the connection, no need to continue
         if (context && context->IsConnectionBroken()) {
             LOG_ENGINE_DEBUG_ << "Client connection broken, stop load collection";
@@ -497,6 +505,8 @@ DBImpl::PreloadCollection(const std::shared_ptr<server::Context>& context, const
         auto json = milvus::json::parse(file.index_params_);
         ExecutionEnginePtr engine =
             EngineFactory::Build(file.dimension_, file.location_, engine_type, (MetricType)file.metric_type_, json);
+        used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+        printf("the %d th file EngineFactory::Build finish, current process cost memory: %ld B, %.2f MB, %.2f GB.\n", file_cnt, used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
         fiu_do_on("DBImpl.PreloadCollection.null_engine", engine = nullptr);
         if (engine == nullptr) {
             LOG_ENGINE_ERROR_ << "Invalid engine type";
@@ -510,11 +520,14 @@ DBImpl::PreloadCollection(const std::shared_ptr<server::Context>& context, const
             std::string msg = "Pre-loaded file: " + file.file_id_ + " size: " + std::to_string(file.file_size_);
             TimeRecorderAuto rc_1(msg);
             status = engine->Load(true);
+            used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+            printf("the %d th file engine->Load(true) finish, current process cost memory: %ld B, %.2f MB, %.2f GB.\n", file_cnt, used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
             if (!status.ok()) {
                 return status;
             }
 
             size += engine->Size();
+            printf("current engine->Size(): %ld, current size: %ld\n", engine->Size(), size);
             if (!force && size > available_size) {
                 LOG_ENGINE_DEBUG_ << "Pre-load cancelled since cache is almost full";
                 return Status(SERVER_CACHE_FULL, "Cache is full");
@@ -524,8 +537,13 @@ DBImpl::PreloadCollection(const std::shared_ptr<server::Context>& context, const
             LOG_ENGINE_ERROR_ << msg;
             return Status(DB_ERROR, msg);
         }
+        used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+        printf("the %d th file loaded, current process cost memory: %ld B, %.2f MB, %.2f GB.\n", file_cnt, used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     }
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("before PreloadCollection return, current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
 
+    printf("=================================================grogeous dividing line=============================================\n");
     return Status::OK();
 }
 

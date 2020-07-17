@@ -124,6 +124,9 @@ ExecutionEngineImpl::ExecutionEngineImpl(uint16_t dimension, const std::string& 
     EngineType tmp_index_type =
         utils::IsBinaryMetricType((int32_t)metric_type) ? EngineType::FAISS_BIN_IDMAP : EngineType::FAISS_IDMAP;
     index_ = CreatetVecIndex(tmp_index_type);
+    auto used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("enter ExecutionEngineImpl::ExecutionEngineImpl, after CreatetVecIndex\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     if (!index_) {
         throw Exception(DB_ERROR, "Unsupported index type");
     }
@@ -144,6 +147,9 @@ ExecutionEngineImpl::ExecutionEngineImpl(uint16_t dimension, const std::string& 
     } else if (auto bf_bin_index = std::dynamic_pointer_cast<knowhere::BinaryIDMAP>(index_)) {
         bf_bin_index->Train(knowhere::DatasetPtr(), conf);
     }
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("before return ExecutionEngineImpl::ExecutionEngineImpl\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
 }
 
 ExecutionEngineImpl::ExecutionEngineImpl(knowhere::VecIndexPtr index, const std::string& location,
@@ -380,6 +386,9 @@ ExecutionEngineImpl::Serialize() {
 
 Status
 ExecutionEngineImpl::Load(bool to_cache) {
+    auto used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("enter ExecutionEngineImpl::Load\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     index_ = std::static_pointer_cast<knowhere::VecIndex>(cache::CpuCacheMgr::GetInstance()->GetIndex(location_));
     bool already_in_cache = (index_ != nullptr);
     if (!already_in_cache) {
@@ -389,6 +398,7 @@ ExecutionEngineImpl::Load(bool to_cache) {
         knowhere::VecIndexFactory& vec_index_factory = knowhere::VecIndexFactory::GetInstance();
 
         if (utils::IsRawIndexType((int32_t)index_type_)) {
+            printf("enter is raw index type fenzhi\n");
             if (index_type_ == EngineType::FAISS_IDMAP) {
                 index_ = vec_index_factory.CreateVecIndex(knowhere::IndexEnum::INDEX_FAISS_IDMAP);
             } else {
@@ -455,6 +465,9 @@ ExecutionEngineImpl::Load(bool to_cache) {
                 segment::SegmentPtr segment_ptr;
                 segment_reader_ptr->GetSegment(segment_ptr);
                 auto status = segment_reader_ptr->LoadVectorIndex(location_, segment_ptr->vector_index_ptr_);
+                used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+                printf("after segment_reader_ptr->LoadVectorIndex\n");
+                printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
                 index_ = segment_ptr->vector_index_ptr_->GetVectorIndex();
 
                 if (index_ == nullptr) {
@@ -474,6 +487,9 @@ ExecutionEngineImpl::Load(bool to_cache) {
                     }
                     segment::DeletedDocsPtr deleted_docs_ptr;
                     auto status = segment_reader_ptr->LoadDeletedDocs(deleted_docs_ptr);
+                    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+                    printf("after segment_reader_ptr->LoadDeletedDocs\n");
+                    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
                     if (!status.ok()) {
                         std::string msg = "Failed to load deleted docs from " + location_;
                         LOG_ENGINE_ERROR_ << msg;
@@ -488,11 +504,17 @@ ExecutionEngineImpl::Load(bool to_cache) {
                             concurrent_bitset_ptr->set(offset);
                         }
                     }
+                    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+                    printf("after std::make_shared<faiss::ConcurrentBitset>, index_->Count() = %ld\n", index_->Count());
+                    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
 
                     index_->SetBlacklist(concurrent_bitset_ptr);
 
                     std::vector<segment::doc_id_t> uids;
                     segment_reader_ptr->LoadUids(uids);
+                    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+                    printf("after segment_reader_ptr->LoadUids\n");
+                    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
                     index_->SetUids(uids);
                     LOG_ENGINE_DEBUG_ << "set uids " << index_->GetUids().size() << " for index " << location_;
 
@@ -506,7 +528,13 @@ ExecutionEngineImpl::Load(bool to_cache) {
     }
 
     if (!already_in_cache && to_cache) {
+        auto used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+        printf("enter if, before Cache()\n");
+        printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
         Cache();
+        used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+        printf("enter if, after Cache()\n");
+        printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     }
     return Status::OK();
 }  // namespace engine

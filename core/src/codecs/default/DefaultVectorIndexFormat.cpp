@@ -17,6 +17,7 @@
 
 #include <boost/filesystem.hpp>
 #include <memory>
+#include <src/metrics/SystemInfo.h>
 
 #include "codecs/default/DefaultVectorIndexFormat.h"
 #include "knowhere/common/BinarySet.h"
@@ -32,6 +33,9 @@ namespace codec {
 
 knowhere::VecIndexPtr
 DefaultVectorIndexFormat::read_internal(const storage::FSHandlerPtr& fs_ptr, const std::string& path) {
+    auto used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("enter DefaultVectorIndexFormat::read_internal\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     milvus::TimeRecorder recorder("read_index");
     knowhere::BinarySet load_data_list;
 
@@ -73,6 +77,7 @@ DefaultVectorIndexFormat::read_internal(const storage::FSHandlerPtr& fs_ptr, con
         fs_ptr->reader_ptr_->seekg(rp);
 
         auto bin = new uint8_t[bin_length];
+        printf("bin_length = %ld B, %.2f MB, %.2f GB\n", bin_length, (double)bin_length/1024/1024, (double)bin_length/1024/1024/1024);
         fs_ptr->reader_ptr_->read(bin, bin_length);
         rp += bin_length;
         fs_ptr->reader_ptr_->seekg(rp);
@@ -82,6 +87,9 @@ DefaultVectorIndexFormat::read_internal(const storage::FSHandlerPtr& fs_ptr, con
         delete[] meta;
     }
     fs_ptr->reader_ptr_->close();
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("after fs_ptr->reader_ptr\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
 
     double span = recorder.RecordSection("End");
     double rate = length * 1000000.0 / span / 1024 / 1024;
@@ -90,6 +98,9 @@ DefaultVectorIndexFormat::read_internal(const storage::FSHandlerPtr& fs_ptr, con
     knowhere::VecIndexFactory& vec_index_factory = knowhere::VecIndexFactory::GetInstance();
     auto index =
         vec_index_factory.CreateVecIndex(knowhere::OldIndexTypeToStr(current_type), knowhere::IndexMode::MODE_CPU);
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("before index->Load\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     if (index != nullptr) {
         index->Load(load_data_list);
         index->SetIndexSize(length);
@@ -97,6 +108,9 @@ DefaultVectorIndexFormat::read_internal(const storage::FSHandlerPtr& fs_ptr, con
         LOG_ENGINE_ERROR_ << "Fail to create vector index: " << path;
     }
 
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("before return DefaultVectorIndexFormat::read_internal\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     return index;
 }
 

@@ -13,6 +13,7 @@
 
 #include <memory>
 #include <utility>
+#include <src/cache/CpuCacheMgr.h>
 
 #include "knowhere/index/vector_index/IndexIVF.h"
 
@@ -23,10 +24,29 @@ class IVFPQ : public IVF {
  public:
     IVFPQ() : IVF() {
         index_type_ = IndexEnum::INDEX_FAISS_IVFPQ;
+        printf("in IndexIVFPQ non-parameter constructor, current memory info:\n");
+        auto used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+        printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
+        cache::CpuCacheMgr::GetInstance()->PrintInfo();
+        printf("------------------------gorgeous dividing line------------------------------\n");
     }
 
     explicit IVFPQ(std::shared_ptr<faiss::Index> index) : IVF(std::move(index)) {
         index_type_ = IndexEnum::INDEX_FAISS_IVFPQ;
+        printf("in IndexIVFPQ parameter constructor, current memory info:\n");
+        auto used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+        printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
+        cache::CpuCacheMgr::GetInstance()->PrintInfo();
+        printf("------------------------gorgeous dividing line------------------------------\n");
+    }
+
+    ~IVFPQ() {
+        printf("IndexIVFPQ deconstructed.\n");
+        printf("current memory info:\n");
+        auto used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+        printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
+        cache::CpuCacheMgr::GetInstance()->PrintInfo();
+        printf("------------------------gorgeous dividing line------------------------------\n");
     }
 
     void

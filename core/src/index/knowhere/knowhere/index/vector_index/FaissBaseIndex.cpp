@@ -11,6 +11,7 @@
 
 #include <faiss/index_io.h>
 #include <fiu-local.h>
+#include <src/metrics/SystemInfo.h>
 
 #include "knowhere/common/Exception.h"
 #include "knowhere/index/vector_index/FaissBaseIndex.h"
@@ -41,6 +42,9 @@ FaissBaseIndex::SerializeImpl(const IndexType& type) {
 
 void
 FaissBaseIndex::LoadImpl(const BinarySet& binary_set, const IndexType& type) {
+    auto used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("enter FaissBaseIndex::LoadImpl\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     auto binary = binary_set.GetByName("IVF");
 
     MemoryIOReader reader;
@@ -48,9 +52,15 @@ FaissBaseIndex::LoadImpl(const BinarySet& binary_set, const IndexType& type) {
     reader.data_ = binary->data.get();
 
     faiss::Index* index = faiss::read_index(&reader);
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("after faiss::read_index\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     index_.reset(index);
 
     SealImpl();
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("after SealImpl(), before return FaissBaseIndex::LoadImpl\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
 }
 
 }  // namespace knowhere

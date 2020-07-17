@@ -29,6 +29,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <src/metrics/SystemInfo.h>
 
 #include "faiss/BuilderSuspend.h"
 #include "knowhere/common/Exception.h"
@@ -322,10 +323,17 @@ IVF::QueryImpl(int64_t n, const float* data, int64_t k, float* distances, int64_
                         << ", data search cost: " << faiss::indexIVF_stats.search_time;
     faiss::indexIVF_stats.quantization_time = 0;
     faiss::indexIVF_stats.search_time = 0;
+    printf("index type: %s query done.\n", index_type_.c_str());
+    auto used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
+    printf("------------------------gorgeous dividing line------------------------------\n");
 }
 
 void
 IVF::SealImpl() {
+    auto used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("enter IVF::SealImpl\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
 #ifdef MILVUS_GPU_VERSION
     faiss::Index* index = index_.get();
     auto idx = dynamic_cast<faiss::IndexIVF*>(index);
@@ -333,6 +341,9 @@ IVF::SealImpl() {
         idx->to_readonly();
     }
 #endif
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("before return IVF::SealImpl\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
 }
 
 }  // namespace knowhere

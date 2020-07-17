@@ -23,8 +23,9 @@
 #include <faiss/IndexFlat.h>
 #include <faiss/impl/AuxIndexStructures.h>
 
+#include </home/zilliz/workspace/dev/milvus/milvus/core/src/metrics/SystemInfo.h>
 namespace faiss {
-
+using namespace milvus;
 using ScopedIds = InvertedLists::ScopedIds;
 using ScopedCodes = InvertedLists::ScopedCodes;
 
@@ -262,10 +263,19 @@ void IndexIVF::add_with_ids (idx_t n, const float * x, const idx_t *xids)
 }
 
 void IndexIVF::to_readonly() {
+    auto used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("enter IndexIVF::to_readonly\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     if (is_readonly()) return;
     auto readonly_lists = this->invlists->to_readonly();
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("after this->invlists->to_readonly()\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     if (!readonly_lists) return;
     this->replace_invlists(readonly_lists, true);
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("after this->replace_invlists(readonly_lists, true);\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
 }
 
 bool IndexIVF::is_readonly() const {
@@ -862,8 +872,18 @@ void IndexIVF::merge_from (IndexIVF &other, idx_t add_id)
 
 void IndexIVF::replace_invlists (InvertedLists *il, bool own)
 {
+    auto used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("enter IndexIVF::replace_invlists\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     if (own_invlists) {
+        auto ivl = dynamic_cast<faiss::ArrayInvertedLists*>(invlists);
+        printf("before delete invlists, invlists.code.size = %ld\n", ivl->compute_ntotal()*ivl->code_size);
+        printf("ivl->compute_ntotal() = %ld, ivl->code_size = %ld\n", ivl->compute_ntotal(), ivl->code_size);
+        printf("sizeof ivl->ids = %ld\n", ivl->compute_ntotal() * sizeof(int64_t));
         delete invlists;
+        used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+        printf("after delete invlists\n");
+        printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     }
     // FAISS_THROW_IF_NOT (ntotal == 0);
     if (il) {
@@ -872,6 +892,9 @@ void IndexIVF::replace_invlists (InvertedLists *il, bool own)
     }
     invlists = il;
     own_invlists = own;
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("before return IndexIVF::replace_invlists\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
 }
 
 
