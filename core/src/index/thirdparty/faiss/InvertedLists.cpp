@@ -19,10 +19,8 @@
 #include "gpu/utils/DeviceUtils.h"
 #include "cuda.h"
 #include "cuda_runtime.h"
-#include </home/zilliz/workspace/dev/milvus/milvus/core/src/metrics/SystemInfo.h>
 
 namespace faiss {
-using namespace milvus;
 /*
  * Use pin memory to build Readonly Inverted list will accelerate cuda memory copy, but it will downgrade cpu ivf search
  * performance. read only inverted list structure will also make ivf search performance not stable. ISSUE 500 mention
@@ -30,13 +28,7 @@ using namespace milvus;
  */
 
 PageLockMemory::PageLockMemory(size_t size) : nbytes(size) {
-    auto used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
-    printf("enter PageLockMemory::PageLockMemory(size_t size)\n");
-    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     auto err = cudaHostAlloc(&(this->data), size, 0);
-    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
-    printf("after cudaHostAlloc(&(this->data), size, 0);\n");
-    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     if (err) {
         std::string msg =
             "Fail to alloc page lock memory " + std::to_string(size) + ", err code " + std::to_string((int32_t)err);
@@ -253,13 +245,7 @@ void ArrayInvertedLists::update_entries (
 }
 
 InvertedLists* ArrayInvertedLists::to_readonly() {
-    auto used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
-    printf("enter ArrayInvertedLists::to_readonly\n");
-    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     ReadOnlyArrayInvertedLists* readonly = new ReadOnlyArrayInvertedLists(*this);
-    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
-    printf("after new readonly\n");
-    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     return readonly;
 }
 
@@ -296,9 +282,6 @@ ReadOnlyArrayInvertedLists::ReadOnlyArrayInvertedLists(size_t nlist,
 
 ReadOnlyArrayInvertedLists::ReadOnlyArrayInvertedLists(const ArrayInvertedLists& other)
         : InvertedLists (other.nlist, other.code_size) {
-    auto used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
-    printf("enter ReadOnlyArrayInvertedLists::ReadOnlyArrayInvertedLists\n");
-    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     readonly_length.resize(nlist);
     readonly_offset.resize(nlist);
     size_t offset = 0;
@@ -308,9 +291,6 @@ ReadOnlyArrayInvertedLists::ReadOnlyArrayInvertedLists(const ArrayInvertedLists&
         readonly_offset[i] = offset;
         offset += list_ids.size();
     }
-    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
-    printf("before #ifdef USE_CPU\n");
-    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
 
 #ifdef USE_CPU
     for (auto i = 0; i < other.ids.size(); i++) {
@@ -320,26 +300,11 @@ ReadOnlyArrayInvertedLists::ReadOnlyArrayInvertedLists(const ArrayInvertedLists&
         auto& list_codes = other.codes[i];
         readonly_codes.insert(readonly_codes.end(), list_codes.begin(), list_codes.end());
     }
-    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
-    printf("out #ifdef USE_CPU\n");
-    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
 #else
     size_t ids_size = offset * sizeof(idx_t);
     size_t codes_size = offset * (this->code_size) * sizeof(uint8_t);
-    printf("ids_size = %ld, codes_size = %ld\n", ids_size, codes_size);
-    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
-    printf("before PageLockMemory\n");
-    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     pin_readonly_codes = std::make_shared<PageLockMemory>(codes_size);
-    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
-    printf("after pin_readonly_codes \n");
-    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     pin_readonly_ids = std::make_shared<PageLockMemory>(ids_size);
-    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
-    printf("after pin_readonly_ids \n");
-    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
-
-    printf("pin_readonly_codes->data_size = %ld, pin_readonly_ids->data_size = %ld\n", pin_readonly_codes->nbytes, pin_readonly_ids->nbytes);
 
     offset = 0;
     for (auto i = 0; i < other.ids.size(); i++) {
@@ -354,9 +319,6 @@ ReadOnlyArrayInvertedLists::ReadOnlyArrayInvertedLists(const ArrayInvertedLists&
 
         offset += list_ids.size();
     }
-    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
-    printf("out #else\n");
-    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
 #endif
 
     valid = true;
