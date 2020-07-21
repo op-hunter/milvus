@@ -13,6 +13,8 @@
 
 #include <memory>
 #include <mutex>
+#include <src/metrics/SystemInfo.h>
+#include <src/cache/CpuCacheMgr.h>
 
 #include "hnswlib/hnswlib.h"
 
@@ -26,6 +28,22 @@ class IndexHNSW : public VecIndex {
  public:
     IndexHNSW() {
         index_type_ = IndexEnum::INDEX_HNSW;
+        printf("in IndexHNSW non-parameter constructor, current memory info:\n");
+        auto used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+        printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
+        cache::CpuCacheMgr::GetInstance()->PrintInfo();
+        printf("------------------------gorgeous dividing line------------------------------\n");
+//        printf("current Index size = %ld bytes, %ld MB\n", Size(), Size()/1024/1024);
+    }
+
+    ~IndexHNSW() {
+        printf("IndexHNSW deconstructed.\n");
+        printf("current memory info:\n");
+        auto used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+        printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
+        cache::CpuCacheMgr::GetInstance()->PrintInfo();
+//        printf("current Index size = %ld bytes, %ld MB\n", Size(), Size()/1024/1024);
+        printf("------------------------gorgeous dividing line------------------------------\n");
     }
 
     BinarySet

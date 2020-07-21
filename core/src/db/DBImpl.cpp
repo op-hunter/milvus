@@ -435,6 +435,8 @@ DBImpl::PreloadCollection(const std::shared_ptr<server::Context>& context, const
 
     printf("DBImpl::PreloadCollection entered\n");
     printf("=================================================grogeous dividing line=============================================\n");
+    LOG_SERVER_DEBUG_ << "DBImpl::PreloadCollection entered";
+    cache::CpuCacheMgr::GetInstance()->PrintInfo();
     auto used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
     printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     // step 1: get all collection files from parent collection
@@ -543,6 +545,8 @@ DBImpl::PreloadCollection(const std::shared_ptr<server::Context>& context, const
     used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
     printf("before PreloadCollection return, current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
 
+    LOG_SERVER_DEBUG_ << "return DBImpl::PreloadCollection";
+    cache::CpuCacheMgr::GetInstance()->PrintInfo();
     printf("=================================================grogeous dividing line=============================================\n");
     return Status::OK();
 }
@@ -715,6 +719,12 @@ DBImpl::InsertVectors(const std::string& collection_id, const std::string& parti
         return SHUTDOWN_ERROR;
     }
 
+    printf("\nDBImpl::InsertVectors entered\n");
+    printf("=================================================grogeous dividing line=============================================\n");
+    LOG_SERVER_DEBUG_ << "DBImpl::InsertVectors entered";
+    cache::CpuCacheMgr::GetInstance()->PrintInfo();
+    auto used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     // insert vectors into target collection
     // (zhiru): generate ids
     if (vectors.id_array_.empty()) {
@@ -728,6 +738,7 @@ DBImpl::InsertVectors(const std::string& collection_id, const std::string& parti
 
     Status status;
     if (options_.wal_enable_) {
+        printf("options_.wal_enable_\n");
         std::string target_collection_name;
         status = GetPartitionByTag(collection_id, partition_tag, target_collection_name);
         if (!status.ok()) {
@@ -735,11 +746,15 @@ DBImpl::InsertVectors(const std::string& collection_id, const std::string& parti
             return status;
         }
 
+        used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+        printf("before wal insert, current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
         if (!vectors.float_data_.empty()) {
             wal_mgr_->Insert(collection_id, partition_tag, vectors.id_array_, vectors.float_data_);
         } else if (!vectors.binary_data_.empty()) {
             wal_mgr_->Insert(collection_id, partition_tag, vectors.id_array_, vectors.binary_data_);
         }
+        used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+        printf("before wal insert, current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
         swn_wal_.Notify();
     } else {
         wal::MXLogRecord record;
@@ -763,6 +778,12 @@ DBImpl::InsertVectors(const std::string& collection_id, const std::string& parti
         status = ExecWalRecord(record);
     }
 
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("before InsertVectors return, current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
+
+    LOG_SERVER_DEBUG_ << "return DBImpl::InsertVectors";
+    cache::CpuCacheMgr::GetInstance()->PrintInfo();
+    printf("=================================================grogeous dividing line=============================================\n\n");
     return status;
 }
 
@@ -1519,19 +1540,40 @@ DBImpl::CreateIndex(const std::shared_ptr<server::Context>& context, const std::
         return SHUTDOWN_ERROR;
     }
 
+    printf("\nDBImpl::CreateIndex entered\n");
+    printf("=================================================grogeous dividing line=============================================\n");
+    LOG_SERVER_DEBUG_ << "DBImpl::CreateIndex entered";
+    cache::CpuCacheMgr::GetInstance()->PrintInfo();
+    auto used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     // step 1: wait merge file thread finished to avoid duplicate data bug
     auto status = Flush();
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("after Flush()\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     WaitMergeFileFinish();  // let merge file thread finish
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("after first WaitMergeFileFinish()\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
 
     // merge all files for this collection, including its partitions
     std::set<std::string> merge_collection_ids = {collection_id};
     std::vector<meta::CollectionSchema> partition_array;
     status = meta_ptr_->ShowPartitions(collection_id, partition_array);
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("before merge_collection_ids\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     for (auto& schema : partition_array) {
         merge_collection_ids.insert(schema.collection_id_);
     }
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("before StartMergeTask\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     StartMergeTask(merge_collection_ids, true);  // start force-merge task
     WaitMergeFileFinish();                       // let force-merge file thread finish
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("after WaitMergeFileFinish\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
 
     {
         std::unique_lock<std::mutex> lock(build_index_mutex_);
@@ -1555,9 +1597,21 @@ DBImpl::CreateIndex(const std::shared_ptr<server::Context>& context, const std::
         }
     }
 
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("before CleanFailedIndexFileOfCollection\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     // step 4: wait and build index
     status = index_failed_checker_.CleanFailedIndexFileOfCollection(collection_id);
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("before WaitCollectionIndexRecursively\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     status = WaitCollectionIndexRecursively(context, collection_id, index);
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("before CreateIndex return, current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
+
+    LOG_SERVER_DEBUG_ << "return DBImpl::CreateIndex";
+    cache::CpuCacheMgr::GetInstance()->PrintInfo();
+    printf("=================================================grogeous dividing line=============================================\n\n");
 
     return status;
 }

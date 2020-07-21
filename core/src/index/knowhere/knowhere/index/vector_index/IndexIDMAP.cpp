@@ -23,6 +23,7 @@
 
 #include <string>
 #include <vector>
+#include <src/metrics/SystemInfo.h>
 
 #include "knowhere/common/Exception.h"
 #include "knowhere/index/vector_index/adapter/VectorAdapter.h"
@@ -78,17 +79,26 @@ IDMAP::AddWithoutIds(const DatasetPtr& dataset_ptr, const Config& config) {
         KNOWHERE_THROW_MSG("index not initialize");
     }
 
+    auto used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("after bf_index->AddWithoutIds\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
+    printf("current index size: %ld\n", sizeof(*this));
     std::lock_guard<std::mutex> lk(mutex_);
     auto rows = dataset_ptr->Get<int64_t>(meta::ROWS);
     auto p_data = dataset_ptr->Get<const void*>(meta::TENSOR);
 
     // TODO: caiyd need check
     std::vector<int64_t> new_ids(rows);
+    printf("rows = %ld, size of new_ids = %ld\n", rows, rows * sizeof(int64_t));
     for (int i = 0; i < rows; ++i) {
         new_ids[i] = i;
     }
 
     index_->add_with_ids(rows, (float*)p_data, new_ids.data());
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("after bf_index->AddWithoutIds\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
+    printf("current index size: %ld\n", sizeof(*this));
 }
 
 DatasetPtr

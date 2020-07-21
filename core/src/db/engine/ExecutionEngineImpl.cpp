@@ -400,10 +400,15 @@ ExecutionEngineImpl::Load(bool to_cache) {
         if (utils::IsRawIndexType((int32_t)index_type_)) {
             printf("enter is raw index type fenzhi\n");
             if (index_type_ == EngineType::FAISS_IDMAP) {
+                printf("index_type = EngineType::FAISS_IDMAP\n");
                 index_ = vec_index_factory.CreateVecIndex(knowhere::IndexEnum::INDEX_FAISS_IDMAP);
             } else {
+                printf("index_type != EngineType::FAISS_IDMAP\n");
                 index_ = vec_index_factory.CreateVecIndex(knowhere::IndexEnum::INDEX_FAISS_BIN_IDMAP);
             }
+            used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+            printf("after index_ = vec_index_factory.CreateVecIndex\n");
+            printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
             milvus::json conf{{knowhere::meta::DEVICEID, gpu_num_}, {knowhere::meta::DIM, dim_}};
             MappingMetricType(metric_type_, conf);
             auto adapter = knowhere::AdapterMgr::GetInstance().GetAdapter(index_->index_type());
@@ -412,7 +417,13 @@ ExecutionEngineImpl::Load(bool to_cache) {
                 throw Exception(DB_ERROR, "Illegal index params");
             }
 
+            used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+            printf("before segment_reader_ptr->Load()\n");
+            printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
             auto status = segment_reader_ptr->Load();
+            used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+            printf("after segment_reader_ptr->Load()\n");
+            printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
             if (!status.ok()) {
                 std::string msg = "Failed to load segment from " + location_;
                 LOG_ENGINE_ERROR_ << msg;
@@ -423,21 +434,36 @@ ExecutionEngineImpl::Load(bool to_cache) {
             segment_reader_ptr->GetSegment(segment_ptr);
             auto& vectors = segment_ptr->vectors_ptr_;
             auto& deleted_docs = segment_ptr->deleted_docs_ptr_->GetDeletedDocs();
+            used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+            printf("after segment_ptr->deleted_docs_ptr_->GetDeletedDocs()\n");
+            printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
 
             auto& vectors_uids = vectors->GetMutableUids();
+            used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+            printf("after vectors->GetMutableUids()\n");
+            printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
             auto count = vectors_uids.size();
             index_->SetUids(vectors_uids);
             LOG_ENGINE_DEBUG_ << "set uids " << index_->GetUids().size() << " for index " << location_;
 
             auto& vectors_data = vectors->GetData();
+            used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+            printf("after vectors->GetData()\n");
+            printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
 
             auto attrs = segment_ptr->attrs_ptr_;
 
             auto attrs_it = attrs->attrs.begin();
+            used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+            printf("before attr_data_.insert\n");
+            printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
             for (; attrs_it != attrs->attrs.end(); ++attrs_it) {
                 attr_data_.insert(std::pair(attrs_it->first, attrs_it->second->GetData()));
                 attr_size_.insert(std::pair(attrs_it->first, attrs_it->second->GetNbytes()));
             }
+            used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+            printf("after attr_data_.insert\n");
+            printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
 
             vector_count_ = count;
 
@@ -445,22 +471,41 @@ ExecutionEngineImpl::Load(bool to_cache) {
             for (auto& offset : deleted_docs) {
                 concurrent_bitset_ptr->set(offset);
             }
+            used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+            printf("after make concurrent_bitset_ptr \n");
+            printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
 
             auto dataset = knowhere::GenDataset(count, this->dim_, vectors_data.data());
+            used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+            printf("after knowhere::GenDataset\n");
+            printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
             if (index_type_ == EngineType::FAISS_IDMAP) {
                 auto bf_index = std::static_pointer_cast<knowhere::IDMAP>(index_);
                 bf_index->Train(knowhere::DatasetPtr(), conf);
+                used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+                printf("after bf_index->Train\n");
+                printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
                 bf_index->AddWithoutIds(dataset, conf);
+                used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+                printf("after bf_index->AddWithoutIds\n");
+                printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
                 bf_index->SetBlacklist(concurrent_bitset_ptr);
+                used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+                printf("after bf_index->SetBlacklist\n");
+                printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
             } else if (index_type_ == EngineType::FAISS_BIN_IDMAP) {
                 auto bin_bf_index = std::static_pointer_cast<knowhere::BinaryIDMAP>(index_);
                 bin_bf_index->Train(knowhere::DatasetPtr(), conf);
                 bin_bf_index->AddWithoutIds(dataset, conf);
                 bin_bf_index->SetBlacklist(concurrent_bitset_ptr);
             }
+            used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+            printf("exit raw data fenzhi\n");
+            printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
 
             LOG_ENGINE_DEBUG_ << "Finished loading raw data from segment " << segment_dir;
         } else {
+            printf("!!!enter not raw data fenzhi!!!\n");
             try {
                 segment::SegmentPtr segment_ptr;
                 segment_reader_ptr->GetSegment(segment_ptr);
@@ -536,6 +581,9 @@ ExecutionEngineImpl::Load(bool to_cache) {
         printf("enter if, after Cache()\n");
         printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     }
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("before return ExecutionEngineImpl::Load()\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     return Status::OK();
 }  // namespace engine
 

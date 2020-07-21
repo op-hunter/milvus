@@ -77,6 +77,9 @@ IndexHNSW::Load(const BinarySet& index_binary) {
 
 void
 IndexHNSW::Train(const DatasetPtr& dataset_ptr, const Config& config) {
+    auto used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("enter IndexHNSW::Train\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     try {
         GETTENSOR(dataset_ptr)
 
@@ -87,11 +90,20 @@ IndexHNSW::Train(const DatasetPtr& dataset_ptr, const Config& config) {
             space = new hnswlib::InnerProductSpace(dim);
             normalize = true;
         }
+        used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+        printf("before create index_\n");
+        printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
         index_ = std::make_shared<hnswlib::HierarchicalNSW<float>>(space, rows, config[IndexParams::M].get<int64_t>(),
                                                                    config[IndexParams::efConstruction].get<int64_t>());
+        used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+        printf("after create index_\n");
+        printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     } catch (std::exception& e) {
         KNOWHERE_THROW_MSG(e.what());
     }
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("return IndexHNSW::Train\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
 }
 
 void
@@ -100,6 +112,9 @@ IndexHNSW::Add(const DatasetPtr& dataset_ptr, const Config& config) {
         KNOWHERE_THROW_MSG("index not initialize");
     }
 
+    auto used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("enter IndexHNSW::Add\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     std::lock_guard<std::mutex> lk(mutex_);
 
     GETTENSORWITHIDS(dataset_ptr)
@@ -128,6 +143,9 @@ IndexHNSW::Add(const DatasetPtr& dataset_ptr, const Config& config) {
         faiss::BuilderSuspend::check_wait();
         index_->addPoint(((float*)p_data + Dim() * i), p_ids[i]);
     }
+    used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("return IndexHNSW::Add\n");
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
 }
 
 DatasetPtr
