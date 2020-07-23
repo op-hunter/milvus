@@ -27,6 +27,9 @@ namespace knowhere {
 
 class VecIndex : public Index {
  public:
+    virtual
+    ~VecIndex() { printf("aaaaaaaaaaaaaaaaaaaaaaaaVecIndex deconstructed!\n"); }
+ public:
     virtual void
     BuildAll(const DatasetPtr& dataset_ptr, const Config& config) {
         Train(dataset_ptr, config);

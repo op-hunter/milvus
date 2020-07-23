@@ -397,7 +397,17 @@ ExecutionEngineImpl::Load(bool to_cache) {
         auto segment_reader_ptr = std::make_shared<segment::SegmentReader>(segment_dir);
         knowhere::VecIndexFactory& vec_index_factory = knowhere::VecIndexFactory::GetInstance();
 
-        if (utils::IsRawIndexType((int32_t)index_type_)) {
+        if (0) {
+            used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+            printf("before if(1) segment_reader_ptr->Load()\n");
+            printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
+            auto status = segment_reader_ptr->Load();
+            index_ = vec_index_factory.CreateVecIndex(knowhere::IndexEnum::INDEX_FAISS_IDMAP);
+            used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+            printf("after if(1) segment_reader_ptr->Load()\n");
+            printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
+        }
+        else if (utils::IsRawIndexType((int32_t)index_type_)) {
             printf("enter is raw index type fenzhi\n");
             if (index_type_ == EngineType::FAISS_IDMAP) {
                 printf("index_type = EngineType::FAISS_IDMAP\n");
@@ -479,7 +489,10 @@ ExecutionEngineImpl::Load(bool to_cache) {
             used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
             printf("after knowhere::GenDataset\n");
             printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
-            if (index_type_ == EngineType::FAISS_IDMAP) {
+            if (0) {
+
+            }
+            else if (index_type_ == EngineType::FAISS_IDMAP) {
                 auto bf_index = std::static_pointer_cast<knowhere::IDMAP>(index_);
                 bf_index->Train(knowhere::DatasetPtr(), conf);
                 used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
@@ -570,6 +583,9 @@ ExecutionEngineImpl::Load(bool to_cache) {
                 return Status(DB_ERROR, e.what());
             }
         }
+        used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+        printf("before return utils::IsRawIndexType((int32_t)index_type_\n");
+        printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     }
 
     if (!already_in_cache && to_cache) {
@@ -779,6 +795,12 @@ ExecutionEngineImpl::BuildIndex(const std::string& location, EngineType engine_t
     }
 
     LOG_ENGINE_DEBUG_ << "Finish build index: " << location;
+//    index_ = nullptr;
+    printf("return BuildIndex, index_ ref_count = %ld\n", index_.use_count());
+//    delete index_.get();
+    index_.reset();
+    auto used_memory = server::SystemInfo::GetInstance().GetProcessUsedMemory();
+    printf("current process cost memory: %ld B, %.2f MB, %.2f GB.\n", used_memory, (double)used_memory/1024/1024, (double)used_memory/1024/1024/1024);
     return std::make_shared<ExecutionEngineImpl>(to_index, location, engine_type, metric_type_, index_params_);
 }
 

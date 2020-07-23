@@ -30,6 +30,8 @@ class Vectors {
  public:
     Vectors() = default;
 
+    ~Vectors() { printf("6666666666666666666666666666666666666666Vectors deconstructor\n"); }
+
     void
     AddData(const std::vector<uint8_t>& data);
 
