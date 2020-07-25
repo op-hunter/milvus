@@ -1,5 +1,6 @@
 #pragma once
-#include "hnswlib_nm.h"
+//#include "hnswlib_nm.h"
+#include "hnswlib_nm_pq.h"
 #include <faiss/FaissHook.h>
 
 namespace hnswlib_nm {
