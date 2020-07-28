@@ -10,6 +10,7 @@
 #pragma once
 
 #include <vector>
+#include <mutex>
 #include <unordered_set>
 #include <queue>
 
@@ -122,6 +123,8 @@ struct HNSW {
   /// maximum level
   int max_level;
 
+  mutable double neighbor_range_costs;
+  mutable int neighbor_range_times;
   /// expansion factor at construction time
   int efConstruction;
 
@@ -222,7 +225,8 @@ struct HNSW {
 
 /// set implementation optimized for fast access.
 struct VisitedTable {
-  std::vector<uint8_t> visited;
+//  std::vector<uint8_t> visited;
+  std::vector<unsigned short> visited;
   int visno;
 
   explicit VisitedTable(int size)
@@ -241,7 +245,7 @@ struct VisitedTable {
   /// reset all flags to false
   void advance() {
     visno++;
-    if (visno == 250) {
+    if (visno == 65500) {
       // 250 rather than 255 because sometimes we use visno and visno+1
       memset(visited.data(), 0, sizeof(visited[0]) * visited.size());
       visno = 1;

@@ -12,6 +12,7 @@
 #include <string>
 
 #include <faiss/impl/AuxIndexStructures.h>
+#include <faiss/utils/utils.h>
 
 namespace faiss {
 
@@ -20,6 +21,7 @@ namespace faiss {
  * HNSW structure implementation
  **************************************************************/
 
+std::mutex locks;
 int HNSW::nb_neighbors(int layer_no) const
 {
   return cum_nneighbor_per_level[layer_no + 1] -
@@ -43,9 +45,13 @@ int HNSW::cum_nb_neighbors(int layer_no) const
 void HNSW::neighbor_range(idx_t no, int layer_no,
                           size_t * begin, size_t * end) const
 {
+    std::lock_guard<std::mutex> templock(locks);
+    double t0 = getmillisecs();
   size_t o = offsets[no];
   *begin = o + cum_nb_neighbors(layer_no);
   *end = o + cum_nb_neighbors(layer_no + 1);
+  neighbor_range_costs += getmillisecs() - t0;
+  neighbor_range_times ++;
 }
 
 
@@ -327,20 +333,26 @@ void add_link(HNSW& hnsw,
   // otherwise we let them fight out which to keep
 
   // copy to resultSet...
-  std::priority_queue<NodeDistCloser> resultSet;
+//  std::priority_queue<NodeDistCloser> resultSet;
+  std::priority_queue<NodeDistFarther> resultSet;
   resultSet.emplace(qdis.symmetric_dis(src, dest), dest);
   for (size_t i = begin; i < end; i++) { // HERE WAS THE BUG
     storage_idx_t neigh = hnsw.neighbors[i];
     resultSet.emplace(qdis.symmetric_dis(src, neigh), neigh);
   }
 
-  shrink_neighbor_list(qdis, resultSet, end - begin);
+//  shrink_neighbor_list(qdis, resultSet, end - begin);
+  std::vector<NodeDistFarther> returnlist;
+  HNSW::shrink_neighbor_list(qdis, resultSet, returnlist, end - begin);
 
   // ...and back
   size_t i = begin;
-  while (resultSet.size()) {
-    hnsw.neighbors[i++] = resultSet.top().id;
-    resultSet.pop();
+//  while (resultSet.size()) {
+//    hnsw.neighbors[i++] = resultSet.top().id;
+//    resultSet.pop();
+//  }
+  for (NodeDistFarther &ndf : returnlist) {
+    hnsw.neighbors[i ++] = ndf.id;
   }
   // they may have shrunk more than just by 1 element
   while(i < end) {

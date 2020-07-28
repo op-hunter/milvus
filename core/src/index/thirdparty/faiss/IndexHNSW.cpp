@@ -117,6 +117,10 @@ void hnsw_add_vertices(IndexHNSW &index_hnsw,
     size_t d = index_hnsw.d;
     HNSW & hnsw = index_hnsw.hnsw;
     size_t ntotal = n0 + n;
+
+    hnsw.neighbor_range_costs = 0.0;
+    hnsw.neighbor_range_times = 0;
+    printf("enter hnsw_add_vertices, size of neighbor is %d, capacity of neighbor is %d\n", hnsw.neighbors.size(), hnsw.neighbors.capacity());
     double t0 = getmillisecs();
     if (verbose) {
         printf("hnsw_add_vertices: adding %ld elements on top of %ld "
@@ -128,20 +132,25 @@ void hnsw_add_vertices(IndexHNSW &index_hnsw,
         return;
     }
 
+    auto tt0 = getmillisecs();
     int max_level = hnsw.prepare_level_tab(n, preset_levels);
+    printf("prepare level table costs %.3f ms\n", getmillisecs() - tt0);
 
     if (verbose) {
         printf("  max_level = %d\n", max_level);
     }
 
+    auto tt1 = getmillisecs();
     std::vector<omp_lock_t> locks(ntotal);
     for(int i = 0; i < ntotal; i++)
         omp_init_lock(&locks[i]);
+    printf("prepare init omp locks costs %.3f ms\n", getmillisecs() - tt1);
 
     // add vectors from highest to lowest level
     std::vector<int> hist;
     std::vector<int> order(n);
 
+    auto ts = getmillisecs();
     { // make buckets with vectors of the same level
 
         // build histogram
@@ -166,6 +175,7 @@ void hnsw_add_vertices(IndexHNSW &index_hnsw,
             order[offsets[pt_level]++] = pt_id;
         }
     }
+    printf("prepare work before add costs %.3f ms\n", getmillisecs() - ts);
 
     idx_t check_period = InterruptCallback::get_period_hint
         (max_level * index_hnsw.d * hnsw.efConstruction);
@@ -237,9 +247,19 @@ void hnsw_add_vertices(IndexHNSW &index_hnsw,
         printf("Done in %.3f ms\n", getmillisecs() - t0);
     }
 
+    auto tt2 = getmillisecs();
     for(int i = 0; i < ntotal; i++) {
         omp_destroy_lock(&locks[i]);
     }
+    printf("release omp locks costs %.3f ms\n", getmillisecs() - tt2);
+    printf("neighbor_range_costs %.3f ms, invoke time %d\n", hnsw.neighbor_range_costs, hnsw.neighbor_range_times);
+    printf("size of neighbor is %d, capacity of neighbor is %d\n", hnsw.neighbors.size(), hnsw.neighbors.capacity());
+    printf("---------------------------------------------------------------\n");
+    for (auto i = 0; i < hnsw.max_level; ++ i) {
+        printf("level %d stats:\n", i);
+        hnsw.print_neighbor_stats(i);
+    }
+    printf("---------------------------------------------------------------\n");
 }
 
 

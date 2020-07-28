@@ -7,7 +7,8 @@
 #include <unordered_set>
 #include <list>
 
-#include "knowhere/index/vector_index/helpers/FaissIO.h"
+//#include "knowhere/index/vector_index/helpers/FaissIO.h"
+#include "/home/zilliz/workspace/dev/milvus/milvus/core/src/index/knowhere/knowhere/index/vector_index/helpers/FaissIO.h"
 
 namespace hnswlib {
 
@@ -135,6 +136,11 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
     size_t data_size_;
 
     bool has_deletions_;
+
+    mutable double access_link0_costs = 0.0;
+    mutable double access_links_costs = 0.0;
+    mutable int access_link0_times = 0;
+    mutable int access_links_times = 0;
 
 
     size_t label_offset_;
@@ -381,7 +387,13 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
 
 
     linklistsizeint *get_linklist0(tableint internal_id) const {
-        return (linklistsizeint *) (data_level0_memory_ + internal_id * size_data_per_element_ + offsetLevel0_);
+        std::unique_lock <std::mutex> templock(lock0);
+        auto t0 = faiss::getmillisecs();
+        auto ret = (linklistsizeint *) (data_level0_memory_ + internal_id * size_data_per_element_ + offsetLevel0_);
+        access_link0_costs += faiss::getmillisecs() - t0;
+        access_link0_times ++;
+        return ret;
+//        return (linklistsizeint *) (data_level0_memory_ + internal_id * size_data_per_element_ + offsetLevel0_);
     };
 
     linklistsizeint *get_linklist0(tableint internal_id, char *data_level0_memory_) const {
@@ -389,8 +401,30 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
     };
 
     linklistsizeint *get_linklist(tableint internal_id, int level) const {
-        return (linklistsizeint *) (linkLists_[internal_id] + (level - 1) * size_links_per_element_);
+        std::unique_lock <std::mutex> templock(locks);
+        auto t0 = faiss::getmillisecs();
+        auto ret = (linklistsizeint *) (linkLists_[internal_id] + (level - 1) * size_links_per_element_);
+        access_links_costs += faiss::getmillisecs() - t0;
+        access_links_times ++;
+        return ret;
+//        return (linklistsizeint *) (linkLists_[internal_id] + (level - 1) * size_links_per_element_);
     };
+
+    void print_stats() {
+        std::vector<int> levels;
+        levels.resize(100, 0);
+        for (auto i = 0; i < max_elements_; ++ i)
+            levels[element_levels_[i]] ++;
+        printf("levels:\n");
+        for (auto i = 0; i < maxlevel_; ++ i) {
+            printf("level %d has %d nodes\n", i, levels[i]);
+        }
+    }
+
+    void show_stats() {
+        printf("access link0 times: %d, access link0 costs: %.2f\n", access_link0_times, access_link0_costs);
+        printf("access links times: %d, access links costs: %.2f\n", access_links_times, access_links_costs);
+    }
 
     void mutuallyConnectNewElement(const void *data_point, tableint cur_c,
                                    std::priority_queue<std::pair<dist_t, tableint>, std::vector<std::pair<dist_t, tableint>>, CompareByFirst> top_candidates,
@@ -497,6 +531,8 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
     }
 
     std::mutex global;
+    mutable std::mutex lock0;
+    mutable std::mutex locks;
     size_t ef_;
 
     void setEf(size_t ef) {
