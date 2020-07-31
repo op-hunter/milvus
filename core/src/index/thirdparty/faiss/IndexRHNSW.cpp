@@ -196,9 +196,6 @@ void hnsw_add_vertices(IndexRHNSW &index_hnsw,
                 DistanceComputer *dis =
                     storage_distance_computer (index_hnsw.storage);
                 ScopeDeleter1<DistanceComputer> del(dis);
-                DistanceComputer *inner_dis =
-                        storage_distance_computer (index_hnsw.storage);
-                ScopeDeleter1<DistanceComputer> del2(inner_dis);
                 int prev_display = verbose && omp_get_thread_num() == 0 ? 0 : -1;
                 size_t counter = 0;
 
@@ -217,7 +214,7 @@ void hnsw_add_vertices(IndexRHNSW &index_hnsw,
 
 //                    vt.set(pt_id);
 //                    hnsw.add_with_locks(*dis, pt_level, pt_id, locks, vt);
-                    hnsw.addPoint(*dis, pt_level, pt_id, locks, *inner_dis, index_hnsw.storage, vt);
+                    hnsw.addPoint(*dis, pt_level, pt_id, locks, vt);
 
                     if (prev_display >= 0 && i - i0 > prev_display + 10000) {
                         prev_display = i - i0;
@@ -364,7 +361,7 @@ void hnsw_add_vertices2(IndexRHNSW &index_hnsw,
 
 //                    vt.set(pt_id);
 //                    hnsw.add_with_locks(*dis, pt_level, pt_id, locks, vt);
-                    hnsw.addPoint(*dis, pt_level, pt_id, locks, *inner_dis, index_hnsw.storage, vt);
+                    hnsw.addPoint(*dis, pt_level, pt_id, locks, vt);
 
                     if (prev_display >= 0 && i - i0 > prev_display + 10000) {
                         prev_display = i - i0;

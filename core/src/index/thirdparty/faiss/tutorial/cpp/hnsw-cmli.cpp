@@ -84,6 +84,7 @@ int main() {
     ProfilerStop();
     auto te = std::chrono::high_resolution_clock::now();
     std::cout << "build index costs: " << std::chrono::duration_cast<std::chrono::milliseconds>(te - ts).count() << "ms " << std::endl;
+//    std::cout << "reconstruct time : " << hnsw->hnsw.reconstruct_time << "ms, inner_dis_time: " << hnsw->hnsw.inner_dis_time << "ms." << std::endl;
 
     {       // search xq
         long *I = new long[topk * nq];

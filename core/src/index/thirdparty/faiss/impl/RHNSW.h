@@ -10,6 +10,7 @@
 #pragma once
 
 #include <vector>
+#include <mutex>
 #include <unordered_set>
 #include <queue>
 
@@ -41,6 +42,8 @@ namespace faiss {
  */
 
 
+typedef unsigned short int vl_type;
+class VisitedListPool;
 struct VisitedTable;
 struct DistanceComputer; // from AuxIndexStructures
 
@@ -66,17 +69,17 @@ struct RHNSW {
 
     explicit MinimaxHeap(int n): n(n), k(0), nvalid(0), ids(n), dis(n) {}
 
-    void push(storage_idx_t i, float v);
+    inline void push(storage_idx_t i, float v);
 
-    float max() const;
+    inline float max() const;
 
-    int size() const;
+    inline int size() const;
 
-    void clear();
+    inline void clear();
 
-    int pop_min(float *vmin_out = nullptr);
+    inline int pop_min(float *vmin_out = nullptr);
 
-    int count_below(float thresh);
+    inline int count_below(float thresh);
   };
 
 
@@ -95,6 +98,12 @@ struct RHNSW {
     bool operator < (const NodeDistFarther &obj1) const { return d > obj1.d; }
   };
 
+  struct CompareByFirst {
+      constexpr bool operator()(std::pair<float, int> const &a,
+                                std::pair<float, int> const &b) const noexcept {
+          return a.first < b.first;
+      }
+  };
 
   /// assignment probability to each layer (sum=1)
 //  std::vector<double> assign_probas;
@@ -127,6 +136,11 @@ struct RHNSW {
   char **linkLists;
   size_t level0_link_size;
   size_t link_size;
+  size_t max_elements;
+  double mult;
+  VisitedListPool *visited_list_pool;
+  std::vector<std::mutex> link_list_locks;
+  std::mutex global;
 
   /// expansion factor at construction time
   int efConstruction;
@@ -161,16 +175,16 @@ struct RHNSW {
 //  int cum_nb_neighbors(int layer_no) const;
 
   /// range of entries in the neighbors table of vertex no at layer_no
-  storage_idx_t* get_neighbor_link(idx_t no, int layer_no) const;
-  unsigned short int get_neighbors_num(int *p) const;
-  void set_neighbors_num(int *p, unsigned short int num) const;
+  inline storage_idx_t* get_neighbor_link(idx_t no, int layer_no) const;
+  inline unsigned short int get_neighbors_num(int *p) const;
+  inline void set_neighbors_num(int *p, unsigned short int num) const;
 
   /// only mandatory parameter: nb of neighbors
   explicit RHNSW(int M = 32);
   ~RHNSW();
 
   /// pick a random level for a new point, arg = 1/log(M)
-  int random_level(double arg);
+  inline int random_level(double arg);
 
   /// add n random levels to table (for debugging...)
 //  void fill_with_random_links(size_t n);
@@ -213,7 +227,7 @@ struct RHNSW {
   void clear_neighbor_tables(int level);
   void print_neighbor_stats(int level) const;
 
-  int prepare_level_tab(size_t n, bool preset_levels = false);
+  inline int prepare_level_tab(size_t n, bool preset_levels = false);
 
   static void shrink_neighbor_list(
     DistanceComputer& qdis,
@@ -225,12 +239,11 @@ struct RHNSW {
   // reimplementations of hnswlib
   /** add point pt_id on all levels <= pt_level and build the link
     * structure for them. inspired by implementation of hnswlib */
-  void addPoint(DistanceComputer& ptdis, int pt_level, int pt_id,
+  inline void addPoint(DistanceComputer& ptdis, int pt_level, int pt_id,
                       std::vector<omp_lock_t>& locks,
-                      DistanceComputer& inner_dis,
-                      const Index* storage,
                       VisitedTable& vt);
 
+  inline
   std::priority_queue<NodeDistCloser, std::vector<NodeDistCloser> >
   search_layer (DistanceComputer& ptdis,
                 storage_idx_t pt_id,
@@ -240,27 +253,25 @@ struct RHNSW {
                 omp_lock_t *locks,
                 VisitedTable &vt);
 
+  inline
   std::priority_queue<NodeDistCloser, std::vector<NodeDistCloser> >
   search_base_layer (DistanceComputer& ptdis,
                      storage_idx_t nearest,
                      float d_nearest,
                      VisitedTable &vt) const;
 
-  void make_connection(DistanceComputer& ptdis,
+  inline void make_connection(DistanceComputer& ptdis,
                        storage_idx_t pt_id,
                        std::priority_queue<NodeDistCloser, std::vector<NodeDistCloser> > &cand,
                        omp_lock_t *locks,
-                       DistanceComputer& inner_dis,
-                       const Index* storage,
                        int level);
 
-  void prune_neighbors(std::priority_queue<NodeDistCloser, std::vector<NodeDistCloser> > &cand,
-                       DistanceComputer& inner_dis,
-                       const Index* storage,
+  inline void prune_neighbors(std::priority_queue<NodeDistCloser, std::vector<NodeDistCloser> > &cand,
+                       DistanceComputer& ptdis,
                        const int maxM, int *ret, int &ret_len);
 
   /// search interface inspired by hnswlib
-  void searchKnn(DistanceComputer& qdis, int k,
+  inline void searchKnn(DistanceComputer& qdis, int k,
               idx_t *I, float *D,
               VisitedTable& vt) const;
 
@@ -300,6 +311,83 @@ struct VisitedTable {
   }
 };
 
+class VisitedList {
+ public:
+    vl_type curV;
+    vl_type *mass;
+    unsigned int numelements;
+
+    VisitedList(int numelements1) {
+        curV = -1;
+        numelements = numelements1;
+        mass = new vl_type[numelements];
+    }
+
+    void reset() {
+        curV++;
+        if (curV == 0) {
+            memset(mass, 0, sizeof(vl_type) * numelements);
+            curV++;
+        }
+    };
+
+
+    ~VisitedList() { delete[] mass; }
+};
+
+///////////////////////////////////////////////////////////
+//
+// Class for multi-threaded pool-management of VisitedLists
+//
+/////////////////////////////////////////////////////////
+
+class VisitedListPool {
+    std::deque<VisitedList *> pool;
+    std::mutex poolguard;
+    int numelements;
+
+ public:
+    VisitedListPool(int initmaxpools, int numelements1) {
+        numelements = numelements1;
+        for (int i = 0; i < initmaxpools; i++)
+            pool.push_front(new VisitedList(numelements));
+        }
+
+    VisitedList *getFreeVisitedList() {
+        VisitedList *rez;
+        {
+            std::unique_lock <std::mutex> lock(poolguard);
+            if (pool.size() > 0) {
+                rez = pool.front();
+                pool.pop_front();
+            } else {
+                rez = new VisitedList(numelements);
+            }
+        }
+        rez->reset();
+        return rez;
+    };
+
+    void releaseVisitedList(VisitedList *vl) {
+        std::unique_lock <std::mutex> lock(poolguard);
+        pool.push_front(vl);
+    };
+
+    ~VisitedListPool() {
+        while (pool.size()) {
+            VisitedList *rez = pool.front();
+            pool.pop_front();
+            delete rez;
+        }
+    };
+
+    int64_t GetSize() {
+        auto visit_list_size = sizeof(VisitedList) + numelements * sizeof(vl_type);
+        auto pool_size = pool.size() * (sizeof(VisitedList *) + visit_list_size);
+        return pool_size + sizeof(*this);
+    }
+};
+
 
 struct RHNSWStats {
   size_t n1, n2, n3;
@@ -324,3 +412,5 @@ extern RHNSWStats rhnsw_stats;
 
 
 }  // namespace faiss
+
+#include "RHNSW-inl.h"
