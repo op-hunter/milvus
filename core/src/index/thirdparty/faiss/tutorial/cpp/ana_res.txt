@@ -1,0 +1,3008 @@
+analysis:  hnsw-milvus
+file path:  /home/zilliz/workspace/dev/milvus/milvus/core/src/index/thirdparty/faiss/tutorial/cpp/test-results/hnsw-milvus
+16 100 100 100
+build index costs: 50562ms 
+search 10000 times costs: 563ms 
+correct query of top100 is 9996
+--------------------------------------------
+16 100 100 10
+build index costs: 50494ms 
+search 10000 times costs: 558ms 
+correct query of top10 is 9994
+--------------------------------------------
+16 100 100 1
+build index costs: 50723ms 
+search 10000 times costs: 547ms 
+correct query of top1 is 9995
+--------------------------------------------
+16 100 16 100
+build index costs: 50399ms 
+search 10000 times costs: 565ms 
+correct query of top100 is 9994
+--------------------------------------------
+16 100 16 10
+build index costs: 50554ms 
+search 10000 times costs: 129ms 
+correct query of top10 is 9811
+--------------------------------------------
+16 100 16 1
+build index costs: 50568ms 
+search 10000 times costs: 129ms 
+correct query of top1 is 9810
+--------------------------------------------
+16 100 200 100
+build index costs: 50574ms 
+search 10000 times costs: 993ms 
+correct query of top100 is 9999
+--------------------------------------------
+16 100 200 10
+build index costs: 51345ms 
+search 10000 times costs: 988ms 
+correct query of top10 is 9998
+--------------------------------------------
+16 100 200 1
+build index costs: 50922ms 
+search 10000 times costs: 1011ms 
+correct query of top1 is 9999
+--------------------------------------------
+16 100 32 100
+build index costs: 50761ms 
+search 10000 times costs: 552ms 
+correct query of top100 is 9995
+--------------------------------------------
+16 100 32 10
+build index costs: 50438ms 
+search 10000 times costs: 216ms 
+correct query of top10 is 9927
+--------------------------------------------
+16 100 32 1
+build index costs: 50460ms 
+search 10000 times costs: 220ms 
+correct query of top1 is 9922
+--------------------------------------------
+16 100 64 100
+build index costs: 50743ms 
+search 10000 times costs: 569ms 
+correct query of top100 is 9994
+--------------------------------------------
+16 100 64 10
+build index costs: 50767ms 
+search 10000 times costs: 381ms 
+correct query of top10 is 9982
+--------------------------------------------
+16 100 64 1
+build index costs: 50746ms 
+search 10000 times costs: 385ms 
+correct query of top1 is 9988
+--------------------------------------------
+16 16 100 100
+build index costs: 7833ms 
+search 10000 times costs: 329ms 
+correct query of top100 is 9412
+--------------------------------------------
+16 16 100 10
+build index costs: 7666ms 
+search 10000 times costs: 317ms 
+correct query of top10 is 8346
+--------------------------------------------
+16 16 100 1
+build index costs: 7595ms 
+search 10000 times costs: 315ms 
+correct query of top1 is 7785
+--------------------------------------------
+16 16 16 100
+build index costs: 7757ms 
+search 10000 times costs: 338ms 
+correct query of top100 is 8115
+--------------------------------------------
+16 16 16 10
+build index costs: 7763ms 
+search 10000 times costs: 86ms 
+correct query of top10 is 7309
+--------------------------------------------
+16 16 16 1
+build index costs: 7861ms 
+search 10000 times costs: 86ms 
+correct query of top1 is 7089
+--------------------------------------------
+16 16 200 100
+build index costs: 7879ms 
+search 10000 times costs: 575ms 
+correct query of top100 is 9577
+--------------------------------------------
+16 16 200 10
+build index costs: 7687ms 
+search 10000 times costs: 559ms 
+correct query of top10 is 8396
+--------------------------------------------
+16 16 200 1
+build index costs: 7793ms 
+search 10000 times costs: 572ms 
+correct query of top1 is 9419
+--------------------------------------------
+16 16 32 100
+build index costs: 7664ms 
+search 10000 times costs: 323ms 
+correct query of top100 is 8878
+--------------------------------------------
+16 16 32 10
+build index costs: 7922ms 
+search 10000 times costs: 139ms 
+correct query of top10 is 8351
+--------------------------------------------
+16 16 32 1
+build index costs: 7788ms 
+search 10000 times costs: 135ms 
+correct query of top1 is 7373
+--------------------------------------------
+16 16 64 100
+build index costs: 7654ms 
+search 10000 times costs: 319ms 
+correct query of top100 is 7029
+--------------------------------------------
+16 16 64 10
+build index costs: 7817ms 
+search 10000 times costs: 227ms 
+correct query of top10 is 8980
+--------------------------------------------
+16 16 64 1
+build index costs: 7758ms 
+search 10000 times costs: 237ms 
+correct query of top1 is 8762
+--------------------------------------------
+16 200 100 100
+build index costs: 95158ms 
+search 10000 times costs: 583ms 
+correct query of top100 is 9996
+--------------------------------------------
+16 200 100 10
+build index costs: 94987ms 
+search 10000 times costs: 580ms 
+correct query of top10 is 9996
+--------------------------------------------
+16 200 100 1
+build index costs: 94633ms 
+search 10000 times costs: 582ms 
+correct query of top1 is 9998
+--------------------------------------------
+16 200 16 100
+build index costs: 98719ms 
+search 10000 times costs: 617ms 
+correct query of top100 is 9995
+--------------------------------------------
+16 200 16 10
+build index costs: 99016ms 
+search 10000 times costs: 149ms 
+correct query of top10 is 9910
+--------------------------------------------
+16 200 16 1
+build index costs: 95971ms 
+search 10000 times costs: 143ms 
+correct query of top1 is 9900
+--------------------------------------------
+16 200 200 100
+build index costs: 94990ms 
+search 10000 times costs: 1047ms 
+correct query of top100 is 9998
+--------------------------------------------
+16 200 200 10
+build index costs: 94855ms 
+search 10000 times costs: 1039ms 
+correct query of top10 is 9999
+--------------------------------------------
+16 200 200 1
+build index costs: 94635ms 
+search 10000 times costs: 1041ms 
+correct query of top1 is 9998
+--------------------------------------------
+16 200 32 100
+build index costs: 94780ms 
+search 10000 times costs: 583ms 
+correct query of top100 is 9996
+--------------------------------------------
+16 200 32 10
+build index costs: 95901ms 
+search 10000 times costs: 229ms 
+correct query of top10 is 9971
+--------------------------------------------
+16 200 32 1
+build index costs: 98030ms 
+search 10000 times costs: 239ms 
+correct query of top1 is 9970
+--------------------------------------------
+16 200 64 100
+build index costs: 95030ms 
+search 10000 times costs: 581ms 
+correct query of top100 is 9996
+--------------------------------------------
+16 200 64 10
+build index costs: 94875ms 
+search 10000 times costs: 396ms 
+correct query of top10 is 9991
+--------------------------------------------
+16 200 64 1
+build index costs: 94673ms 
+search 10000 times costs: 398ms 
+correct query of top1 is 9993
+--------------------------------------------
+16 32 100 100
+build index costs: 16001ms 
+search 10000 times costs: 428ms 
+correct query of top100 is 9885
+--------------------------------------------
+16 32 100 10
+build index costs: 16045ms 
+search 10000 times costs: 420ms 
+correct query of top10 is 9893
+--------------------------------------------
+16 32 100 1
+build index costs: 16037ms 
+search 10000 times costs: 430ms 
+correct query of top1 is 9879
+--------------------------------------------
+16 32 16 100
+build index costs: 15901ms 
+search 10000 times costs: 419ms 
+correct query of top100 is 9867
+--------------------------------------------
+16 32 16 10
+build index costs: 15967ms 
+search 10000 times costs: 106ms 
+correct query of top10 is 9017
+--------------------------------------------
+16 32 16 1
+build index costs: 15939ms 
+search 10000 times costs: 106ms 
+correct query of top1 is 9020
+--------------------------------------------
+16 32 200 100
+build index costs: 15920ms 
+search 10000 times costs: 749ms 
+correct query of top100 is 9944
+--------------------------------------------
+16 32 200 10
+build index costs: 15867ms 
+search 10000 times costs: 753ms 
+correct query of top10 is 9944
+--------------------------------------------
+16 32 200 1
+build index costs: 15950ms 
+search 10000 times costs: 748ms 
+correct query of top1 is 9939
+--------------------------------------------
+16 32 32 100
+build index costs: 16048ms 
+search 10000 times costs: 423ms 
+correct query of top100 is 9877
+--------------------------------------------
+16 32 32 10
+build index costs: 15928ms 
+search 10000 times costs: 171ms 
+correct query of top10 is 9534
+--------------------------------------------
+16 32 32 1
+build index costs: 15871ms 
+search 10000 times costs: 171ms 
+correct query of top1 is 9561
+--------------------------------------------
+16 32 64 100
+build index costs: 15963ms 
+search 10000 times costs: 433ms 
+correct query of top100 is 9902
+--------------------------------------------
+16 32 64 10
+build index costs: 15942ms 
+search 10000 times costs: 288ms 
+correct query of top10 is 9781
+--------------------------------------------
+16 32 64 1
+build index costs: 15965ms 
+search 10000 times costs: 289ms 
+correct query of top1 is 9792
+--------------------------------------------
+16 64 100 100
+build index costs: 32742ms 
+search 10000 times costs: 509ms 
+correct query of top100 is 9985
+--------------------------------------------
+16 64 100 10
+build index costs: 32726ms 
+search 10000 times costs: 510ms 
+correct query of top10 is 9977
+--------------------------------------------
+16 64 100 1
+build index costs: 32746ms 
+search 10000 times costs: 515ms 
+correct query of top1 is 9979
+--------------------------------------------
+16 64 16 100
+build index costs: 32712ms 
+search 10000 times costs: 506ms 
+correct query of top100 is 9973
+--------------------------------------------
+16 64 16 10
+build index costs: 32594ms 
+search 10000 times costs: 145ms 
+correct query of top10 is 9622
+--------------------------------------------
+16 64 16 1
+build index costs: 32637ms 
+search 10000 times costs: 135ms 
+correct query of top1 is 9607
+--------------------------------------------
+16 64 200 100
+build index costs: 32850ms 
+search 10000 times costs: 918ms 
+correct query of top100 is 9988
+--------------------------------------------
+16 64 200 10
+build index costs: 32650ms 
+search 10000 times costs: 910ms 
+correct query of top10 is 9988
+--------------------------------------------
+16 64 200 1
+build index costs: 32449ms 
+search 10000 times costs: 928ms 
+correct query of top1 is 9988
+--------------------------------------------
+16 64 32 100
+build index costs: 32732ms 
+search 10000 times costs: 513ms 
+correct query of top100 is 9978
+--------------------------------------------
+16 64 32 10
+build index costs: 32577ms 
+search 10000 times costs: 204ms 
+correct query of top10 is 9868
+--------------------------------------------
+16 64 32 1
+build index costs: 32539ms 
+search 10000 times costs: 201ms 
+correct query of top1 is 9862
+--------------------------------------------
+16 64 64 100
+build index costs: 32520ms 
+search 10000 times costs: 505ms 
+correct query of top100 is 9977
+--------------------------------------------
+16 64 64 10
+build index costs: 32467ms 
+search 10000 times costs: 352ms 
+correct query of top10 is 9949
+--------------------------------------------
+16 64 64 1
+build index costs: 32589ms 
+search 10000 times costs: 353ms 
+correct query of top1 is 9955
+--------------------------------------------
+32 100 100 100
+build index costs: 60869ms 
+search 10000 times costs: 711ms 
+correct query of top100 is 9997
+--------------------------------------------
+32 100 100 10
+build index costs: 60762ms 
+search 10000 times costs: 704ms 
+correct query of top10 is 9997
+--------------------------------------------
+32 100 100 1
+build index costs: 60727ms 
+search 10000 times costs: 716ms 
+correct query of top1 is 9998
+--------------------------------------------
+32 100 16 100
+build index costs: 60804ms 
+search 10000 times costs: 716ms 
+correct query of top100 is 10000
+--------------------------------------------
+32 100 16 10
+build index costs: 61523ms 
+search 10000 times costs: 168ms 
+correct query of top10 is 9924
+--------------------------------------------
+32 100 16 1
+build index costs: 62149ms 
+search 10000 times costs: 171ms 
+correct query of top1 is 9927
+--------------------------------------------
+32 100 200 100
+build index costs: 60803ms 
+search 10000 times costs: 1255ms 
+correct query of top100 is 10000
+--------------------------------------------
+32 100 200 10
+build index costs: 61119ms 
+search 10000 times costs: 1254ms 
+correct query of top10 is 9999
+--------------------------------------------
+32 100 200 1
+build index costs: 60986ms 
+search 10000 times costs: 1254ms 
+correct query of top1 is 9998
+--------------------------------------------
+32 100 32 100
+build index costs: 60917ms 
+search 10000 times costs: 718ms 
+correct query of top100 is 9999
+--------------------------------------------
+32 100 32 10
+build index costs: 60811ms 
+search 10000 times costs: 291ms 
+correct query of top10 is 9985
+--------------------------------------------
+32 100 32 1
+build index costs: 60783ms 
+search 10000 times costs: 282ms 
+correct query of top1 is 9978
+--------------------------------------------
+32 100 64 100
+build index costs: 60892ms 
+search 10000 times costs: 706ms 
+correct query of top100 is 10000
+--------------------------------------------
+32 100 64 10
+build index costs: 60917ms 
+search 10000 times costs: 492ms 
+correct query of top10 is 9998
+--------------------------------------------
+32 100 64 1
+build index costs: 60932ms 
+search 10000 times costs: 514ms 
+correct query of top1 is 9999
+--------------------------------------------
+32 16 100 100
+build index costs: 17523ms 
+search 10000 times costs: 486ms 
+correct query of top100 is 9949
+--------------------------------------------
+32 16 100 10
+build index costs: 17492ms 
+search 10000 times costs: 486ms 
+correct query of top10 is 9951
+--------------------------------------------
+32 16 100 1
+build index costs: 17518ms 
+search 10000 times costs: 484ms 
+correct query of top1 is 9958
+--------------------------------------------
+32 16 16 100
+build index costs: 17567ms 
+search 10000 times costs: 497ms 
+correct query of top100 is 9951
+--------------------------------------------
+32 16 16 10
+build index costs: 17535ms 
+search 10000 times costs: 128ms 
+correct query of top10 is 9319
+--------------------------------------------
+32 16 16 1
+build index costs: 17445ms 
+search 10000 times costs: 134ms 
+correct query of top1 is 9369
+--------------------------------------------
+32 16 200 100
+build index costs: 17403ms 
+search 10000 times costs: 850ms 
+correct query of top100 is 9836
+--------------------------------------------
+32 16 200 10
+build index costs: 17484ms 
+search 10000 times costs: 850ms 
+correct query of top10 is 9980
+--------------------------------------------
+32 16 200 1
+build index costs: 17414ms 
+search 10000 times costs: 842ms 
+correct query of top1 is 9093
+--------------------------------------------
+32 16 32 100
+build index costs: 17572ms 
+search 10000 times costs: 488ms 
+correct query of top100 is 9960
+--------------------------------------------
+32 16 32 10
+build index costs: 17421ms 
+search 10000 times costs: 196ms 
+correct query of top10 is 9750
+--------------------------------------------
+32 16 32 1
+build index costs: 17519ms 
+search 10000 times costs: 206ms 
+correct query of top1 is 9746
+--------------------------------------------
+32 16 64 100
+build index costs: 17485ms 
+search 10000 times costs: 484ms 
+correct query of top100 is 9926
+--------------------------------------------
+32 16 64 10
+build index costs: 17519ms 
+search 10000 times costs: 336ms 
+correct query of top10 is 9890
+--------------------------------------------
+32 16 64 1
+build index costs: 17542ms 
+search 10000 times costs: 335ms 
+correct query of top1 is 9895
+--------------------------------------------
+32 200 100 100
+build index costs: 123573ms 
+search 10000 times costs: 818ms 
+correct query of top100 is 10000
+--------------------------------------------
+32 200 100 10
+build index costs: 123454ms 
+search 10000 times costs: 815ms 
+correct query of top10 is 10000
+--------------------------------------------
+32 200 100 1
+build index costs: 123230ms 
+search 10000 times costs: 822ms 
+correct query of top1 is 10000
+--------------------------------------------
+32 200 16 100
+build index costs: 123434ms 
+search 10000 times costs: 819ms 
+correct query of top100 is 10000
+--------------------------------------------
+32 200 16 10
+build index costs: 123346ms 
+search 10000 times costs: 190ms 
+correct query of top10 is 9983
+--------------------------------------------
+32 200 16 1
+build index costs: 123428ms 
+search 10000 times costs: 200ms 
+correct query of top1 is 9979
+--------------------------------------------
+32 200 200 100
+build index costs: 123011ms 
+search 10000 times costs: 1451ms 
+correct query of top100 is 10000
+--------------------------------------------
+32 200 200 10
+build index costs: 123401ms 
+search 10000 times costs: 1445ms 
+correct query of top10 is 10000
+--------------------------------------------
+32 200 200 1
+build index costs: 123159ms 
+search 10000 times costs: 1484ms 
+correct query of top1 is 10000
+--------------------------------------------
+32 200 32 100
+build index costs: 123812ms 
+search 10000 times costs: 813ms 
+correct query of top100 is 10000
+--------------------------------------------
+32 200 32 10
+build index costs: 123485ms 
+search 10000 times costs: 335ms 
+correct query of top10 is 9994
+--------------------------------------------
+32 200 32 1
+build index costs: 123667ms 
+search 10000 times costs: 322ms 
+correct query of top1 is 9998
+--------------------------------------------
+32 200 64 100
+build index costs: 123544ms 
+search 10000 times costs: 817ms 
+correct query of top100 is 10000
+--------------------------------------------
+32 200 64 10
+build index costs: 123530ms 
+search 10000 times costs: 569ms 
+correct query of top10 is 10000
+--------------------------------------------
+32 200 64 1
+build index costs: 123197ms 
+search 10000 times costs: 564ms 
+correct query of top1 is 10000
+--------------------------------------------
+32 32 100 100
+build index costs: 17756ms 
+search 10000 times costs: 500ms 
+correct query of top100 is 9887
+--------------------------------------------
+32 32 100 10
+build index costs: 17785ms 
+search 10000 times costs: 480ms 
+correct query of top10 is 9843
+--------------------------------------------
+32 32 100 1
+build index costs: 17780ms 
+search 10000 times costs: 505ms 
+correct query of top1 is 9941
+--------------------------------------------
+32 32 16 100
+build index costs: 19250ms 
+search 10000 times costs: 565ms 
+correct query of top100 is 8954
+--------------------------------------------
+32 32 16 10
+build index costs: 19136ms 
+search 10000 times costs: 151ms 
+correct query of top10 is 9359
+--------------------------------------------
+32 32 16 1
+build index costs: 17464ms 
+search 10000 times costs: 131ms 
+correct query of top1 is 9302
+--------------------------------------------
+32 32 200 100
+build index costs: 17511ms 
+search 10000 times costs: 904ms 
+correct query of top100 is 9972
+--------------------------------------------
+32 32 200 10
+build index costs: 17675ms 
+search 10000 times costs: 854ms 
+correct query of top10 is 9983
+--------------------------------------------
+32 32 200 1
+build index costs: 18026ms 
+search 10000 times costs: 861ms 
+correct query of top1 is 9982
+--------------------------------------------
+32 32 32 100
+build index costs: 17911ms 
+search 10000 times costs: 484ms 
+correct query of top100 is 9950
+--------------------------------------------
+32 32 32 10
+build index costs: 17710ms 
+search 10000 times costs: 217ms 
+correct query of top10 is 9748
+--------------------------------------------
+32 32 32 1
+build index costs: 17772ms 
+search 10000 times costs: 211ms 
+correct query of top1 is 9733
+--------------------------------------------
+32 32 64 100
+build index costs: 17925ms 
+search 10000 times costs: 491ms 
+correct query of top100 is 8076
+--------------------------------------------
+32 32 64 10
+build index costs: 17600ms 
+search 10000 times costs: 349ms 
+correct query of top10 is 9603
+--------------------------------------------
+32 32 64 1
+build index costs: 17746ms 
+search 10000 times costs: 342ms 
+correct query of top1 is 9779
+--------------------------------------------
+32 64 100 100
+build index costs: 37992ms 
+search 10000 times costs: 644ms 
+correct query of top100 is 9993
+--------------------------------------------
+32 64 100 10
+build index costs: 37699ms 
+search 10000 times costs: 628ms 
+correct query of top10 is 9995
+--------------------------------------------
+32 64 100 1
+build index costs: 37775ms 
+search 10000 times costs: 627ms 
+correct query of top1 is 9995
+--------------------------------------------
+32 64 16 100
+build index costs: 38014ms 
+search 10000 times costs: 627ms 
+correct query of top100 is 9994
+--------------------------------------------
+32 64 16 10
+build index costs: 38180ms 
+search 10000 times costs: 158ms 
+correct query of top10 is 9795
+--------------------------------------------
+32 64 16 1
+build index costs: 38838ms 
+search 10000 times costs: 150ms 
+correct query of top1 is 9799
+--------------------------------------------
+32 64 200 100
+build index costs: 38080ms 
+search 10000 times costs: 1109ms 
+correct query of top100 is 9996
+--------------------------------------------
+32 64 200 10
+build index costs: 37548ms 
+search 10000 times costs: 1118ms 
+correct query of top10 is 9989
+--------------------------------------------
+32 64 200 1
+build index costs: 38041ms 
+search 10000 times costs: 1107ms 
+correct query of top1 is 9996
+--------------------------------------------
+32 64 32 100
+build index costs: 38111ms 
+search 10000 times costs: 637ms 
+correct query of top100 is 9997
+--------------------------------------------
+32 64 32 10
+build index costs: 37977ms 
+search 10000 times costs: 250ms 
+correct query of top10 is 9936
+--------------------------------------------
+32 64 32 1
+build index costs: 38057ms 
+search 10000 times costs: 257ms 
+correct query of top1 is 9931
+--------------------------------------------
+32 64 64 100
+build index costs: 37726ms 
+search 10000 times costs: 631ms 
+correct query of top100 is 9996
+--------------------------------------------
+32 64 64 10
+build index costs: 38130ms 
+search 10000 times costs: 434ms 
+correct query of top10 is 9983
+--------------------------------------------
+32 64 64 1
+build index costs: 38988ms 
+search 10000 times costs: 448ms 
+correct query of top1 is 9986
+--------------------------------------------
+analysis:  hnsw-flat
+file path:  /home/zilliz/workspace/dev/milvus/milvus/core/src/index/thirdparty/faiss/tutorial/cpp/test-results/hnsw-flat
+16 100 100 100
+build index costs: 48569ms 
+search 10000 times costs: 528ms 
+correct query of top100 is 9995
+--------------------------------------------
+16 100 100 10
+build index costs: 48718ms 
+search 10000 times costs: 521ms 
+correct query of top10 is 9992
+--------------------------------------------
+16 100 100 1
+build index costs: 48769ms 
+search 10000 times costs: 524ms 
+correct query of top1 is 9993
+--------------------------------------------
+16 100 16 100
+build index costs: 48531ms 
+search 10000 times costs: 542ms 
+correct query of top100 is 9993
+--------------------------------------------
+16 100 16 10
+build index costs: 48535ms 
+search 10000 times costs: 122ms 
+correct query of top10 is 9837
+--------------------------------------------
+16 100 16 1
+build index costs: 48681ms 
+search 10000 times costs: 122ms 
+correct query of top1 is 9838
+--------------------------------------------
+16 100 200 100
+build index costs: 48659ms 
+search 10000 times costs: 938ms 
+correct query of top100 is 9998
+--------------------------------------------
+16 100 200 10
+build index costs: 48726ms 
+search 10000 times costs: 935ms 
+correct query of top10 is 9998
+--------------------------------------------
+16 100 200 1
+build index costs: 48701ms 
+search 10000 times costs: 932ms 
+correct query of top1 is 9997
+--------------------------------------------
+16 100 32 100
+build index costs: 48766ms 
+search 10000 times costs: 527ms 
+correct query of top100 is 9995
+--------------------------------------------
+16 100 32 10
+build index costs: 48780ms 
+search 10000 times costs: 205ms 
+correct query of top10 is 9939
+--------------------------------------------
+16 100 32 1
+build index costs: 48563ms 
+search 10000 times costs: 204ms 
+correct query of top1 is 9947
+--------------------------------------------
+16 100 64 100
+build index costs: 48794ms 
+search 10000 times costs: 531ms 
+correct query of top100 is 9993
+--------------------------------------------
+16 100 64 10
+build index costs: 48597ms 
+search 10000 times costs: 361ms 
+correct query of top10 is 9984
+--------------------------------------------
+16 100 64 1
+build index costs: 48768ms 
+search 10000 times costs: 359ms 
+correct query of top1 is 9987
+--------------------------------------------
+16 16 100 100
+build index costs: 11389ms 
+search 10000 times costs: 463ms 
+correct query of top100 is 9131
+--------------------------------------------
+16 16 100 10
+build index costs: 11534ms 
+search 10000 times costs: 482ms 
+correct query of top10 is 9560
+--------------------------------------------
+16 16 100 1
+build index costs: 11522ms 
+search 10000 times costs: 466ms 
+correct query of top1 is 9213
+--------------------------------------------
+16 16 16 100
+build index costs: 11373ms 
+search 10000 times costs: 464ms 
+correct query of top100 is 9194
+--------------------------------------------
+16 16 16 10
+build index costs: 11466ms 
+search 10000 times costs: 118ms 
+correct query of top10 is 7608
+--------------------------------------------
+16 16 16 1
+build index costs: 11465ms 
+search 10000 times costs: 119ms 
+correct query of top1 is 7664
+--------------------------------------------
+16 16 200 100
+build index costs: 11501ms 
+search 10000 times costs: 830ms 
+correct query of top100 is 9781
+--------------------------------------------
+16 16 200 10
+build index costs: 11347ms 
+search 10000 times costs: 821ms 
+correct query of top10 is 9437
+--------------------------------------------
+16 16 200 1
+build index costs: 11383ms 
+search 10000 times costs: 829ms 
+correct query of top1 is 9413
+--------------------------------------------
+16 16 32 100
+build index costs: 11417ms 
+search 10000 times costs: 467ms 
+correct query of top100 is 9565
+--------------------------------------------
+16 16 32 10
+build index costs: 11421ms 
+search 10000 times costs: 188ms 
+correct query of top10 is 8430
+--------------------------------------------
+16 16 32 1
+build index costs: 11374ms 
+search 10000 times costs: 195ms 
+correct query of top1 is 8491
+--------------------------------------------
+16 16 64 100
+build index costs: 11468ms 
+search 10000 times costs: 479ms 
+correct query of top100 is 9549
+--------------------------------------------
+16 16 64 10
+build index costs: 11421ms 
+search 10000 times costs: 331ms 
+correct query of top10 is 9104
+--------------------------------------------
+16 16 64 1
+build index costs: 11471ms 
+search 10000 times costs: 322ms 
+correct query of top1 is 9250
+--------------------------------------------
+16 200 100 100
+build index costs: 95393ms 
+search 10000 times costs: 582ms 
+correct query of top100 is 9998
+--------------------------------------------
+16 200 100 10
+build index costs: 94873ms 
+search 10000 times costs: 579ms 
+correct query of top10 is 9998
+--------------------------------------------
+16 200 100 1
+build index costs: 95389ms 
+search 10000 times costs: 582ms 
+correct query of top1 is 9997
+--------------------------------------------
+16 200 16 100
+build index costs: 95167ms 
+search 10000 times costs: 591ms 
+correct query of top100 is 9998
+--------------------------------------------
+16 200 16 10
+build index costs: 94825ms 
+search 10000 times costs: 131ms 
+correct query of top10 is 9955
+--------------------------------------------
+16 200 16 1
+build index costs: 94929ms 
+search 10000 times costs: 133ms 
+correct query of top1 is 9951
+--------------------------------------------
+16 200 200 100
+build index costs: 95071ms 
+search 10000 times costs: 1043ms 
+correct query of top100 is 9999
+--------------------------------------------
+16 200 200 10
+build index costs: 94801ms 
+search 10000 times costs: 1030ms 
+correct query of top10 is 9999
+--------------------------------------------
+16 200 200 1
+build index costs: 94880ms 
+search 10000 times costs: 1033ms 
+correct query of top1 is 9999
+--------------------------------------------
+16 200 32 100
+build index costs: 95042ms 
+search 10000 times costs: 588ms 
+correct query of top100 is 9998
+--------------------------------------------
+16 200 32 10
+build index costs: 94629ms 
+search 10000 times costs: 225ms 
+correct query of top10 is 9988
+--------------------------------------------
+16 200 32 1
+build index costs: 94886ms 
+search 10000 times costs: 223ms 
+correct query of top1 is 9986
+--------------------------------------------
+16 200 64 100
+build index costs: 94409ms 
+search 10000 times costs: 578ms 
+correct query of top100 is 9998
+--------------------------------------------
+16 200 64 10
+build index costs: 94780ms 
+search 10000 times costs: 396ms 
+correct query of top10 is 9997
+--------------------------------------------
+16 200 64 1
+build index costs: 94969ms 
+search 10000 times costs: 422ms 
+correct query of top1 is 9998
+--------------------------------------------
+16 32 100 100
+build index costs: 15002ms 
+search 10000 times costs: 395ms 
+correct query of top100 is 9870
+--------------------------------------------
+16 32 100 10
+build index costs: 15046ms 
+search 10000 times costs: 390ms 
+correct query of top10 is 9854
+--------------------------------------------
+16 32 100 1
+build index costs: 15070ms 
+search 10000 times costs: 389ms 
+correct query of top1 is 9894
+--------------------------------------------
+16 32 16 100
+build index costs: 15011ms 
+search 10000 times costs: 419ms 
+correct query of top100 is 9888
+--------------------------------------------
+16 32 16 10
+build index costs: 15013ms 
+search 10000 times costs: 99ms 
+correct query of top10 is 8991
+--------------------------------------------
+16 32 16 1
+build index costs: 15047ms 
+search 10000 times costs: 98ms 
+correct query of top1 is 8988
+--------------------------------------------
+16 32 200 100
+build index costs: 15041ms 
+search 10000 times costs: 706ms 
+correct query of top100 is 9891
+--------------------------------------------
+16 32 200 10
+build index costs: 15049ms 
+search 10000 times costs: 712ms 
+correct query of top10 is 9962
+--------------------------------------------
+16 32 200 1
+build index costs: 15079ms 
+search 10000 times costs: 700ms 
+correct query of top1 is 9917
+--------------------------------------------
+16 32 32 100
+build index costs: 15022ms 
+search 10000 times costs: 391ms 
+correct query of top100 is 9845
+--------------------------------------------
+16 32 32 10
+build index costs: 15033ms 
+search 10000 times costs: 163ms 
+correct query of top10 is 9519
+--------------------------------------------
+16 32 32 1
+build index costs: 15112ms 
+search 10000 times costs: 160ms 
+correct query of top1 is 9528
+--------------------------------------------
+16 32 64 100
+build index costs: 15010ms 
+search 10000 times costs: 393ms 
+correct query of top100 is 9883
+--------------------------------------------
+16 32 64 10
+build index costs: 15052ms 
+search 10000 times costs: 273ms 
+correct query of top10 is 9760
+--------------------------------------------
+16 32 64 1
+build index costs: 14954ms 
+search 10000 times costs: 271ms 
+correct query of top1 is 9806
+--------------------------------------------
+16 64 100 100
+build index costs: 30765ms 
+search 10000 times costs: 491ms 
+correct query of top100 is 9979
+--------------------------------------------
+16 64 100 10
+build index costs: 30899ms 
+search 10000 times costs: 473ms 
+correct query of top10 is 9975
+--------------------------------------------
+16 64 100 1
+build index costs: 30968ms 
+search 10000 times costs: 476ms 
+correct query of top1 is 9978
+--------------------------------------------
+16 64 16 100
+build index costs: 30986ms 
+search 10000 times costs: 486ms 
+correct query of top100 is 9976
+--------------------------------------------
+16 64 16 10
+build index costs: 30815ms 
+search 10000 times costs: 126ms 
+correct query of top10 is 9669
+--------------------------------------------
+16 64 16 1
+build index costs: 30914ms 
+search 10000 times costs: 114ms 
+correct query of top1 is 9662
+--------------------------------------------
+16 64 200 100
+build index costs: 31030ms 
+search 10000 times costs: 864ms 
+correct query of top100 is 9988
+--------------------------------------------
+16 64 200 10
+build index costs: 30756ms 
+search 10000 times costs: 861ms 
+correct query of top10 is 9987
+--------------------------------------------
+16 64 200 1
+build index costs: 30938ms 
+search 10000 times costs: 849ms 
+correct query of top1 is 9991
+--------------------------------------------
+16 64 32 100
+build index costs: 30803ms 
+search 10000 times costs: 477ms 
+correct query of top100 is 9979
+--------------------------------------------
+16 64 32 10
+build index costs: 30947ms 
+search 10000 times costs: 189ms 
+correct query of top10 is 9863
+--------------------------------------------
+16 64 32 1
+build index costs: 30964ms 
+search 10000 times costs: 188ms 
+correct query of top1 is 9872
+--------------------------------------------
+16 64 64 100
+build index costs: 30857ms 
+search 10000 times costs: 478ms 
+correct query of top100 is 9979
+--------------------------------------------
+16 64 64 10
+build index costs: 30881ms 
+search 10000 times costs: 330ms 
+correct query of top10 is 9956
+--------------------------------------------
+16 64 64 1
+build index costs: 30856ms 
+search 10000 times costs: 330ms 
+correct query of top1 is 9959
+--------------------------------------------
+32 100 100 100
+build index costs: 58801ms 
+search 10000 times costs: 682ms 
+correct query of top100 is 10000
+--------------------------------------------
+32 100 100 10
+build index costs: 62981ms 
+search 10000 times costs: 670ms 
+correct query of top10 is 9998
+--------------------------------------------
+32 100 100 1
+build index costs: 59310ms 
+search 10000 times costs: 782ms 
+correct query of top1 is 9997
+--------------------------------------------
+32 100 16 100
+build index costs: 56110ms 
+search 10000 times costs: 663ms 
+correct query of top100 is 9998
+--------------------------------------------
+32 100 16 10
+build index costs: 56839ms 
+search 10000 times costs: 158ms 
+correct query of top10 is 9934
+--------------------------------------------
+32 100 16 1
+build index costs: 56525ms 
+search 10000 times costs: 158ms 
+correct query of top1 is 9936
+--------------------------------------------
+32 100 200 100
+build index costs: 68985ms 
+search 10000 times costs: 1278ms 
+correct query of top100 is 10000
+--------------------------------------------
+32 100 200 10
+build index costs: 68287ms 
+search 10000 times costs: 1441ms 
+correct query of top10 is 10000
+--------------------------------------------
+32 100 200 1
+build index costs: 64564ms 
+search 10000 times costs: 1236ms 
+correct query of top1 is 10000
+--------------------------------------------
+32 100 32 100
+build index costs: 56670ms 
+search 10000 times costs: 660ms 
+correct query of top100 is 9999
+--------------------------------------------
+32 100 32 10
+build index costs: 56447ms 
+search 10000 times costs: 259ms 
+correct query of top10 is 9984
+--------------------------------------------
+32 100 32 1
+build index costs: 56414ms 
+search 10000 times costs: 268ms 
+correct query of top1 is 9989
+--------------------------------------------
+32 100 64 100
+build index costs: 56403ms 
+search 10000 times costs: 659ms 
+correct query of top100 is 9999
+--------------------------------------------
+32 100 64 10
+build index costs: 56699ms 
+search 10000 times costs: 453ms 
+correct query of top10 is 10000
+--------------------------------------------
+32 100 64 1
+build index costs: 56570ms 
+search 10000 times costs: 458ms 
+correct query of top1 is 9999
+--------------------------------------------
+32 16 100 100
+build index costs: 13863ms 
+search 10000 times costs: 607ms 
+correct query of top100 is 9874
+--------------------------------------------
+32 16 100 10
+build index costs: 13806ms 
+search 10000 times costs: 612ms 
+correct query of top10 is 9823
+--------------------------------------------
+32 16 100 1
+build index costs: 13828ms 
+search 10000 times costs: 614ms 
+correct query of top1 is 9793
+--------------------------------------------
+32 16 16 100
+build index costs: 13809ms 
+search 10000 times costs: 602ms 
+correct query of top100 is 9316
+--------------------------------------------
+32 16 16 10
+build index costs: 13429ms 
+search 10000 times costs: 152ms 
+correct query of top10 is 6602
+--------------------------------------------
+32 16 16 1
+build index costs: 13804ms 
+search 10000 times costs: 174ms 
+correct query of top1 is 8575
+--------------------------------------------
+32 16 200 100
+build index costs: 13757ms 
+search 10000 times costs: 1091ms 
+correct query of top100 is 9917
+--------------------------------------------
+32 16 200 10
+build index costs: 13437ms 
+search 10000 times costs: 1053ms 
+correct query of top10 is 7971
+--------------------------------------------
+32 16 200 1
+build index costs: 13767ms 
+search 10000 times costs: 1064ms 
+correct query of top1 is 9578
+--------------------------------------------
+32 16 32 100
+build index costs: 13461ms 
+search 10000 times costs: 602ms 
+correct query of top100 is 7697
+--------------------------------------------
+32 16 32 10
+build index costs: 13766ms 
+search 10000 times costs: 254ms 
+correct query of top10 is 9024
+--------------------------------------------
+32 16 32 1
+build index costs: 13547ms 
+search 10000 times costs: 250ms 
+correct query of top1 is 8133
+--------------------------------------------
+32 16 64 100
+build index costs: 13745ms 
+search 10000 times costs: 611ms 
+correct query of top100 is 9347
+--------------------------------------------
+32 16 64 10
+build index costs: 13685ms 
+search 10000 times costs: 428ms 
+correct query of top10 is 9453
+--------------------------------------------
+32 16 64 1
+build index costs: 13614ms 
+search 10000 times costs: 425ms 
+correct query of top1 is 8825
+--------------------------------------------
+32 200 100 100
+build index costs: 113806ms 
+search 10000 times costs: 763ms 
+correct query of top100 is 10000
+--------------------------------------------
+32 200 100 10
+build index costs: 114243ms 
+search 10000 times costs: 762ms 
+correct query of top10 is 10000
+--------------------------------------------
+32 200 100 1
+build index costs: 113855ms 
+search 10000 times costs: 768ms 
+correct query of top1 is 10000
+--------------------------------------------
+32 200 16 100
+build index costs: 142609ms 
+search 10000 times costs: 996ms 
+correct query of top100 is 10000
+--------------------------------------------
+32 200 16 10
+build index costs: 142730ms 
+search 10000 times costs: 239ms 
+correct query of top10 is 9984
+--------------------------------------------
+32 200 16 1
+build index costs: 132001ms 
+search 10000 times costs: 243ms 
+correct query of top1 is 9976
+--------------------------------------------
+32 200 200 100
+build index costs: 113183ms 
+search 10000 times costs: 1358ms 
+correct query of top100 is 10000
+--------------------------------------------
+32 200 200 10
+build index costs: 113572ms 
+search 10000 times costs: 1337ms 
+correct query of top10 is 10000
+--------------------------------------------
+32 200 200 1
+build index costs: 114279ms 
+search 10000 times costs: 1377ms 
+correct query of top1 is 10000
+--------------------------------------------
+32 200 32 100
+build index costs: 118410ms 
+search 10000 times costs: 770ms 
+correct query of top100 is 10000
+--------------------------------------------
+32 200 32 10
+build index costs: 120654ms 
+search 10000 times costs: 309ms 
+correct query of top10 is 9997
+--------------------------------------------
+32 200 32 1
+build index costs: 126737ms 
+search 10000 times costs: 311ms 
+correct query of top1 is 9998
+--------------------------------------------
+32 200 64 100
+build index costs: 113619ms 
+search 10000 times costs: 760ms 
+correct query of top100 is 10000
+--------------------------------------------
+32 200 64 10
+build index costs: 113437ms 
+search 10000 times costs: 526ms 
+correct query of top10 is 10000
+--------------------------------------------
+32 200 64 1
+build index costs: 113439ms 
+search 10000 times costs: 526ms 
+correct query of top1 is 10000
+--------------------------------------------
+32 32 100 100
+build index costs: 28654ms 
+search 10000 times costs: 799ms 
+correct query of top100 is 9955
+--------------------------------------------
+32 32 100 10
+build index costs: 28914ms 
+search 10000 times costs: 793ms 
+correct query of top10 is 9957
+--------------------------------------------
+32 32 100 1
+build index costs: 28860ms 
+search 10000 times costs: 795ms 
+correct query of top1 is 9961
+--------------------------------------------
+32 32 16 100
+build index costs: 28782ms 
+search 10000 times costs: 794ms 
+correct query of top100 is 9957
+--------------------------------------------
+32 32 16 10
+build index costs: 28765ms 
+search 10000 times costs: 200ms 
+correct query of top10 is 9544
+--------------------------------------------
+32 32 16 1
+build index costs: 28752ms 
+search 10000 times costs: 198ms 
+correct query of top1 is 9526
+--------------------------------------------
+32 32 200 100
+build index costs: 28800ms 
+search 10000 times costs: 1397ms 
+correct query of top100 is 9981
+--------------------------------------------
+32 32 200 10
+build index costs: 28963ms 
+search 10000 times costs: 1398ms 
+correct query of top10 is 9981
+--------------------------------------------
+32 32 200 1
+build index costs: 28596ms 
+search 10000 times costs: 1393ms 
+correct query of top1 is 9988
+--------------------------------------------
+32 32 32 100
+build index costs: 28742ms 
+search 10000 times costs: 798ms 
+correct query of top100 is 9968
+--------------------------------------------
+32 32 32 10
+build index costs: 28740ms 
+search 10000 times costs: 346ms 
+correct query of top10 is 9809
+--------------------------------------------
+32 32 32 1
+build index costs: 29075ms 
+search 10000 times costs: 325ms 
+correct query of top1 is 9829
+--------------------------------------------
+32 32 64 100
+build index costs: 28905ms 
+search 10000 times costs: 816ms 
+correct query of top100 is 9953
+--------------------------------------------
+32 32 64 10
+build index costs: 28699ms 
+search 10000 times costs: 560ms 
+correct query of top10 is 9928
+--------------------------------------------
+32 32 64 1
+build index costs: 28792ms 
+search 10000 times costs: 563ms 
+correct query of top1 is 9934
+--------------------------------------------
+32 64 100 100
+build index costs: 34947ms 
+search 10000 times costs: 601ms 
+correct query of top100 is 9992
+--------------------------------------------
+32 64 100 10
+build index costs: 35065ms 
+search 10000 times costs: 587ms 
+correct query of top10 is 9992
+--------------------------------------------
+32 64 100 1
+build index costs: 35085ms 
+search 10000 times costs: 576ms 
+correct query of top1 is 9993
+--------------------------------------------
+32 64 16 100
+build index costs: 35279ms 
+search 10000 times costs: 585ms 
+correct query of top100 is 9992
+--------------------------------------------
+32 64 16 10
+build index costs: 34883ms 
+search 10000 times costs: 143ms 
+correct query of top10 is 9818
+--------------------------------------------
+32 64 16 1
+build index costs: 35072ms 
+search 10000 times costs: 143ms 
+correct query of top1 is 9817
+--------------------------------------------
+32 64 200 100
+build index costs: 35072ms 
+search 10000 times costs: 1015ms 
+correct query of top100 is 9994
+--------------------------------------------
+32 64 200 10
+build index costs: 35090ms 
+search 10000 times costs: 1013ms 
+correct query of top10 is 9996
+--------------------------------------------
+32 64 200 1
+build index costs: 34918ms 
+search 10000 times costs: 1032ms 
+correct query of top1 is 9997
+--------------------------------------------
+32 64 32 100
+build index costs: 34958ms 
+search 10000 times costs: 601ms 
+correct query of top100 is 9992
+--------------------------------------------
+32 64 32 10
+build index costs: 35114ms 
+search 10000 times costs: 237ms 
+correct query of top10 is 9945
+--------------------------------------------
+32 64 32 1
+build index costs: 35085ms 
+search 10000 times costs: 241ms 
+correct query of top1 is 9946
+--------------------------------------------
+32 64 64 100
+build index costs: 34807ms 
+search 10000 times costs: 577ms 
+correct query of top100 is 9993
+--------------------------------------------
+32 64 64 10
+build index costs: 35060ms 
+search 10000 times costs: 410ms 
+correct query of top10 is 9981
+--------------------------------------------
+32 64 64 1
+build index costs: 35001ms 
+search 10000 times costs: 401ms 
+correct query of top1 is 9981
+--------------------------------------------
+analysis:  hnsw-pq
+file path:  /home/zilliz/workspace/dev/milvus/milvus/core/src/index/thirdparty/faiss/tutorial/cpp/test-results/hnsw-pq
+16 100 100 100
+build index costs: 13711ms 
+search 10000 times costs: 81ms 
+correct query of top100 is 6022
+--------------------------------------------
+16 100 100 10
+build index costs: 13761ms 
+search 10000 times costs: 74ms 
+correct query of top10 is 5749
+--------------------------------------------
+16 100 100 1
+build index costs: 13760ms 
+search 10000 times costs: 69ms 
+correct query of top1 is 4996
+--------------------------------------------
+16 100 16 100
+build index costs: 13738ms 
+search 10000 times costs: 80ms 
+correct query of top100 is 5973
+--------------------------------------------
+16 100 16 10
+build index costs: 13758ms 
+search 10000 times costs: 24ms 
+correct query of top10 is 2017
+--------------------------------------------
+16 100 16 1
+build index costs: 13747ms 
+search 10000 times costs: 24ms 
+correct query of top1 is 1725
+--------------------------------------------
+16 100 200 100
+build index costs: 13655ms 
+search 10000 times costs: 128ms 
+correct query of top100 is 7437
+--------------------------------------------
+16 100 200 10
+build index costs: 13810ms 
+search 10000 times costs: 120ms 
+correct query of top10 is 7248
+--------------------------------------------
+16 100 200 1
+build index costs: 13701ms 
+search 10000 times costs: 126ms 
+correct query of top1 is 6196
+--------------------------------------------
+16 100 32 100
+build index costs: 13703ms 
+search 10000 times costs: 78ms 
+correct query of top100 is 6032
+--------------------------------------------
+16 100 32 10
+build index costs: 13730ms 
+search 10000 times costs: 45ms 
+correct query of top10 is 3258
+--------------------------------------------
+16 100 32 1
+build index costs: 13729ms 
+search 10000 times costs: 33ms 
+correct query of top1 is 2741
+--------------------------------------------
+16 100 64 100
+build index costs: 13820ms 
+search 10000 times costs: 82ms 
+correct query of top100 is 6008
+--------------------------------------------
+16 100 64 10
+build index costs: 13796ms 
+search 10000 times costs: 58ms 
+correct query of top10 is 4760
+--------------------------------------------
+16 100 64 1
+build index costs: 13697ms 
+search 10000 times costs: 65ms 
+correct query of top1 is 4037
+--------------------------------------------
+16 16 100 100
+build index costs: 9501ms 
+search 10000 times costs: 120ms 
+correct query of top100 is 8867
+--------------------------------------------
+16 16 100 10
+build index costs: 9525ms 
+search 10000 times costs: 107ms 
+correct query of top10 is 8510
+--------------------------------------------
+16 16 100 1
+build index costs: 9519ms 
+search 10000 times costs: 106ms 
+correct query of top1 is 7128
+--------------------------------------------
+16 16 16 100
+build index costs: 9665ms 
+search 10000 times costs: 109ms 
+correct query of top100 is 6491
+--------------------------------------------
+16 16 16 10
+build index costs: 9431ms 
+search 10000 times costs: 35ms 
+correct query of top10 is 6027
+--------------------------------------------
+16 16 16 1
+build index costs: 9378ms 
+search 10000 times costs: 35ms 
+correct query of top1 is 4872
+--------------------------------------------
+16 16 200 100
+build index costs: 9359ms 
+search 10000 times costs: 192ms 
+correct query of top100 is 7718
+--------------------------------------------
+16 16 200 10
+build index costs: 9470ms 
+search 10000 times costs: 178ms 
+correct query of top10 is 7850
+--------------------------------------------
+16 16 200 1
+build index costs: 9468ms 
+search 10000 times costs: 196ms 
+correct query of top1 is 7486
+--------------------------------------------
+16 16 32 100
+build index costs: 9570ms 
+search 10000 times costs: 112ms 
+correct query of top100 is 8892
+--------------------------------------------
+16 16 32 10
+build index costs: 9569ms 
+search 10000 times costs: 47ms 
+correct query of top10 is 6824
+--------------------------------------------
+16 16 32 1
+build index costs: 9507ms 
+search 10000 times costs: 48ms 
+correct query of top1 is 5535
+--------------------------------------------
+16 16 64 100
+build index costs: 9489ms 
+search 10000 times costs: 109ms 
+correct query of top100 is 7998
+--------------------------------------------
+16 16 64 10
+build index costs: 9587ms 
+search 10000 times costs: 77ms 
+correct query of top10 is 7588
+--------------------------------------------
+16 16 64 1
+build index costs: 9539ms 
+search 10000 times costs: 83ms 
+correct query of top1 is 6334
+--------------------------------------------
+16 200 100 100
+build index costs: 20440ms 
+search 10000 times costs: 78ms 
+correct query of top100 is 6493
+--------------------------------------------
+16 200 100 10
+build index costs: 20489ms 
+search 10000 times costs: 74ms 
+correct query of top10 is 6272
+--------------------------------------------
+16 200 100 1
+build index costs: 20398ms 
+search 10000 times costs: 82ms 
+correct query of top1 is 5375
+--------------------------------------------
+16 200 16 100
+build index costs: 20345ms 
+search 10000 times costs: 77ms 
+correct query of top100 is 6449
+--------------------------------------------
+16 200 16 10
+build index costs: 20511ms 
+search 10000 times costs: 24ms 
+correct query of top10 is 2363
+--------------------------------------------
+16 200 16 1
+build index costs: 20418ms 
+search 10000 times costs: 23ms 
+correct query of top1 is 1897
+--------------------------------------------
+16 200 200 100
+build index costs: 20360ms 
+search 10000 times costs: 132ms 
+correct query of top100 is 8007
+--------------------------------------------
+16 200 200 10
+build index costs: 20379ms 
+search 10000 times costs: 124ms 
+correct query of top10 is 7707
+--------------------------------------------
+16 200 200 1
+build index costs: 20362ms 
+search 10000 times costs: 131ms 
+correct query of top1 is 6495
+--------------------------------------------
+16 200 32 100
+build index costs: 20427ms 
+search 10000 times costs: 74ms 
+correct query of top100 is 6490
+--------------------------------------------
+16 200 32 10
+build index costs: 20374ms 
+search 10000 times costs: 41ms 
+correct query of top10 is 3692
+--------------------------------------------
+16 200 32 1
+build index costs: 20268ms 
+search 10000 times costs: 35ms 
+correct query of top1 is 3012
+--------------------------------------------
+16 200 64 100
+build index costs: 20375ms 
+search 10000 times costs: 76ms 
+correct query of top100 is 6504
+--------------------------------------------
+16 200 64 10
+build index costs: 20386ms 
+search 10000 times costs: 55ms 
+correct query of top10 is 5286
+--------------------------------------------
+16 200 64 1
+build index costs: 20314ms 
+search 10000 times costs: 54ms 
+correct query of top1 is 4450
+--------------------------------------------
+16 32 100 100
+build index costs: 8985ms 
+search 10000 times costs: 89ms 
+correct query of top100 is 3902
+--------------------------------------------
+16 32 100 10
+build index costs: 8956ms 
+search 10000 times costs: 90ms 
+correct query of top10 is 3884
+--------------------------------------------
+16 32 100 1
+build index costs: 9009ms 
+search 10000 times costs: 93ms 
+correct query of top1 is 3339
+--------------------------------------------
+16 32 16 100
+build index costs: 9035ms 
+search 10000 times costs: 79ms 
+correct query of top100 is 3897
+--------------------------------------------
+16 32 16 10
+build index costs: 9060ms 
+search 10000 times costs: 23ms 
+correct query of top10 is 1099
+--------------------------------------------
+16 32 16 1
+build index costs: 8949ms 
+search 10000 times costs: 24ms 
+correct query of top1 is 958
+--------------------------------------------
+16 32 200 100
+build index costs: 9099ms 
+search 10000 times costs: 130ms 
+correct query of top100 is 5714
+--------------------------------------------
+16 32 200 10
+build index costs: 8996ms 
+search 10000 times costs: 126ms 
+correct query of top10 is 5275
+--------------------------------------------
+16 32 200 1
+build index costs: 9017ms 
+search 10000 times costs: 134ms 
+correct query of top1 is 4832
+--------------------------------------------
+16 32 32 100
+build index costs: 8949ms 
+search 10000 times costs: 76ms 
+correct query of top100 is 3309
+--------------------------------------------
+16 32 32 10
+build index costs: 9014ms 
+search 10000 times costs: 33ms 
+correct query of top10 is 1831
+--------------------------------------------
+16 32 32 1
+build index costs: 8910ms 
+search 10000 times costs: 34ms 
+correct query of top1 is 1568
+--------------------------------------------
+16 32 64 100
+build index costs: 9011ms 
+search 10000 times costs: 78ms 
+correct query of top100 is 3901
+--------------------------------------------
+16 32 64 10
+build index costs: 9055ms 
+search 10000 times costs: 50ms 
+correct query of top10 is 2858
+--------------------------------------------
+16 32 64 1
+build index costs: 9073ms 
+search 10000 times costs: 51ms 
+correct query of top1 is 2554
+--------------------------------------------
+16 64 100 100
+build index costs: 11300ms 
+search 10000 times costs: 79ms 
+correct query of top100 is 5307
+--------------------------------------------
+16 64 100 10
+build index costs: 11304ms 
+search 10000 times costs: 74ms 
+correct query of top10 is 5240
+--------------------------------------------
+16 64 100 1
+build index costs: 11282ms 
+search 10000 times costs: 75ms 
+correct query of top1 is 4522
+--------------------------------------------
+16 64 16 100
+build index costs: 11285ms 
+search 10000 times costs: 80ms 
+correct query of top100 is 5360
+--------------------------------------------
+16 64 16 10
+build index costs: 11313ms 
+search 10000 times costs: 23ms 
+correct query of top10 is 1767
+--------------------------------------------
+16 64 16 1
+build index costs: 11327ms 
+search 10000 times costs: 24ms 
+correct query of top1 is 1480
+--------------------------------------------
+16 64 200 100
+build index costs: 11312ms 
+search 10000 times costs: 129ms 
+correct query of top100 is 6899
+--------------------------------------------
+16 64 200 10
+build index costs: 11392ms 
+search 10000 times costs: 126ms 
+correct query of top10 is 6839
+--------------------------------------------
+16 64 200 1
+build index costs: 11269ms 
+search 10000 times costs: 127ms 
+correct query of top1 is 5897
+--------------------------------------------
+16 64 32 100
+build index costs: 11300ms 
+search 10000 times costs: 78ms 
+correct query of top100 is 5249
+--------------------------------------------
+16 64 32 10
+build index costs: 11288ms 
+search 10000 times costs: 34ms 
+correct query of top10 is 2788
+--------------------------------------------
+16 64 32 1
+build index costs: 11267ms 
+search 10000 times costs: 34ms 
+correct query of top1 is 2437
+--------------------------------------------
+16 64 64 100
+build index costs: 11259ms 
+search 10000 times costs: 82ms 
+correct query of top100 is 5378
+--------------------------------------------
+16 64 64 10
+build index costs: 11199ms 
+search 10000 times costs: 54ms 
+correct query of top10 is 4164
+--------------------------------------------
+16 64 64 1
+build index costs: 11292ms 
+search 10000 times costs: 50ms 
+correct query of top1 is 3626
+--------------------------------------------
+32 100 100 100
+build index costs: 13665ms 
+search 10000 times costs: 73ms 
+correct query of top100 is 6185
+--------------------------------------------
+32 100 100 10
+build index costs: 13597ms 
+search 10000 times costs: 86ms 
+correct query of top10 is 6117
+--------------------------------------------
+32 100 100 1
+build index costs: 13642ms 
+search 10000 times costs: 71ms 
+correct query of top1 is 5029
+--------------------------------------------
+32 100 16 100
+build index costs: 13634ms 
+search 10000 times costs: 96ms 
+correct query of top100 is 6147
+--------------------------------------------
+32 100 16 10
+build index costs: 13687ms 
+search 10000 times costs: 24ms 
+correct query of top10 is 2266
+--------------------------------------------
+32 100 16 1
+build index costs: 13631ms 
+search 10000 times costs: 23ms 
+correct query of top1 is 1962
+--------------------------------------------
+32 100 200 100
+build index costs: 13574ms 
+search 10000 times costs: 152ms 
+correct query of top100 is 7630
+--------------------------------------------
+32 100 200 10
+build index costs: 13622ms 
+search 10000 times costs: 145ms 
+correct query of top10 is 7559
+--------------------------------------------
+32 100 200 1
+build index costs: 13567ms 
+search 10000 times costs: 147ms 
+correct query of top1 is 6199
+--------------------------------------------
+32 100 32 100
+build index costs: 13591ms 
+search 10000 times costs: 77ms 
+correct query of top100 is 6115
+--------------------------------------------
+32 100 32 10
+build index costs: 13558ms 
+search 10000 times costs: 40ms 
+correct query of top10 is 3517
+--------------------------------------------
+32 100 32 1
+build index costs: 13571ms 
+search 10000 times costs: 34ms 
+correct query of top1 is 2971
+--------------------------------------------
+32 100 64 100
+build index costs: 13660ms 
+search 10000 times costs: 75ms 
+correct query of top100 is 6322
+--------------------------------------------
+32 100 64 10
+build index costs: 13649ms 
+search 10000 times costs: 53ms 
+correct query of top10 is 4981
+--------------------------------------------
+32 100 64 1
+build index costs: 13624ms 
+search 10000 times costs: 55ms 
+correct query of top1 is 4270
+--------------------------------------------
+32 16 100 100
+build index costs: 9508ms 
+search 10000 times costs: 131ms 
+correct query of top100 is 8296
+--------------------------------------------
+32 16 100 10
+build index costs: 9488ms 
+search 10000 times costs: 129ms 
+correct query of top10 is 8959
+--------------------------------------------
+32 16 100 1
+build index costs: 9421ms 
+search 10000 times costs: 133ms 
+correct query of top1 is 5513
+--------------------------------------------
+32 16 16 100
+build index costs: 9557ms 
+search 10000 times costs: 129ms 
+correct query of top100 is 9010
+--------------------------------------------
+32 16 16 10
+build index costs: 9499ms 
+search 10000 times costs: 38ms 
+correct query of top10 is 6839
+--------------------------------------------
+32 16 16 1
+build index costs: 9506ms 
+search 10000 times costs: 36ms 
+correct query of top1 is 5367
+--------------------------------------------
+32 16 200 100
+build index costs: 9451ms 
+search 10000 times costs: 235ms 
+correct query of top100 is 8446
+--------------------------------------------
+32 16 200 10
+build index costs: 9502ms 
+search 10000 times costs: 223ms 
+correct query of top10 is 6573
+--------------------------------------------
+32 16 200 1
+build index costs: 9542ms 
+search 10000 times costs: 227ms 
+correct query of top1 is 7548
+--------------------------------------------
+32 16 32 100
+build index costs: 9511ms 
+search 10000 times costs: 131ms 
+correct query of top100 is 9148
+--------------------------------------------
+32 16 32 10
+build index costs: 9506ms 
+search 10000 times costs: 67ms 
+correct query of top10 is 7846
+--------------------------------------------
+32 16 32 1
+build index costs: 9521ms 
+search 10000 times costs: 56ms 
+correct query of top1 is 6598
+--------------------------------------------
+32 16 64 100
+build index costs: 9426ms 
+search 10000 times costs: 137ms 
+correct query of top100 is 7283
+--------------------------------------------
+32 16 64 10
+build index costs: 9534ms 
+search 10000 times costs: 89ms 
+correct query of top10 is 8278
+--------------------------------------------
+32 16 64 1
+build index costs: 9552ms 
+search 10000 times costs: 102ms 
+correct query of top1 is 7224
+--------------------------------------------
+32 200 100 100
+build index costs: 20143ms 
+search 10000 times costs: 77ms 
+correct query of top100 is 6880
+--------------------------------------------
+32 200 100 10
+build index costs: 20099ms 
+search 10000 times costs: 76ms 
+correct query of top10 is 6585
+--------------------------------------------
+32 200 100 1
+build index costs: 20023ms 
+search 10000 times costs: 75ms 
+correct query of top1 is 5629
+--------------------------------------------
+32 200 16 100
+build index costs: 20341ms 
+search 10000 times costs: 77ms 
+correct query of top100 is 6740
+--------------------------------------------
+32 200 16 10
+build index costs: 20087ms 
+search 10000 times costs: 24ms 
+correct query of top10 is 2563
+--------------------------------------------
+32 200 16 1
+build index costs: 20081ms 
+search 10000 times costs: 26ms 
+correct query of top1 is 2136
+--------------------------------------------
+32 200 200 100
+build index costs: 20096ms 
+search 10000 times costs: 143ms 
+correct query of top100 is 8246
+--------------------------------------------
+32 200 200 10
+build index costs: 20205ms 
+search 10000 times costs: 126ms 
+correct query of top10 is 7962
+--------------------------------------------
+32 200 200 1
+build index costs: 20100ms 
+search 10000 times costs: 129ms 
+correct query of top1 is 6781
+--------------------------------------------
+32 200 32 100
+build index costs: 20015ms 
+search 10000 times costs: 85ms 
+correct query of top100 is 6844
+--------------------------------------------
+32 200 32 10
+build index costs: 20125ms 
+search 10000 times costs: 35ms 
+correct query of top10 is 3996
+--------------------------------------------
+32 200 32 1
+build index costs: 20075ms 
+search 10000 times costs: 35ms 
+correct query of top1 is 3369
+--------------------------------------------
+32 200 64 100
+build index costs: 20090ms 
+search 10000 times costs: 88ms 
+correct query of top100 is 6820
+--------------------------------------------
+32 200 64 10
+build index costs: 20056ms 
+search 10000 times costs: 56ms 
+correct query of top10 is 5565
+--------------------------------------------
+32 200 64 1
+build index costs: 20048ms 
+search 10000 times costs: 66ms 
+correct query of top1 is 4681
+--------------------------------------------
+32 32 100 100
+build index costs: 13258ms 
+search 10000 times costs: 154ms 
+correct query of top100 is 7975
+--------------------------------------------
+32 32 100 10
+build index costs: 13449ms 
+search 10000 times costs: 147ms 
+correct query of top10 is 8111
+--------------------------------------------
+32 32 100 1
+build index costs: 13557ms 
+search 10000 times costs: 161ms 
+correct query of top1 is 7221
+--------------------------------------------
+32 32 16 100
+build index costs: 13484ms 
+search 10000 times costs: 151ms 
+correct query of top100 is 8672
+--------------------------------------------
+32 32 16 10
+build index costs: 13458ms 
+search 10000 times costs: 44ms 
+correct query of top10 is 7171
+--------------------------------------------
+32 32 16 1
+build index costs: 13695ms 
+search 10000 times costs: 44ms 
+correct query of top1 is 6526
+--------------------------------------------
+32 32 200 100
+build index costs: 13468ms 
+search 10000 times costs: 273ms 
+correct query of top100 is 8965
+--------------------------------------------
+32 32 200 10
+build index costs: 13541ms 
+search 10000 times costs: 271ms 
+correct query of top10 is 9471
+--------------------------------------------
+32 32 200 1
+build index costs: 13422ms 
+search 10000 times costs: 283ms 
+correct query of top1 is 7342
+--------------------------------------------
+32 32 32 100
+build index costs: 13668ms 
+search 10000 times costs: 156ms 
+correct query of top100 is 8847
+--------------------------------------------
+32 32 32 10
+build index costs: 13544ms 
+search 10000 times costs: 70ms 
+correct query of top10 is 8259
+--------------------------------------------
+32 32 32 1
+build index costs: 13863ms 
+search 10000 times costs: 65ms 
+correct query of top1 is 7131
+--------------------------------------------
+32 32 64 100
+build index costs: 13655ms 
+search 10000 times costs: 152ms 
+correct query of top100 is 9649
+--------------------------------------------
+32 32 64 10
+build index costs: 13239ms 
+search 10000 times costs: 108ms 
+correct query of top10 is 7439
+--------------------------------------------
+32 32 64 1
+build index costs: 13236ms 
+search 10000 times costs: 107ms 
+correct query of top1 is 6571
+--------------------------------------------
+32 64 100 100
+build index costs: 11388ms 
+search 10000 times costs: 80ms 
+correct query of top100 is 5548
+--------------------------------------------
+32 64 100 10
+build index costs: 11259ms 
+search 10000 times costs: 78ms 
+correct query of top10 is 5387
+--------------------------------------------
+32 64 100 1
+build index costs: 11206ms 
+search 10000 times costs: 78ms 
+correct query of top1 is 4793
+--------------------------------------------
+32 64 16 100
+build index costs: 11308ms 
+search 10000 times costs: 80ms 
+correct query of top100 is 5611
+--------------------------------------------
+32 64 16 10
+build index costs: 11223ms 
+search 10000 times costs: 25ms 
+correct query of top10 is 1896
+--------------------------------------------
+32 64 16 1
+build index costs: 11208ms 
+search 10000 times costs: 24ms 
+correct query of top1 is 1600
+--------------------------------------------
+32 64 200 100
+build index costs: 11188ms 
+search 10000 times costs: 138ms 
+correct query of top100 is 6994
+--------------------------------------------
+32 64 200 10
+build index costs: 11272ms 
+search 10000 times costs: 128ms 
+correct query of top10 is 6835
+--------------------------------------------
+32 64 200 1
+build index costs: 11286ms 
+search 10000 times costs: 134ms 
+correct query of top1 is 5918
+--------------------------------------------
+32 64 32 100
+build index costs: 11291ms 
+search 10000 times costs: 80ms 
+correct query of top100 is 5473
+--------------------------------------------
+32 64 32 10
+build index costs: 11287ms 
+search 10000 times costs: 34ms 
+correct query of top10 is 3043
+--------------------------------------------
+32 64 32 1
+build index costs: 11240ms 
+search 10000 times costs: 35ms 
+correct query of top1 is 2557
+--------------------------------------------
+32 64 64 100
+build index costs: 11239ms 
+search 10000 times costs: 79ms 
+correct query of top100 is 5450
+--------------------------------------------
+32 64 64 10
+build index costs: 11237ms 
+search 10000 times costs: 56ms 
+correct query of top10 is 4462
+--------------------------------------------
+32 64 64 1
+build index costs: 11199ms 
+search 10000 times costs: 65ms 
+correct query of top1 is 3901
+--------------------------------------------
+analysis:  hnsw-sq
+file path:  /home/zilliz/workspace/dev/milvus/milvus/core/src/index/thirdparty/faiss/tutorial/cpp/test-results/hnsw-sq
+16 100 100 100
+build index costs: 39627ms 
+search 10000 times costs: 382ms 
+correct query of top100 is 9992
+--------------------------------------------
+16 100 100 10
+build index costs: 40091ms 
+search 10000 times costs: 364ms 
+correct query of top10 is 9995
+--------------------------------------------
+16 100 100 1
+build index costs: 39555ms 
+search 10000 times costs: 381ms 
+correct query of top1 is 9995
+--------------------------------------------
+16 100 16 100
+build index costs: 39834ms 
+search 10000 times costs: 374ms 
+correct query of top100 is 9993
+--------------------------------------------
+16 100 16 10
+build index costs: 39768ms 
+search 10000 times costs: 88ms 
+correct query of top10 is 9820
+--------------------------------------------
+16 100 16 1
+build index costs: 39733ms 
+search 10000 times costs: 87ms 
+correct query of top1 is 9814
+--------------------------------------------
+16 100 200 100
+build index costs: 39915ms 
+search 10000 times costs: 687ms 
+correct query of top100 is 9998
+--------------------------------------------
+16 100 200 10
+build index costs: 39895ms 
+search 10000 times costs: 669ms 
+correct query of top10 is 9995
+--------------------------------------------
+16 100 200 1
+build index costs: 39562ms 
+search 10000 times costs: 688ms 
+correct query of top1 is 10000
+--------------------------------------------
+16 100 32 100
+build index costs: 40017ms 
+search 10000 times costs: 367ms 
+correct query of top100 is 9991
+--------------------------------------------
+16 100 32 10
+build index costs: 39793ms 
+search 10000 times costs: 148ms 
+correct query of top10 is 9943
+--------------------------------------------
+16 100 32 1
+build index costs: 39930ms 
+search 10000 times costs: 146ms 
+correct query of top1 is 9944
+--------------------------------------------
+16 100 64 100
+build index costs: 39872ms 
+search 10000 times costs: 408ms 
+correct query of top100 is 9994
+--------------------------------------------
+16 100 64 10
+build index costs: 39843ms 
+search 10000 times costs: 272ms 
+correct query of top10 is 9987
+--------------------------------------------
+16 100 64 1
+build index costs: 39880ms 
+search 10000 times costs: 272ms 
+correct query of top1 is 9987
+--------------------------------------------
+16 16 100 100
+build index costs: 11429ms 
+search 10000 times costs: 343ms 
+correct query of top100 is 9640
+--------------------------------------------
+16 16 100 10
+build index costs: 11270ms 
+search 10000 times costs: 335ms 
+correct query of top10 is 9179
+--------------------------------------------
+16 16 100 1
+build index costs: 11380ms 
+search 10000 times costs: 356ms 
+correct query of top1 is 9598
+--------------------------------------------
+16 16 16 100
+build index costs: 11247ms 
+search 10000 times costs: 362ms 
+correct query of top100 is 9639
+--------------------------------------------
+16 16 16 10
+build index costs: 11436ms 
+search 10000 times costs: 85ms 
+correct query of top10 is 7949
+--------------------------------------------
+16 16 16 1
+build index costs: 11311ms 
+search 10000 times costs: 85ms 
+correct query of top1 is 7999
+--------------------------------------------
+16 16 200 100
+build index costs: 11427ms 
+search 10000 times costs: 621ms 
+correct query of top100 is 9859
+--------------------------------------------
+16 16 200 10
+build index costs: 11389ms 
+search 10000 times costs: 627ms 
+correct query of top10 is 9828
+--------------------------------------------
+16 16 200 1
+build index costs: 11459ms 
+search 10000 times costs: 609ms 
+correct query of top1 is 9813
+--------------------------------------------
+16 16 32 100
+build index costs: 11327ms 
+search 10000 times costs: 343ms 
+correct query of top100 is 9292
+--------------------------------------------
+16 16 32 10
+build index costs: 11308ms 
+search 10000 times costs: 137ms 
+correct query of top10 is 8817
+--------------------------------------------
+16 16 32 1
+build index costs: 11474ms 
+search 10000 times costs: 138ms 
+correct query of top1 is 8785
+--------------------------------------------
+16 16 64 100
+build index costs: 11479ms 
+search 10000 times costs: 339ms 
+correct query of top100 is 9615
+--------------------------------------------
+16 16 64 10
+build index costs: 11291ms 
+search 10000 times costs: 240ms 
+correct query of top10 is 9394
+--------------------------------------------
+16 16 64 1
+build index costs: 11353ms 
+search 10000 times costs: 236ms 
+correct query of top1 is 9383
+--------------------------------------------
+16 200 100 100
+build index costs: 79160ms 
+search 10000 times costs: 409ms 
+correct query of top100 is 9998
+--------------------------------------------
+16 200 100 10
+build index costs: 78832ms 
+search 10000 times costs: 410ms 
+correct query of top10 is 9996
+--------------------------------------------
+16 200 100 1
+build index costs: 78468ms 
+search 10000 times costs: 412ms 
+correct query of top1 is 9997
+--------------------------------------------
+16 200 16 100
+build index costs: 79719ms 
+search 10000 times costs: 417ms 
+correct query of top100 is 9998
+--------------------------------------------
+16 200 16 10
+build index costs: 78221ms 
+search 10000 times costs: 93ms 
+correct query of top10 is 9951
+--------------------------------------------
+16 200 16 1
+build index costs: 78778ms 
+search 10000 times costs: 92ms 
+correct query of top1 is 9957
+--------------------------------------------
+16 200 200 100
+build index costs: 79233ms 
+search 10000 times costs: 742ms 
+correct query of top100 is 9999
+--------------------------------------------
+16 200 200 10
+build index costs: 78543ms 
+search 10000 times costs: 747ms 
+correct query of top10 is 9999
+--------------------------------------------
+16 200 200 1
+build index costs: 78374ms 
+search 10000 times costs: 757ms 
+correct query of top1 is 9999
+--------------------------------------------
+16 200 32 100
+build index costs: 79580ms 
+search 10000 times costs: 421ms 
+correct query of top100 is 9998
+--------------------------------------------
+16 200 32 10
+build index costs: 79004ms 
+search 10000 times costs: 155ms 
+correct query of top10 is 9988
+--------------------------------------------
+16 200 32 1
+build index costs: 78435ms 
+search 10000 times costs: 156ms 
+correct query of top1 is 9985
+--------------------------------------------
+16 200 64 100
+build index costs: 78859ms 
+search 10000 times costs: 420ms 
+correct query of top100 is 9997
+--------------------------------------------
+16 200 64 10
+build index costs: 78594ms 
+search 10000 times costs: 273ms 
+correct query of top10 is 9997
+--------------------------------------------
+16 200 64 1
+build index costs: 78768ms 
+search 10000 times costs: 280ms 
+correct query of top1 is 9996
+--------------------------------------------
+16 32 100 100
+build index costs: 12171ms 
+search 10000 times costs: 302ms 
+correct query of top100 is 9883
+--------------------------------------------
+16 32 100 10
+build index costs: 12164ms 
+search 10000 times costs: 287ms 
+correct query of top10 is 9855
+--------------------------------------------
+16 32 100 1
+build index costs: 12046ms 
+search 10000 times costs: 308ms 
+correct query of top1 is 9872
+--------------------------------------------
+16 32 16 100
+build index costs: 12163ms 
+search 10000 times costs: 290ms 
+correct query of top100 is 9898
+--------------------------------------------
+16 32 16 10
+build index costs: 12254ms 
+search 10000 times costs: 74ms 
+correct query of top10 is 8945
+--------------------------------------------
+16 32 16 1
+build index costs: 12069ms 
+search 10000 times costs: 90ms 
+correct query of top1 is 8948
+--------------------------------------------
+16 32 200 100
+build index costs: 12208ms 
+search 10000 times costs: 530ms 
+correct query of top100 is 9935
+--------------------------------------------
+16 32 200 10
+build index costs: 12100ms 
+search 10000 times costs: 537ms 
+correct query of top10 is 9941
+--------------------------------------------
+16 32 200 1
+build index costs: 12152ms 
+search 10000 times costs: 523ms 
+correct query of top1 is 9920
+--------------------------------------------
+16 32 32 100
+build index costs: 12154ms 
+search 10000 times costs: 286ms 
+correct query of top100 is 9856
+--------------------------------------------
+16 32 32 10
+build index costs: 12198ms 
+search 10000 times costs: 113ms 
+correct query of top10 is 9487
+--------------------------------------------
+16 32 32 1
+build index costs: 12117ms 
+search 10000 times costs: 128ms 
+correct query of top1 is 9492
+--------------------------------------------
+16 32 64 100
+build index costs: 12132ms 
+search 10000 times costs: 286ms 
+correct query of top100 is 9852
+--------------------------------------------
+16 32 64 10
+build index costs: 12144ms 
+search 10000 times costs: 199ms 
+correct query of top10 is 9787
+--------------------------------------------
+16 32 64 1
+build index costs: 12105ms 
+search 10000 times costs: 196ms 
+correct query of top1 is 9782
+--------------------------------------------
+16 64 100 100
+build index costs: 25069ms 
+search 10000 times costs: 347ms 
+correct query of top100 is 9969
+--------------------------------------------
+16 64 100 10
+build index costs: 25256ms 
+search 10000 times costs: 341ms 
+correct query of top10 is 9969
+--------------------------------------------
+16 64 100 1
+build index costs: 25175ms 
+search 10000 times costs: 337ms 
+correct query of top1 is 9968
+--------------------------------------------
+16 64 16 100
+build index costs: 25032ms 
+search 10000 times costs: 344ms 
+correct query of top100 is 9967
+--------------------------------------------
+16 64 16 10
+build index costs: 25106ms 
+search 10000 times costs: 93ms 
+correct query of top10 is 9652
+--------------------------------------------
+16 64 16 1
+build index costs: 24899ms 
+search 10000 times costs: 83ms 
+correct query of top1 is 9643
+--------------------------------------------
+16 64 200 100
+build index costs: 25109ms 
+search 10000 times costs: 632ms 
+correct query of top100 is 9984
+--------------------------------------------
+16 64 200 10
+build index costs: 24981ms 
+search 10000 times costs: 626ms 
+correct query of top10 is 9984
+--------------------------------------------
+16 64 200 1
+build index costs: 25137ms 
+search 10000 times costs: 626ms 
+correct query of top1 is 9986
+--------------------------------------------
+16 64 32 100
+build index costs: 25192ms 
+search 10000 times costs: 346ms 
+correct query of top100 is 9970
+--------------------------------------------
+16 64 32 10
+build index costs: 25071ms 
+search 10000 times costs: 135ms 
+correct query of top10 is 9854
+--------------------------------------------
+16 64 32 1
+build index costs: 25076ms 
+search 10000 times costs: 136ms 
+correct query of top1 is 9848
+--------------------------------------------
+16 64 64 100
+build index costs: 24934ms 
+search 10000 times costs: 369ms 
+correct query of top100 is 9975
+--------------------------------------------
+16 64 64 10
+build index costs: 25294ms 
+search 10000 times costs: 238ms 
+correct query of top10 is 9956
+--------------------------------------------
+16 64 64 1
+build index costs: 25176ms 
+search 10000 times costs: 235ms 
+correct query of top1 is 9954
+--------------------------------------------
+32 100 100 100
+build index costs: 42968ms 
+search 10000 times costs: 471ms 
+correct query of top100 is 9999
+--------------------------------------------
+32 100 100 10
+build index costs: 43273ms 
+search 10000 times costs: 465ms 
+correct query of top10 is 9999
+--------------------------------------------
+32 100 100 1
+build index costs: 42915ms 
+search 10000 times costs: 472ms 
+correct query of top1 is 9999
+--------------------------------------------
+32 100 16 100
+build index costs: 43564ms 
+search 10000 times costs: 471ms 
+correct query of top100 is 9999
+--------------------------------------------
+32 100 16 10
+build index costs: 43468ms 
+search 10000 times costs: 110ms 
+correct query of top10 is 9918
+--------------------------------------------
+32 100 16 1
+build index costs: 43416ms 
+search 10000 times costs: 123ms 
+correct query of top1 is 9923
+--------------------------------------------
+32 100 200 100
+build index costs: 43285ms 
+search 10000 times costs: 821ms 
+correct query of top100 is 10000
+--------------------------------------------
+32 100 200 10
+build index costs: 42877ms 
+search 10000 times costs: 844ms 
+correct query of top10 is 9998
+--------------------------------------------
+32 100 200 1
+build index costs: 43022ms 
+search 10000 times costs: 847ms 
+correct query of top1 is 9999
+--------------------------------------------
+32 100 32 100
+build index costs: 43177ms 
+search 10000 times costs: 461ms 
+correct query of top100 is 9999
+--------------------------------------------
+32 100 32 10
+build index costs: 43224ms 
+search 10000 times costs: 184ms 
+correct query of top10 is 9983
+--------------------------------------------
+32 100 32 1
+build index costs: 42998ms 
+search 10000 times costs: 199ms 
+correct query of top1 is 9982
+--------------------------------------------
+32 100 64 100
+build index costs: 43174ms 
+search 10000 times costs: 457ms 
+correct query of top100 is 10000
+--------------------------------------------
+32 100 64 10
+build index costs: 43222ms 
+search 10000 times costs: 322ms 
+correct query of top10 is 9995
+--------------------------------------------
+32 100 64 1
+build index costs: 43040ms 
+search 10000 times costs: 318ms 
+correct query of top1 is 9997
+--------------------------------------------
+32 16 100 100
+build index costs: 11098ms 
+search 10000 times costs: 458ms 
+correct query of top100 is 9597
+--------------------------------------------
+32 16 100 10
+build index costs: 10847ms 
+search 10000 times costs: 434ms 
+correct query of top10 is 7461
+--------------------------------------------
+32 16 100 1
+build index costs: 10881ms 
+search 10000 times costs: 444ms 
+correct query of top1 is 8526
+--------------------------------------------
+32 16 16 100
+build index costs: 11017ms 
+search 10000 times costs: 445ms 
+correct query of top100 is 7710
+--------------------------------------------
+32 16 16 10
+build index costs: 10888ms 
+search 10000 times costs: 114ms 
+correct query of top10 is 7324
+--------------------------------------------
+32 16 16 1
+build index costs: 10996ms 
+search 10000 times costs: 122ms 
+correct query of top1 is 8489
+--------------------------------------------
+32 16 200 100
+build index costs: 11067ms 
+search 10000 times costs: 785ms 
+correct query of top100 is 9177
+--------------------------------------------
+32 16 200 10
+build index costs: 11083ms 
+search 10000 times costs: 788ms 
+correct query of top10 is 9563
+--------------------------------------------
+32 16 200 1
+build index costs: 11030ms 
+search 10000 times costs: 809ms 
+correct query of top1 is 9862
+--------------------------------------------
+32 16 32 100
+build index costs: 10925ms 
+search 10000 times costs: 448ms 
+correct query of top100 is 8780
+--------------------------------------------
+32 16 32 10
+build index costs: 10821ms 
+search 10000 times costs: 180ms 
+correct query of top10 is 7084
+--------------------------------------------
+32 16 32 1
+build index costs: 10986ms 
+search 10000 times costs: 180ms 
+correct query of top1 is 8742
+--------------------------------------------
+32 16 64 100
+build index costs: 11068ms 
+search 10000 times costs: 451ms 
+correct query of top100 is 9587
+--------------------------------------------
+32 16 64 10
+build index costs: 11158ms 
+search 10000 times costs: 308ms 
+correct query of top10 is 8826
+--------------------------------------------
+32 16 64 1
+build index costs: 11011ms 
+search 10000 times costs: 312ms 
+correct query of top1 is 9400
+--------------------------------------------
+32 200 100 100
+build index costs: 87686ms 
+search 10000 times costs: 540ms 
+correct query of top100 is 10000
+--------------------------------------------
+32 200 100 10
+build index costs: 87965ms 
+search 10000 times costs: 541ms 
+correct query of top10 is 10000
+--------------------------------------------
+32 200 100 1
+build index costs: 87524ms 
+search 10000 times costs: 538ms 
+correct query of top1 is 10000
+--------------------------------------------
+32 200 16 100
+build index costs: 87731ms 
+search 10000 times costs: 527ms 
+correct query of top100 is 10000
+--------------------------------------------
+32 200 16 10
+build index costs: 87589ms 
+search 10000 times costs: 126ms 
+correct query of top10 is 9978
+--------------------------------------------
+32 200 16 1
+build index costs: 87142ms 
+search 10000 times costs: 135ms 
+correct query of top1 is 9976
+--------------------------------------------
+32 200 200 100
+build index costs: 87269ms 
+search 10000 times costs: 981ms 
+correct query of top100 is 10000
+--------------------------------------------
+32 200 200 10
+build index costs: 87270ms 
+search 10000 times costs: 968ms 
+correct query of top10 is 10000
+--------------------------------------------
+32 200 200 1
+build index costs: 87844ms 
+search 10000 times costs: 962ms 
+correct query of top1 is 10000
+--------------------------------------------
+32 200 32 100
+build index costs: 87789ms 
+search 10000 times costs: 540ms 
+correct query of top100 is 10000
+--------------------------------------------
+32 200 32 10
+build index costs: 87579ms 
+search 10000 times costs: 212ms 
+correct query of top10 is 9997
+--------------------------------------------
+32 200 32 1
+build index costs: 87136ms 
+search 10000 times costs: 214ms 
+correct query of top1 is 9995
+--------------------------------------------
+32 200 64 100
+build index costs: 87441ms 
+search 10000 times costs: 543ms 
+correct query of top100 is 10000
+--------------------------------------------
+32 200 64 10
+build index costs: 88663ms 
+search 10000 times costs: 374ms 
+correct query of top10 is 9999
+--------------------------------------------
+32 200 64 1
+build index costs: 87777ms 
+search 10000 times costs: 390ms 
+correct query of top1 is 9999
+--------------------------------------------
+32 32 100 100
+build index costs: 23372ms 
+search 10000 times costs: 626ms 
+correct query of top100 is 9955
+--------------------------------------------
+32 32 100 10
+build index costs: 23374ms 
+search 10000 times costs: 595ms 
+correct query of top10 is 9954
+--------------------------------------------
+32 32 100 1
+build index costs: 23354ms 
+search 10000 times costs: 594ms 
+correct query of top1 is 9963
+--------------------------------------------
+32 32 16 100
+build index costs: 23388ms 
+search 10000 times costs: 585ms 
+correct query of top100 is 9956
+--------------------------------------------
+32 32 16 10
+build index costs: 23521ms 
+search 10000 times costs: 137ms 
+correct query of top10 is 9500
+--------------------------------------------
+32 32 16 1
+build index costs: 23349ms 
+search 10000 times costs: 140ms 
+correct query of top1 is 9520
+--------------------------------------------
+32 32 200 100
+build index costs: 23448ms 
+search 10000 times costs: 1030ms 
+correct query of top100 is 9980
+--------------------------------------------
+32 32 200 10
+build index costs: 23461ms 
+search 10000 times costs: 1045ms 
+correct query of top10 is 9983
+--------------------------------------------
+32 32 200 1
+build index costs: 23526ms 
+search 10000 times costs: 1016ms 
+correct query of top1 is 9983
+--------------------------------------------
+32 32 32 100
+build index costs: 23401ms 
+search 10000 times costs: 571ms 
+correct query of top100 is 9958
+--------------------------------------------
+32 32 32 10
+build index costs: 23409ms 
+search 10000 times costs: 226ms 
+correct query of top10 is 9795
+--------------------------------------------
+32 32 32 1
+build index costs: 23376ms 
+search 10000 times costs: 226ms 
+correct query of top1 is 9794
+--------------------------------------------
+32 32 64 100
+build index costs: 23477ms 
+search 10000 times costs: 572ms 
+correct query of top100 is 9959
+--------------------------------------------
+32 32 64 10
+build index costs: 23394ms 
+search 10000 times costs: 398ms 
+correct query of top10 is 9922
+--------------------------------------------
+32 32 64 1
+build index costs: 23515ms 
+search 10000 times costs: 417ms 
+correct query of top1 is 9922
+--------------------------------------------
+32 64 100 100
+build index costs: 26666ms 
+search 10000 times costs: 408ms 
+correct query of top100 is 9992
+--------------------------------------------
+32 64 100 10
+build index costs: 26817ms 
+search 10000 times costs: 420ms 
+correct query of top10 is 9992
+--------------------------------------------
+32 64 100 1
+build index costs: 26784ms 
+search 10000 times costs: 408ms 
+correct query of top1 is 9992
+--------------------------------------------
+32 64 16 100
+build index costs: 26900ms 
+search 10000 times costs: 412ms 
+correct query of top100 is 9990
+--------------------------------------------
+32 64 16 10
+build index costs: 26990ms 
+search 10000 times costs: 102ms 
+correct query of top10 is 9802
+--------------------------------------------
+32 64 16 1
+build index costs: 26506ms 
+search 10000 times costs: 122ms 
+correct query of top1 is 9805
+--------------------------------------------
+32 64 200 100
+build index costs: 26853ms 
+search 10000 times costs: 737ms 
+correct query of top100 is 9998
+--------------------------------------------
+32 64 200 10
+build index costs: 26820ms 
+search 10000 times costs: 742ms 
+correct query of top10 is 9997
+--------------------------------------------
+32 64 200 1
+build index costs: 26674ms 
+search 10000 times costs: 762ms 
+correct query of top1 is 9996
+--------------------------------------------
+32 64 32 100
+build index costs: 26679ms 
+search 10000 times costs: 432ms 
+correct query of top100 is 9990
+--------------------------------------------
+32 64 32 10
+build index costs: 26669ms 
+search 10000 times costs: 164ms 
+correct query of top10 is 9940
+--------------------------------------------
+32 64 32 1
+build index costs: 26670ms 
+search 10000 times costs: 164ms 
+correct query of top1 is 9941
+--------------------------------------------
+32 64 64 100
+build index costs: 26840ms 
+search 10000 times costs: 414ms 
+correct query of top100 is 9994
+--------------------------------------------
+32 64 64 10
+build index costs: 26822ms 
+search 10000 times costs: 283ms 
+correct query of top10 is 9979
+--------------------------------------------
+32 64 64 1
+build index costs: 26616ms 
+search 10000 times costs: 309ms 
+correct query of top1 is 9980
+--------------------------------------------
