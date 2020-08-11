@@ -24,16 +24,19 @@ namespace {
 
 const char* COLLECTION_NAME = milvus_sdk::Utils::GenCollectionName().c_str();
 
-constexpr int64_t COLLECTION_DIMENSION = 512;
+//constexpr int64_t COLLECTION_DIMENSION = 512;
+constexpr int64_t COLLECTION_DIMENSION = 128;
 constexpr int64_t COLLECTION_INDEX_FILE_SIZE = 1024;
 constexpr milvus::MetricType COLLECTION_METRIC_TYPE = milvus::MetricType::L2;
 constexpr int64_t BATCH_ENTITY_COUNT = 4000;
 constexpr int64_t NQ = 5;
 constexpr int64_t TOP_K = 10;
-constexpr int64_t NPROBE = 32;
+constexpr int64_t NPROBE = 100;
 constexpr int64_t SEARCH_TARGET = BATCH_ENTITY_COUNT / 2;  // change this value, result is different
 constexpr int64_t ADD_ENTITY_LOOP = 1;
-constexpr milvus::IndexType INDEX_TYPE = milvus::IndexType::IVFFLAT;
+constexpr milvus::IndexType INDEX_TYPE = milvus::IndexType::RHNSWFLAT;
+//constexpr milvus::IndexType INDEX_TYPE = milvus::IndexType::RHNSWSQ;
+//constexpr milvus::IndexType INDEX_TYPE = milvus::IndexType::RHNSWPQ;
 constexpr int32_t NLIST = 16384;
 const char* PARTITION_TAG = "part";
 const char* DIMENSION = "dim";
@@ -262,7 +265,7 @@ void
 ClientTest::CreateIndex(const std::string& collection_name, int64_t nlist) {
     milvus_sdk::TimeRecorder rc("Create index");
     std::cout << "Wait until create all index done" << std::endl;
-    JSON json_params = {{"nlist", nlist}, {"index_type", "IVF_FLAT"}};
+    JSON json_params = {{"nlist", nlist}, {"M", 16}, {"efConstruction", 200}, {"PQM", 4}, {"index_type", "RHNSW_FLAT"}};
     milvus::IndexParam index1 = {collection_name, "field_vec", "index_3", json_params.dump()};
     milvus_sdk::Utils::PrintIndexParam(index1);
     milvus::Status stat = conn_->CreateIndex(index1);
@@ -334,6 +337,8 @@ ClientTest::Test() {
     InsertEntities(collection_name);
     Flush(collection_name);
     CountEntities(collection_name);
+
+    CreateIndex(collection_name, NPROBE);
     //    GetCollectionStats(collection_name);
     //
     BuildVectors(NQ, COLLECTION_DIMENSION);
