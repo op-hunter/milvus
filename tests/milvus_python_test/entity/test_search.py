@@ -917,6 +917,7 @@ class TestSearchDSL(object):
         assert len(res[0]) == 0
         # TODO:
 
+    # TODO:
     @pytest.mark.level(2)
     def test_query_term_value_all_in(self, connect, collection):
         '''
@@ -931,6 +932,7 @@ class TestSearchDSL(object):
         assert len(res[0]) == 1
         # TODO:
 
+    # TODO:
     @pytest.mark.level(2)
     def test_query_term_values_not_in(self, connect, collection):
         '''
@@ -973,6 +975,7 @@ class TestSearchDSL(object):
         assert len(res[0]) == top_k
         # TODO:
 
+    # TODO:
     @pytest.mark.level(2)
     def test_query_term_values_repeat(self, connect, collection):
         '''
@@ -1027,7 +1030,7 @@ class TestSearchDSL(object):
 
     # TODO
     @pytest.mark.level(2)
-    def test_query_term_wrong_format(self, connect, collection, get_invalid_term):
+    def _test_query_term_wrong_format(self, connect, collection, get_invalid_term):
         '''
         method: build query with wrong format term
         expected: Exception raised

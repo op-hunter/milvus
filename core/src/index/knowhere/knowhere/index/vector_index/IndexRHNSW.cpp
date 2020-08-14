@@ -80,6 +80,7 @@ IndexRHNSW::Add(const DatasetPtr& dataset_ptr, const Config& config) {
 
 DatasetPtr
 IndexRHNSW::Query(const DatasetPtr& dataset_ptr, const Config& config) {
+    std::cout << "start query, current index type is: " << index_type() << std::endl;
     if (!index_) {
         KNOWHERE_THROW_MSG("index not initialize or trained");
     }

@@ -78,6 +78,7 @@ IndexRHNSWPQ::Load(const BinarySet& index_binary) {
 
 void
 IndexRHNSWPQ::Train(const DatasetPtr& dataset_ptr, const Config& config) {
+    std::cout << "start train, current index type is: " << index_type() << std::endl;
     try {
         GET_TENSOR_DATA_DIM(dataset_ptr)
 

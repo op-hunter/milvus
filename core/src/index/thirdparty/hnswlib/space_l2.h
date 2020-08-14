@@ -1,8 +1,12 @@
 #pragma once
+#include <atomic>
 #include "hnswlib.h"
-#include <faiss/FaissHook.h>
+//#include <faiss/FaissHook.h>
+#include "../faiss/FaissHook.h"
 
 namespace hnswlib {
+
+static std::atomic_int64_t l2_dis_cnt(0);
 
 static float
 L2Sqr(const void *pVect1, const void *pVect2, const void *qty_ptr) {

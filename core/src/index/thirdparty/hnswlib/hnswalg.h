@@ -7,7 +7,9 @@
 #include <unordered_set>
 #include <list>
 
-#include "knowhere/index/vector_index/helpers/FaissIO.h"
+//#include "knowhere/index/vector_index/helpers/FaissIO.h"
+#include "/home/zilliz/workspace/dev/milvus/milvus/core/src/index/knowhere/knowhere/index/vector_index/helpers/FaissIO.h"
+#include <iostream>
 
 namespace hnswlib {
 
@@ -1146,6 +1148,34 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
         return ret;
      }
 
+    void indegree_stats() {
+        std::vector<size_t > in_degree_cnt(max_elements_, 0);
+        size_t max_in_degree = 0;
+        unsigned int *data = nullptr;
+        size_t size;
+        for (auto i = 0; i < max_elements_; ++ i) {
+            data = get_linklist0(i);
+            size = getListCount(data);
+            for (auto j = 1; j <= size; ++ j) {
+                in_degree_cnt[data[j]] ++;
+                max_in_degree = std::max(max_in_degree, in_degree_cnt[data[j]]);
+            }
+        }
+        std::vector<int> in_degree_stats_(max_in_degree + 10, 0);
+        for (auto i = 0; i < max_elements_; ++ i)
+            in_degree_stats_[in_degree_cnt[i]] ++;
+        std::ofstream f("/home/zilliz/workspace/dev/milvus/test/indegree1.txt", std::ios::out);
+        f << "in-degree stats: " << std::endl;
+        for (auto i = 0; i <= max_in_degree; ++ i) {
+            if (in_degree_stats_[i])
+                f << i << " " << in_degree_stats_[i] << std::endl;
+        }
+        f.close();
+    }
+
+    void show_l2_dis_invoke_times() {
+        std::cout << "current l2 dis cnt = " << hnswlib::l2_dis_cnt << std::endl;
+    }
     };
 
 }
