@@ -45,8 +45,8 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
         fstdistfunc_ = s->get_dist_func();
         dist_func_param_ = s->get_dist_func_param();
         M_ = M;
-        maxM_ = M_;
-        maxM0_ = M_ * 2;
+        maxM_ = M_ << 2;
+        maxM0_ = M_ << 2;
         ef_construction_ = std::max(ef_construction,M_);
         ef_ = 10;
 
