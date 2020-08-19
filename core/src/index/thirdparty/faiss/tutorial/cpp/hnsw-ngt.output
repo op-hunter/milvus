@@ -1,0 +1,62 @@
+argvs: M = 32, efConstruction = 100, efSearch = 100, topk = 3
+start load sift data ...
+dim: 128, rows: 1000000
+load data costs: 139ms 
+in constructor, current syc distance invoke times is: 0
+current l2 dis cnt = 0
+build index costs: 63291ms 
+current l2 dis cnt = 2252757688
+query original:
+query startiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+search 10000 times costs: 717ms 
+correct query of top3 is 10000
+query done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+start static degree adjust, eo = 42, ei = 22
+alloc_initial_space done
+static degree adjustment costs: 5785ms 
+query static degree adjustment:
+query startiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+search 10000 times costs: 771ms 
+correct query of top3 is 10000
+query done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+static degree adjust + path adjust: 
+cut edges: 4821628
+static degree adjustment + path adjust costs: 18764ms 
+query static degree adjust + path adjust: 
+query startiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+search 10000 times costs: 674ms 
+correct query of top3 is 9998
+query done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+start static degree adjust with constraint, eo = 42, ei = 22
+alloc_initial_space done
+static degree adjustment with adjustment costs: 16220ms 
+query static degree adjustment with constraint:
+query startiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+search 10000 times costs: 820ms 
+correct query of top3 is 9985
+query done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+static degree adjust with constraint+ path adjust: 
+cut edges: 3646389
+static degree adjustment with constraint + path adjust costs: 21239ms 
+query static degree adjust with constraint + path adjust: 
+query startiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+search 10000 times costs: 742ms 
+correct query of top3 is 9981
+query done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+query origin: 
+query startiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+search 10000 times costs: 713ms 
+correct query of top3 is 10000
+query done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+origin graph~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cut edges: 4805823
+cut edges: 0
+path adjustment on original graph costs: 28118ms 
+query path adjust on original graph: 
+query startiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+search 10000 times costs: 609ms 
+correct query of top3 is 10000
+query done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+path adjust grpath~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+current l2 dis cnt = 2712642826
+in deconstructor, distance invoke times is: 2712642826

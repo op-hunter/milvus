@@ -163,12 +163,12 @@ namespace hnswlib {
             return (data_level0_memory_ + internal_id * size_data_per_element_ + offsetData_);
         }
         */
-        void alloc_initial_space(char *addr) {
+        void alloc_initial_space(char*& addr) {
             addr = (char *) malloc(max_elements_ * size_data_per_element_);
             memset(addr, 0, sizeof(max_elements_ * size_data_per_element_));
         }
 
-        inline char *getDataByInternalId(void *pdata, tableint offset) const {
+        inline char *getDataByInternalId(const void *pdata, tableint offset) const {
             return ((char*)pdata + offset * data_size_);
         }
 
@@ -210,11 +210,11 @@ namespace hnswlib {
 
                 std::unique_lock <std::mutex> lock(link_list_locks_[curNodeNum]);
 
-                int *data;// = (int *)(linkList0_ + curNodeNum * size_links_per_element0_);
+                linklistsizeint *data;// = (int *)(linkList0_ + curNodeNum * size_links_per_element0_);
                 if (layer == 0) {
-                    data = (int*)get_linklist0(curNodeNum);
+                    data = get_linklist0(curNodeNum);
                 } else {
-                    data = (int*)get_linklist(curNodeNum, layer);
+                    data = get_linklist(curNodeNum, layer);
                     // data = (int *) (linkLists_[curNodeNum] + (layer - 1) * size_links_per_element_);
                 }
                 size_t size = getListCount((linklistsizeint*)data);
@@ -294,8 +294,12 @@ namespace hnswlib {
                 candidate_set.pop();
 
                 tableint current_node_id = current_node_pair.second;
-                int *data = (int *) get_linklist0(current_node_id);
+                linklistsizeint *data = get_linklist0(current_node_id);
                 size_t size = getListCount((linklistsizeint*)data);
+                if (size > maxM0_) {
+                    printf("error node %u get wrong size %zu\n", current_node_id, size);
+                    continue;
+                }
                 // bool cur_node_deleted = isMarkedDeleted(current_node_id);
 
 #ifdef USE_SSE
@@ -307,7 +311,11 @@ namespace hnswlib {
 #endif
 
                 for (size_t j = 1; j <= size; j++) {
-                    int candidate_id = *(data + j);
+                    linklistsizeint candidate_id = *(data + j);
+                    if (candidate_id >= max_elements_ || candidate_id < 0) {
+                        printf("error node %u\n", candidate_id);
+                        continue;
+                    }
                     // if (candidate_id == 0) continue;
 #ifdef USE_SSE
                     _mm_prefetch((char *) (visited_array + *(data + j + 1)), _MM_HINT_T0);
@@ -535,9 +543,8 @@ namespace hnswlib {
                 bool changed = true;
                 while (changed) {
                     changed = false;
-                    int *data;
-                    data = (int *) get_linklist(currObj,level);
-                    int size = getListCount(data);
+                    auto data = get_linklist(currObj,level);
+                    auto size = getListCount(data);
                     tableint *datal = (tableint *) (data + 1);
                     for (int i = 0; i < size; i++) {
                         tableint cand = datal[i];
@@ -1150,6 +1157,9 @@ namespace hnswlib {
         template <typename Comp>
         std::vector<std::pair<dist_t, labeltype>>
         searchKnn(const void* query_data, size_t k, Comp comp, faiss::ConcurrentBitsetPtr bitset, dist_t *pdata) {
+            if (data_level0_memory_ == nullptr) {
+                printf("data_level0_memory_ == nullptr!\n");
+            }
             std::vector<std::pair<dist_t, labeltype>> result;
             if (cur_element_count == 0) return result;
 
@@ -1165,7 +1175,7 @@ namespace hnswlib {
             return result;
         }
 
-        void indegree_stats() {
+        void indegree_stats(int file_no) {
             std::vector<size_t > in_degree_cnt(max_elements_, 0);
             std::vector<int> out_degree_stats_(M_ * 2 + 10, 0);
             size_t max_in_degree = 0;
@@ -1181,9 +1191,17 @@ namespace hnswlib {
                 }
             }
             std::vector<int> in_degree_stats_(max_in_degree + 10, 0);
-            for (auto i = 0; i < max_elements_; ++ i)
+//            if (file_no)
+//                std::cout << "big in degree nodes:" << std::endl;
+            for (auto i = 0; i < max_elements_; ++ i) {
+//                if (file_no && in_degree_cnt[i])
+//                    std::cout << "indegree: " << in_degree_cnt[i] << ", node id: " << i << std::endl;
                 in_degree_stats_[in_degree_cnt[i]] ++;
-            std::ofstream f("/home/zilliz/workspace/dev/milvus/test/indegree2.txt", std::ios::out);
+            }
+            std::string file_loc = "/home/zilliz/workspace/dev/milvus/test/indegree";
+            file_loc += std::to_string(file_no);
+            file_loc += ".txt";
+            std::ofstream f(file_loc, std::ios::out);
             int64_t sum_ind = 0, sum_outd = 0;
             f << "in-degree stats: " << std::endl;
             for (auto i = 0; i <= max_in_degree; ++ i) {
@@ -1211,12 +1229,26 @@ namespace hnswlib {
          * cmli@2020.8.13
          ******************************************************************************/
 
-        void add_edge(char *graph, tableint from, tableint to) {
+        void add_edge(char*& graph, tableint from, tableint to) {
             auto data = get_linklist0(graph, from);
             auto size = getListCount(data);
             if (size < maxM0_) {
                 data[++ size] = to;
                 setListCount(data, size);
+            }
+        }
+
+        void remove_edge(char*& graph, tableint from, tableint to) {
+            auto data = get_linklist0(graph, from);
+            auto size = getListCount(data);
+            for (auto j = 1; j <= size; ++ j) {
+                if (data[j] == to) {
+                    for (auto k = j + 1; k <= size; ++ k) {
+                        data[k - 1] = data[k];
+                    }
+                    setListCount(data, size - 1);
+                    break;
+                }
             }
         }
 
@@ -1226,7 +1258,7 @@ namespace hnswlib {
          * output: Ge(Ve, Ee) = output, initial value = nullptr
          */
 
-        void ConstructAdjustedGraph(int eo, int ei, const float* pdata, char* output) {
+        void ConstructAdjustedGraph(int eo, int ei, const float* pdata, char*& output) {
             if (output) free(output);
             alloc_initial_space(output);
 
@@ -1246,7 +1278,8 @@ namespace hnswlib {
                     if (p <= eo) {
                         auto c_neis = get_linklist0(output, i);
                         auto s_neis = getListCount(c_neis);
-                        for (auto j = 1; j <= s_neis; ++ j) {
+                        int j;
+                        for (j = 1; j <= s_neis; ++ j) {
                             if (c_neis[j] == closest.second)
                                 break;
                         }
@@ -1258,7 +1291,8 @@ namespace hnswlib {
                     if (p <= ei) {
                         auto c_neis = get_linklist0(output, closest.second);
                         auto s_neis = getListCount(c_neis);
-                        for (auto j = 1; j <= s_neis; ++ j) {
+                        int j;
+                        for (j = 1; j <= s_neis; ++ j) {
                             if (c_neis[j] == i)
                                 break;
                         }
@@ -1278,7 +1312,7 @@ namespace hnswlib {
          * output: Ge(Ve, Ee) = output
          */
 
-        void ConstructAdjustedGraphWithConstraint(int eo, int ei, const float* pdata, char* output) {
+        void ConstructAdjustedGraphWithConstraint(int eo, int ei, const float* pdata, char*& output) {
             if (output) free(output);// Ge
             alloc_initial_space(output);
             char *Gi = nullptr;// Gi
@@ -1288,9 +1322,8 @@ namespace hnswlib {
 
             std::priority_queue<std::pair<tableint, tableint>> vertex_set;
             std::priority_queue<std::pair<dist_t, tableint>> neighbors_set;
-            vertex_set.clear();
             for (int i = 0, j = 0; i < max_elements_; ++ i, j += size_data_per_element_) {
-                vertex_set.emplace(-getListCount(Gt + j), i);
+                vertex_set.emplace(-getListCount((linklistsizeint *)(Gt + j)), i);
             }
             while (!vertex_set.empty()) {
                 auto cur_v = vertex_set.top();
@@ -1299,17 +1332,17 @@ namespace hnswlib {
                 auto size = getListCount(data);
                 while (!neighbors_set.empty()) neighbors_set.pop();
                 for (auto i = 1; i <= size; ++ i) {
-                    neighbors_set.emplace(-fstdistfunc_(getDataByInternalId(pdata, data[j]),
+                    neighbors_set.emplace(-fstdistfunc_(getDataByInternalId(pdata, data[i]),
                                                         getDataByInternalId(pdata, cur_v.second),
-                                                        dist_func_param_), data[j]);
+                                                        dist_func_param_), data[i]);
                 }
                 while (!neighbors_set.empty()) {
                     auto cur_n = neighbors_set.top();
                     neighbors_set.pop();
                     auto nei_num_n_Gi = getListCount(get_linklist0(Gi, cur_n.second));
-                    auto nei_num_v_Ge = getListCount(get_linklist0(Ge, cur_v.second));
+                    auto nei_num_v_Ge = getListCount(get_linklist0(output, cur_v.second));
                     if (nei_num_n_Gi == 0 || (nei_num_n_Gi < ei && nei_num_v_Ge < eo)) {
-                        add_edge(Ge, cur_v.second, cur_n.second);
+                        add_edge(output, cur_v.second, cur_n.second);
                         add_edge(Gi, cur_n.second, cur_v.second);
                     }
                 }
@@ -1330,7 +1363,8 @@ namespace hnswlib {
                 while (!neighbors_set.empty() && ge_size < eo) {
                     auto cur_v = neighbors_set.top();
                     neighbors_set.pop();
-                    for (auto j = 1; j <= ge_size; ++ j) {
+                    int j;
+                    for (j = 1; j <= ge_size; ++ j) {
                         if (ge_data[j] == cur_v.second)
                             break;
                     }
@@ -1348,19 +1382,20 @@ namespace hnswlib {
         /**
          * algorithm 5 HasPath
          */
-        bool HasPath(char *graph, tableint ns, tableint nd, const float* pdata) {
+        bool HasPath(char*& graph, tableint ns, tableint nd, const float* pdata) {
             auto data = get_linklist0(graph, ns);
             auto size = getListCount(data);
+            auto dist2 = fstdistfunc_(getDataByInternalId(pdata, nd), getDataByInternalId(pdata, ns), dist_func_param_);
             for (auto i = 1; i <= size; ++ i) {
                 auto c_data = get_linklist0(graph, data[i]);
                 auto c_size = getListCount(c_data);
-                for (auto j = 1; j <= c_size; ++ j) {
+                int j;
+                for (j = 1; j <= c_size; ++ j) {
                     if (nd == c_data[j])
                         break;
                 }
                 if (j <= c_size) {
                     auto dist1 = fstdistfunc_(getDataByInternalId(pdata, nd), getDataByInternalId(pdata, data[i]), dist_func_param_);
-                    auto dist2 = fstdistfunc_(getDataByInternalId(pdata, nd), getDataByInternalId(pdata, ns), dist_func_param_);
                     if (dist1 < dist2)
                         return true;
                 }
@@ -1371,12 +1406,37 @@ namespace hnswlib {
         /**
          * algorithm 4
          */
-         void AdjustPath(char *graph, char *output, const float* pdata) {
+         void AdjustPath(char*& graph, char*& output, const float* pdata) {
              if (output) free(output);
              alloc_initial_space(output);
              char *Gt = nullptr;
              alloc_initial_space(Gt);
-             memcpy(Gt, data_level0_memory_, max_elements_ * size_data_per_element_);
+             memcpy(Gt, graph, max_elements_ * size_data_per_element_);
+
+             /*
+             for (int i = 0; i < max_elements_; ++ i) {
+                 auto data = get_linklist0(Gt, i);
+                 auto size = getListCount(data);
+                 while (size) {
+                     float min_dis = fstdistfunc_(getDataByInternalId(pdata, i), getDataByInternalId(pdata, data[1]), dist_func_param_);
+                     tableint min_v = 1;
+                     for (auto j = 2; j <= size; ++ j) {
+                         auto dis = fstdistfunc_(getDataByInternalId(pdata, i), getDataByInternalId(pdata, data[j]), dist_func_param_);
+                         if (dis < min_dis) {
+                             min_dis = dis;
+                             min_v = j;
+                         }
+                     }
+                     if (!HasPath(output, i, min_v, pdata)) {
+                         add_edge(output, i, min_v);
+                     }
+                     for (auto j = min_v + 1; j <= size; ++ j)
+                         data[j - 1] = data[j];
+                     setListCount(data, -- size);
+                 }
+             }
+             */
+
              std::queue<tableint> Vt;
              while (!Vt.empty()) Vt.pop();
              for (auto i = 0; i < max_elements_; ++ i) Vt.push(i);
@@ -1385,12 +1445,14 @@ namespace hnswlib {
                  Vt.pop();
                  auto data = get_linklist0(Gt, cur_n);
                  auto size = getListCount(data);
+                 if (size > maxM0_)
+                     continue;
                  if (size) {
                      float min_dis = fstdistfunc_(getDataByInternalId(pdata, cur_n), getDataByInternalId(pdata, data[1]), dist_func_param_);
                      tableint min_v = 1;
                      for (auto i = 2; i <= size; ++ i) {
                          auto dis = fstdistfunc_(getDataByInternalId(pdata, cur_n), getDataByInternalId(pdata, data[i]), dist_func_param_);
-                         if (min_dis < dis) {
+                         if (dis < min_dis) {
                              min_dis = dis;
                              min_v = i;
                          }
@@ -1403,6 +1465,101 @@ namespace hnswlib {
                      setListCount(data, size - 1);
                      if (size - 1)
                          Vt.push(cur_n);
+                 }
+             }
+             free(Gt);
+         }
+
+         int AdjustPath2(char*& graph, char*& output, const float* pdata) {
+             if (output) free(output);
+             alloc_initial_space(output);
+             memcpy(output, graph, max_elements_ * size_data_per_element_);
+             int cut_cnt = 0;
+
+             for (int i = 0; i < max_elements_; ++ i) {
+                 auto data = get_linklist0(output, i);
+                 auto size = getListCount(data);
+                 if (size > maxM0_)
+                     continue;
+                 std::priority_queue<std::pair<dist_t, tableint>> neighbors_set;
+                 for (auto j = 1; j <= size; ++ j) {
+                     if (data[j] >= max_elements_) continue;
+                     neighbors_set.emplace(fstdistfunc_(getDataByInternalId(pdata, i), getDataByInternalId(pdata, data[j]), dist_func_param_), data[j]);
+                 }
+                 while (!neighbors_set.empty()) {
+                     auto cur_node = neighbors_set.top().second;
+                     neighbors_set.pop();
+                     if (HasPath(output, i, cur_node, pdata))
+                         remove_edge(output, i, cur_node), cut_cnt ++;
+                 }
+             }
+             printf("cut edges: %d\n", cut_cnt);
+             return cut_cnt;
+
+             /*
+             std::queue<tableint> Vt;
+             while (!Vt.empty()) Vt.pop();
+             for (auto i = 0; i < max_elements_; ++ i) Vt.push(i);
+             while (!Vt.empty()) {
+                 auto cur_n = Vt.front();
+                 Vt.pop();
+                 auto data = get_linklist0(output, cur_n);
+                 auto size = getListCount(data);
+                 if (size) {
+                     float min_dis = fstdistfunc_(getDataByInternalId(pdata, cur_n), getDataByInternalId(pdata, data[1]), dist_func_param_);
+                     tableint min_v = 1;
+                     for (auto i = 2; i <= size; ++ i) {
+                         auto dis = fstdistfunc_(getDataByInternalId(pdata, cur_n), getDataByInternalId(pdata, data[i]), dist_func_param_);
+                         if (dis > min_dis) {
+                             min_dis = dis;
+                             min_v = i;
+                         }
+                     }
+                     if (HasPath(output, cur_n, min_v, pdata)) {
+//                         add_edge(output, cur_n, min_v);
+                         remove_edge(output, cur_n, min_v);
+                     }
+                     for (auto i = min_v + 1; i <= size; ++ i)
+                         data[i - 1] = data[i];
+                     setListCount(data, size - 1);
+                     if (size - 1)
+                         Vt.push(cur_n);
+                 }
+             }
+             */
+         }
+
+         int get_edges() {
+             int ret = 0;
+             for (auto i = 0; i < max_elements_; ++ i) {
+                 auto data = get_linklist0(i);
+                 auto size = getListCount(data);
+                 if (size <= maxM0_) {
+                     ret += size;
+                 }
+             }
+             return ret;
+         }
+
+
+         void check_graph(std::ofstream &f) {
+             for (auto i = 0; i < max_elements_; ++ i) {
+                 auto data = get_linklist0(i);
+                 auto size = getListCount(data);
+                 if (size < 0 || size > maxM0_) {
+                     f << "node " << i << " has wrong size " << size << std::endl;
+                 }
+                 int j;
+                 for (j = 1; j <= size; ++ j) {
+                     if (data[j] < 0 || data[j] >= max_elements_)
+                         break;
+                 }
+                 if (j <= size) {
+                     f << "node " << i << " has wrong neighbors: " << std::endl;
+                     for (auto k = 1; k <= size; ++ k) {
+                         if (data[k] < 0 || data[k] >= max_elements_)
+                             f << "the invalid " << k << "th neighbor: " << data[k] << std::endl;
+                     }
                  }
              }
          }

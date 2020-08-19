@@ -71,8 +71,8 @@ int main(int argc, char **argv) {
             xq[d * i + j] = drand48();
         xq[d * i] += i / 1000.;
     }
-
     */
+
     std::string data_location = "/home/zilliz/workspace/data/sift-128-euclidean.hdf5";
     std::cout << "start load sift data ..." << std::endl;
     auto ts = std::chrono::high_resolution_clock::now();
