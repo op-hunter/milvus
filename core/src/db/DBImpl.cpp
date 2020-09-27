@@ -653,8 +653,11 @@ DBImpl::Query(const server::ContextPtr& context, const query::QueryPtr& query_pt
     };
 
     auto segment_iter = std::make_shared<snapshot::SegmentIterator>(ss, exec);
+    rc.RecordSection("before Iterate");
     segment_iter->Iterate();
+    rc.RecordSection("end Iterate");
     STATUS_CHECK(segment_iter->GetStatus());
+    rc.RecordSection("end segment_iter->GetStatus()");
 
     LOG_ENGINE_DEBUG_ << LogOut("Engine query begin, segment count: %ld", segment_visitors.size());
 
@@ -663,17 +666,23 @@ DBImpl::Query(const server::ContextPtr& context, const query::QueryPtr& query_pt
         segment_ids.emplace_back(sv->GetSegment()->GetID());
     }
 
+    rc.RecordSection("end for loop: segment_ids.emplace_back(sv->GetSegment()->GetID())");
     scheduler::SearchJobPtr job = std::make_shared<scheduler::SearchJob>(nullptr, ss, options_, query_ptr, segment_ids);
 
     cache::CpuCacheMgr::GetInstance().PrintInfo();  // print cache info before query
 
+    rc.RecordSection("before SuspendIfFirst");
     SuspendIfFirst();
+    rc.RecordSection("end SuspendIfFirst");
 
     /* put search job to scheduler and wait job finish */
     scheduler::JobMgrInst::GetInstance()->Put(job);
+    rc.RecordSection("end scheduler::JobMgrInst::GetInstance()->Put(job)");
     job->WaitFinish();
+    rc.RecordSection("end WaitFinish");
 
     ResumeIfLast();
+    rc.RecordSection("end ResumeIfLast");
 
     cache::CpuCacheMgr::GetInstance().PrintInfo();  // print cache info after query
 
@@ -681,16 +690,19 @@ DBImpl::Query(const server::ContextPtr& context, const query::QueryPtr& query_pt
         return job->status();
     }
 
+    rc.RecordSection("before job->query_result");
     if (job->query_result()) {
         result = job->query_result();
     }
 
+    rc.RecordSection("end job->query_result");
     // step 4: get entities by result ids
     std::vector<bool> valid_row;
     if (!query_ptr->field_names.empty()) {
         STATUS_CHECK(GetEntityByID(query_ptr->collection_id, result->result_ids_, query_ptr->field_names, valid_row,
                                    result->data_chunk_));
     }
+    rc.RecordSection("end valid_row");
 
     // step 5: filter entities by field names
     //    std::vector<engine::AttrsData> filter_attrs;

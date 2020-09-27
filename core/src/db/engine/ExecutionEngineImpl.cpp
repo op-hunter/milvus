@@ -160,6 +160,7 @@ ExecutionEngineImpl::Load(const TargetFields& field_names) {
                 //                }
             }
 
+            LOG_ENGINE_DEBUG_ << "valid_metric_type = " << valid_metric_type;
             knowhere::VecIndexPtr index_ptr;
             if (valid_metric_type) {
                 segment_reader_->LoadVectorIndex(name, index_ptr);
@@ -334,6 +335,7 @@ ExecutionEngineImpl::Search(ExecutionEngineContext& context) {
             return status;
         }
         rc.RecordSection("Scalar field filtering");
+        std::cout << "after Scalar field filtering, entity_count_ = " << entity_count_ << std::endl;
 
         // Do And
         for (int64_t i = 0; i < entity_count_; i++) {
@@ -341,6 +343,7 @@ ExecutionEngineImpl::Search(ExecutionEngineContext& context) {
                 list->set(i);
             }
         }
+        rc.RecordSection("after Do And");
         vec_index->SetBlacklist(list);
 
         auto& vector_param = context.query_ptr_->vectors.at(vector_placeholder);

@@ -362,10 +362,10 @@ Utils::GenDSLJson(nlohmann::json& dsl_json, nlohmann::json& vector_param_json, c
     dsl_json["bool"] = bool_json;
 
     nlohmann::json query_vector_json, vector_extra_params;
-    int64_t topk = 10;
+    int64_t topk = 1;
     query_vector_json["topk"] = topk;
     query_vector_json["metric_type"] = metric_type;
-    vector_extra_params["nprobe"] = 64;
+    vector_extra_params["nprobe"] = 32;
     query_vector_json["params"] = vector_extra_params;
     vector_param_json[placeholder]["field_vec"] = query_vector_json;
 }

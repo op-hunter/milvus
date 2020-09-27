@@ -256,7 +256,9 @@ SegmentReader::LoadVectorIndex(const std::string& field_name, knowhere::VecIndex
     try {
         TimeRecorder recorder("SegmentReader::LoadVectorIndex: " + field_name);
 
+        recorder.RecordSection("start");
         segment_ptr_->GetVectorIndex(field_name, index_ptr);
+        recorder.RecordSection("after GetVectorIndex");
         if (index_ptr != nullptr) {
             return Status::OK();  // already exist
         }
@@ -264,7 +266,9 @@ SegmentReader::LoadVectorIndex(const std::string& field_name, knowhere::VecIndex
         // check field type
         auto& ss_codec = codec::Codec::instance();
         auto field_visitor = segment_visitor_->GetFieldVisitor(field_name);
+        recorder.RecordSection("after GetFieldVisitor");
         const engine::snapshot::FieldPtr& field = field_visitor->GetField();
+        recorder.RecordSection("after field_visitor->GetField()");
         if (!engine::IsVectorField(field)) {
             return Status(DB_ERROR, "Field is not vector type");
         }
@@ -272,11 +276,13 @@ SegmentReader::LoadVectorIndex(const std::string& field_name, knowhere::VecIndex
         // load uids
         std::vector<int64_t> uids;
         STATUS_CHECK(LoadUids(uids));
+        recorder.RecordSection("after LoadUids");
 
         // load deleted doc
         faiss::ConcurrentBitsetPtr concurrent_bitset_ptr = std::make_shared<faiss::ConcurrentBitset>(uids.size());
         segment::DeletedDocsPtr deleted_docs_ptr;
         LoadDeletedDocs(deleted_docs_ptr);
+        recorder.RecordSection("after LoadDeletedDocs");
         if (deleted_docs_ptr != nullptr) {
             auto& deleted_docs = deleted_docs_ptr->GetDeletedDocs();
             for (auto& offset : deleted_docs) {
