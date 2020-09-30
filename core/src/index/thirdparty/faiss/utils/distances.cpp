@@ -148,7 +148,11 @@ static void knn_inner_product_sse (const float * x,
     size_t k = res->k;
     size_t thread_max_num = omp_get_max_threads();
 
-    if (ny > parallel_policy_threshold || (nx < thread_max_num / 2 && ny >= thread_max_num * 32)) {
+    // Strategy C
+    if (ny > parallel_policy_threshold || (nx < thread_max_num / 2 && ny >= thread_max_num * 32))
+//    if (true)
+    {// Strategy B
+        printf("do Strategy B\n");
         size_t block_x = std::min(
                 get_L3_Size() / (d * sizeof(float) + thread_max_num * k * (sizeof(float) + sizeof(int64_t))),
                 nx);
@@ -218,7 +222,10 @@ static void knn_inner_product_sse (const float * x,
         delete[] value;
         delete[] labels;
 
-    } else {
+    }
+    else
+    {// Strategy A
+        printf("do Strategy A\n");
         float * value = res->val;
         int64_t * labels = res->ids;
 
@@ -588,7 +595,7 @@ static void knn_jaccard_blas (const float * x,
  * KNN driver functions
  *******************************************************/
 
-int distance_compute_blas_threshold = 20;
+int distance_compute_blas_threshold = 2000000;
 
 void knn_inner_product (const float * x,
         const float * y,
