@@ -17,7 +17,7 @@
 #include <faiss/IndexFlat.h>
 
 int main() {
-    int d = 128;                            // dimension
+    int d = 512;                            // dimension
     int nb = 1000000;                       // database size
     int nq = 5000;                        // nb of queries
 
@@ -46,7 +46,8 @@ int main() {
             long *I = new long[topk * snq];
             float *D = new float[topk * snq];
             // gen data
-            float *xb = new float[d * snb];
+	    int64_t new_size = (int64_t)d * snb;
+            float *xb = new float[new_size];
             float *xq = new float[d * snq];
             std::chrono::high_resolution_clock::time_point ts, te;
             float tot_cost = 0.0;
@@ -102,7 +103,7 @@ int main() {
 //    std::vector<int> topks = {128};
 //    std::vector<int> nbs = {128, 256, 512, 1024, 2048, 4096, 16384};
     std::vector<int> nbs = {1000, 10000, 50000, 100000, 500000, 1000000, 10000000};
-    std::vector<int> nqs = {1000};
+    std::vector<int> nqs = {10000};
     std::vector<int> topks = {1};
 
     for (auto &snb : nbs) {

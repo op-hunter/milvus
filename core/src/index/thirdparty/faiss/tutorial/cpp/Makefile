@@ -5,8 +5,9 @@
 
 -include ../../makefile.inc
 
-CPU_TARGETS = 1-Flat 2-IVFFlat 3-IVFPQ 9-BinaryFlat
-GPU_TARGETS = 4-GPU 5-Multiple-GPUs
+#CPU_TARGETS = 1-Flat 2-IVFFlat 3-IVFPQ 9-BinaryFlat
+#GPU_TARGETS = 4-GPU 5-Multiple-GPUs
+CPU_TARGETS = cache_test
 
 default: cpu
 
@@ -16,7 +17,7 @@ cpu: $(CPU_TARGETS)
 
 gpu: $(GPU_TARGETS)
 
-%: %.cpp ../../libfaiss.a
+%: %.cpp ../../libfaiss.a.sa
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $@ $^ $(LDFLAGS) -I../../ $(LIBS)
 
 clean:
