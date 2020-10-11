@@ -36,7 +36,7 @@ int main() {
         }
     };
 
-    std::string save_file = "StrategyA.result";
+    std::string save_file = "StrategyBB.result";
     std::ofstream fout(save_file, std::ios::app);
 
     auto search = [&](int snb, int snq, int topk) {
@@ -103,7 +103,7 @@ int main() {
 //    std::vector<int> topks = {128};
 //    std::vector<int> nbs = {128, 256, 512, 1024, 2048, 4096, 16384};
     std::vector<int> nbs = {1000, 10000, 50000, 100000, 500000, 1000000, 10000000};
-    std::vector<int> nqs = {10000};
+    std::vector<int> nqs = {1, 10, 100, 1000, 10000};
     std::vector<int> topks = {1};
 
     for (auto &snb : nbs) {
