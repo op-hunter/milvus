@@ -229,6 +229,14 @@ ExecutionEngineImpl::CreatetVecIndex(EngineType type) {
             index = vec_index_factory.CreateVecIndex(knowhere::IndexEnum::INDEX_ANNOY, mode);
             break;
         }
+        case EngineType::NGTPANNG: {
+            index = vec_index_factory.CreateVecIndex(knowhere::IndexEnum::INDEX_NGTPANNG, mode);
+            break;
+        }
+        case EngineType::NGTONNG: {
+            index = vec_index_factory.CreateVecIndex(knowhere::IndexEnum::INDEX_NGTONNG, mode);
+            break;
+        }
         default: {
             LOG_ENGINE_ERROR_ << "Unsupported index type " << (int)type;
             return nullptr;

@@ -40,7 +40,9 @@ enum class EngineType {
     FAISS_BIN_IVFFLAT,
     HNSW,
     ANNOY,
-    MAX_VALUE = ANNOY,
+    NGTPANNG,
+    NGTONNG,
+    MAX_VALUE = NGTONNG,
 };
 
 enum class MetricType {

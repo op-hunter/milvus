@@ -96,6 +96,8 @@ Utils::IndexTypeName(const milvus::IndexType& index_type) {
         case milvus::IndexType::SPTAGBKT:return "SPTAGBKT";
         case milvus::IndexType::HNSW:return "HNSW";
         case milvus::IndexType::ANNOY:return "ANNOY";
+        case milvus::IndexType::NGTPANNG:return "NGTPANNG";
+        case milvus::IndexType::NGTONNG:return "NGTONNG";
         default:return "Unknown index type";
     }
 }

@@ -39,6 +39,8 @@ enum class IndexType {
     SPTAGBKT = 8,
     HNSW = 11,
     ANNOY = 12,
+    NGTPANNG = 13,
+    NGTONNG = 14,
 };
 
 enum class MetricType {
