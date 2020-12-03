@@ -11,6 +11,7 @@
 
 #include "knowhere/index/vector_index/IndexHNSW.h"
 
+#include <cstdio>
 #include <algorithm>
 #include <cassert>
 #include <iterator>
@@ -47,10 +48,13 @@ IndexHNSW::Serialize(const Config& config) {
     try {
         MemoryIOWriter writer;
         index_->saveIndex(writer);
-        std::shared_ptr<uint8_t[]> data(writer.data_);
-
         BinarySet res_set;
-        res_set.Append("HNSW", data, writer.rp);
+        if (config.contains(INDEX_FILE_SLICE_SIZE_IN_MEGABYTE)) {
+            Disassemble(config[INDEX_FILE_SLICE_SIZE_IN_MEGABYTE].get<int64_t>() * 1024 * 1024, writer, "HNSW_INDEX", res_set);
+        } else {
+            std::shared_ptr<uint8_t[]> data(writer.data_);
+            res_set.Append("HNSW", data, writer.rp);
+        }
         return res_set;
     } catch (std::exception& e) {
         KNOWHERE_THROW_MSG(e.what());
@@ -60,15 +64,21 @@ IndexHNSW::Serialize(const Config& config) {
 void
 IndexHNSW::Load(const BinarySet& index_binary) {
     try {
-        auto binary = index_binary.GetByName("HNSW");
-
         MemoryIOReader reader;
-        reader.total = binary->size;
-        reader.data_ = binary->data.get();
+        if (index_binary.Contains("HNSW")) {
+            auto binary = index_binary.GetByName("HNSW");
+            reader.total = binary->size;
+            reader.data_ = binary->data.get();
+        } else {
+            Assemble(index_binary, "HNSW_INDEX", reader);
+        }
 
         hnswlib::SpaceInterface<float>* space = nullptr;
         index_ = std::make_shared<hnswlib::HierarchicalNSW<float>>(space);
         index_->loadIndex(reader);
+
+        if (!index_binary.Contains("HNSW"))
+            free(reader.data_);
 
         normalize = index_->metric_type_ == 1;  // 1 == InnerProduct
     } catch (std::exception& e) {

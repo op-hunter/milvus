@@ -41,6 +41,7 @@ set(external_srcs
         knowhere/common/Exception.cpp
         knowhere/common/Log.cpp
         knowhere/common/Timer.cpp
+        knowhere/common/Utils.cpp
         )
 
 set(vector_index_srcs

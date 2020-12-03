@@ -197,6 +197,9 @@ VectorIndexFormat::WriteIndex(const storage::FSHandlerPtr& fs_ptr, const std::st
     std::string full_file_path = file_path + VECTOR_INDEX_POSTFIX;
 
     auto binaryset = index->Serialize(knowhere::Config());
+//    knowhere::Config cfg;
+//    cfg[knowhere::INDEX_FILE_SLICE_SIZE_IN_MEGABYTE] = 20;
+//    auto binaryset = index->Serialize(cfg);
 
     if (!fs_ptr->writer_ptr_->Open(full_file_path)) {
         return Status(SERVER_CANNOT_OPEN_FILE, "Fail to open vector index: " + full_file_path);
@@ -253,6 +256,9 @@ VectorIndexFormat::WriteCompress(const storage::FSHandlerPtr& fs_ptr, const std:
     milvus::TimeRecorderAuto recorder("VectorIndexFormat::WriteCompress:" + file_path);
 
     auto binaryset = index->Serialize(knowhere::Config());
+//    knowhere::Config cfg;
+//    cfg[knowhere::INDEX_FILE_SLICE_SIZE_IN_MEGABYTE] = 20;
+//    auto binaryset = index->Serialize(cfg);
 
     auto sq8_data = binaryset.Erase(QUANTIZATION_DATA);
     if (sq8_data != nullptr) {

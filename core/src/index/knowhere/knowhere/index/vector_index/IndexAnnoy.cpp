@@ -32,34 +32,48 @@ IndexAnnoy::Serialize(const Config& config) {
         KNOWHERE_THROW_MSG("index not initialize or trained");
     }
 
-    auto metric_type_length = metric_type_.length();
-    std::shared_ptr<uint8_t[]> metric_type(new uint8_t[metric_type_length]);
-    memcpy(metric_type.get(), metric_type_.data(), metric_type_.length());
-
-    auto dim = Dim();
-    std::shared_ptr<uint8_t[]> dim_data(new uint8_t[sizeof(uint64_t)]);
-    memcpy(dim_data.get(), &dim, sizeof(uint64_t));
-
-    size_t index_length = index_->get_index_length();
-    std::shared_ptr<uint8_t[]> index_data(new uint8_t[index_length]);
-    memcpy(index_data.get(), index_->get_index(), index_length);
-
     BinarySet res_set;
-    res_set.Append("annoy_metric_type", metric_type, metric_type_length);
-    res_set.Append("annoy_dim", dim_data, sizeof(uint64_t));
-    res_set.Append("annoy_index_data", index_data, index_length);
+    if (config.contains(INDEX_FILE_SLICE_SIZE_IN_MEGABYTE)) {
+        auto dim = index_->get_dim();
+        Disassemble(config[INDEX_FILE_SLICE_SIZE_IN_MEGABYTE].get<int64_t>() * 1024 * 1024, "ANNOY_METRIC_TYPE", (uint8_t*)(metric_type_.data()), metric_type_.length(), res_set);
+        Disassemble(config[INDEX_FILE_SLICE_SIZE_IN_MEGABYTE].get<int64_t>() * 1024 * 1024, "ANNOY_DIM", (uint8_t*)(&dim), sizeof(int64_t), res_set);
+        Disassemble(config[INDEX_FILE_SLICE_SIZE_IN_MEGABYTE].get<int64_t>() * 1024 * 1024, "ANNOY_INDEX", (uint8_t*)(index_->get_index()), index_->get_index_length(), res_set);
+    } else {
+        auto metric_type_length = metric_type_.length();
+        std::shared_ptr<uint8_t[]> metric_type(new uint8_t[metric_type_length]);
+        memcpy(metric_type.get(), metric_type_.data(), metric_type_.length());
+
+        auto dim = Dim();
+        std::shared_ptr<uint8_t[]> dim_data(new uint8_t[sizeof(uint64_t)]);
+        memcpy(dim_data.get(), &dim, sizeof(uint64_t));
+
+        size_t index_length = index_->get_index_length();
+        std::shared_ptr<uint8_t[]> index_data(new uint8_t[index_length]);
+        memcpy(index_data.get(), index_->get_index(), index_length);
+
+        res_set.Append("annoy_metric_type", metric_type, metric_type_length);
+        res_set.Append("annoy_dim", dim_data, sizeof(uint64_t));
+        res_set.Append("annoy_index_data", index_data, index_length);
+    }
     return res_set;
 }
 
 void
 IndexAnnoy::Load(const BinarySet& index_binary) {
-    auto metric_type = index_binary.GetByName("annoy_metric_type");
-    metric_type_.resize(static_cast<size_t>(metric_type->size));
-    memcpy(metric_type_.data(), metric_type->data.get(), static_cast<size_t>(metric_type->size));
+    uint64_t dim, data_size;
+    void *p_data = nullptr;
+    if (index_binary.Contains("annoy_index_data")) {
+        auto metric_type = index_binary.GetByName("annoy_metric_type");
+        metric_type_.resize(static_cast<size_t>(metric_type->size));
+        memcpy(metric_type_.data(), metric_type->data.get(), static_cast<size_t>(metric_type->size));
 
-    auto dim_data = index_binary.GetByName("annoy_dim");
-    uint64_t dim;
-    memcpy(&dim, dim_data->data.get(), static_cast<size_t>(dim_data->size));
+        auto dim_data = index_binary.GetByName("annoy_dim");
+        memcpy(&dim, dim_data->data.get(), static_cast<size_t>(dim_data->size));
+        auto index_data = index_binary.GetByName("annoy_index_data");
+        p_data = index_data->data.get();
+        data_size = index_data->size;
+    } else {
+    }
 
     if (metric_type_ == Metric::L2) {
         index_ = std::make_shared<AnnoyIndex<int64_t, float, ::Euclidean, ::Kiss64Random>>(dim);
@@ -69,9 +83,8 @@ IndexAnnoy::Load(const BinarySet& index_binary) {
         KNOWHERE_THROW_MSG("metric not supported " + metric_type_);
     }
 
-    auto index_data = index_binary.GetByName("annoy_index_data");
     char* p = nullptr;
-    if (!index_->load_index(reinterpret_cast<void*>(index_data->data.get()), index_data->size, &p)) {
+    if (!index_->load_index(p_data, data_size, &p)) {
         std::string error_msg(p);
         free(p);
         KNOWHERE_THROW_MSG(error_msg);
