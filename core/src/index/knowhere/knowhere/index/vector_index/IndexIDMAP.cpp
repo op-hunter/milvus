@@ -22,6 +22,7 @@
 
 #include <string>
 #include <vector>
+#include <src/index/thirdparty/faiss/impl/AuxIndexStructures.h>
 
 #include "knowhere/common/Exception.h"
 #include "knowhere/index/vector_index/adapter/VectorAdapter.h"
@@ -90,6 +91,33 @@ IDMAP::Query(const DatasetPtr& dataset_ptr, const Config& config, const faiss::B
     auto p_dist = static_cast<float*>(malloc(p_dist_size));
 
     QueryImpl(rows, reinterpret_cast<const float*>(p_data), k, p_dist, p_id, config, bitset);
+    MapOffsetToUid(p_id, static_cast<size_t>(elems));
+
+    auto ret_ds = std::make_shared<Dataset>();
+    ret_ds->Set(meta::IDS, p_id);
+    ret_ds->Set(meta::DISTANCE, p_dist);
+    return ret_ds;
+}
+
+DatasetPtr
+IDMAP::QueryByDistance(const DatasetPtr& dataset_ptr, const Config& config, const faiss::BitsetView& bitset) {
+    if (!index_) {
+        KNOWHERE_THROW_MSG("index not initialize");
+    }
+    GET_TENSOR_DATA(dataset_ptr)
+
+    auto k = config[meta::TOPK].get<int64_t>();
+    auto distance_threshold = config[meta::DISTANCE_THRESHOLD].get<float>();
+    auto elems = rows * k;
+    size_t p_id_size = sizeof(int64_t) * elems;
+    size_t p_dist_size = sizeof(float) * elems;
+    auto p_id = static_cast<int64_t*>(malloc(p_id_size));
+    auto p_dist = static_cast<float*>(malloc(p_dist_size));
+
+    index_->metric_type = GetMetricType(config[Metric::TYPE].get<std::string>());
+    faiss::RangeSearchResult result(rows);
+    index_->range_search(rows, reinterpret_cast<const float*>(p_data), distance_threshold, &result, bitset);
+//    QueryImpl(rows, reinterpret_cast<const float*>(p_data), k, p_dist, p_id, config, bitset);
     MapOffsetToUid(p_id, static_cast<size_t>(elems));
 
     auto ret_ds = std::make_shared<Dataset>();

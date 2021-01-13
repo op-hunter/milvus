@@ -241,7 +241,8 @@ void range_search_L2sqr (
         const float * y,
         size_t d, size_t nx, size_t ny,
         float radius,
-        RangeSearchResult *result);
+        RangeSearchResult *result,
+        const BitsetView& bitset);
 
 /// same as range_search_L2sqr for the inner product similarity
 void range_search_inner_product (
@@ -249,7 +250,8 @@ void range_search_inner_product (
         const float * y,
         size_t d, size_t nx, size_t ny,
         float radius,
-        RangeSearchResult *result);
+        RangeSearchResult *result,
+        const BitsetView& bitset);
 
 
 /***************************************************************************

@@ -813,7 +813,8 @@ static void range_search_blas (
         const float * y,
         size_t d, size_t nx, size_t ny,
         float radius,
-        RangeSearchResult *result)
+        RangeSearchResult *result,
+        const BitsetView& bitset)
 {
 
     // BLAS does not like empty matrices
@@ -892,7 +893,8 @@ static void range_search_sse (const float * x,
                 const float * y,
                 size_t d, size_t nx, size_t ny,
                 float radius,
-                RangeSearchResult *res)
+                RangeSearchResult *res,
+                const BitsetView& bitset)
 {
 
 #pragma omp parallel
@@ -940,13 +942,14 @@ void range_search_L2sqr (
         const float * y,
         size_t d, size_t nx, size_t ny,
         float radius,
-        RangeSearchResult *res)
+        RangeSearchResult *res,
+        const BitsetView& bitset)
 {
 
     if (nx < distance_compute_blas_threshold) {
-        range_search_sse<true> (x, y, d, nx, ny, radius, res);
+        range_search_sse<true> (x, y, d, nx, ny, radius, res, bitset);
     } else {
-        range_search_blas<true> (x, y, d, nx, ny, radius, res);
+        range_search_blas<true> (x, y, d, nx, ny, radius, res, bitset);
     }
 }
 
@@ -955,13 +958,14 @@ void range_search_inner_product (
         const float * y,
         size_t d, size_t nx, size_t ny,
         float radius,
-        RangeSearchResult *res)
+        RangeSearchResult *res,
+        const BitsetView& bitset)
 {
 
     if (nx < distance_compute_blas_threshold) {
-        range_search_sse<false> (x, y, d, nx, ny, radius, res);
+        range_search_sse<false> (x, y, d, nx, ny, radius, res, bitset);
     } else {
-        range_search_blas<false> (x, y, d, nx, ny, radius, res);
+        range_search_blas<false> (x, y, d, nx, ny, radius, res, bitset);
     }
 }
 

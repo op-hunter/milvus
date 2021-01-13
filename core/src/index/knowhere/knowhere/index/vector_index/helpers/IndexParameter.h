@@ -25,6 +25,7 @@ constexpr const char* IDS = "ids";
 constexpr const char* DISTANCE = "distance";
 constexpr const char* TOPK = "k";
 constexpr const char* DEVICEID = "gpu_id";
+constexpr const char* DISTANCE_THRESHOLD = "distance_threshold";
 };  // namespace meta
 
 namespace IndexParams {
