@@ -35,13 +35,22 @@ class VecIndex : public Index {
     }
 
     virtual void
-    Train(const DatasetPtr& dataset, const Config& config) = 0;
+    Train(const DatasetPtr& dataset, const Config& config) {
+        KNOWHERE_THROW_MSG(index_type_ + " not support Train, please invoke BuildAll interface.");
+    }
 
     virtual void
-    AddWithoutIds(const DatasetPtr& dataset, const Config& config) = 0;
+    AddWithoutIds(const DatasetPtr& dataset, const Config& config) {
+        KNOWHERE_THROW_MSG(index_type_ + " not support AddWithoutIds");
+    }
 
     virtual DatasetPtr
     Query(const DatasetPtr& dataset, const Config& config) = 0;
+
+    virtual DatasetPtr
+    QueryByDistance(const DatasetPtr& dataset, const Config& config) {
+        KNOWHERE_THROW_MSG(index_type_ + " not support QueryByDistance");
+    }
 
     virtual int64_t
     Dim() = 0;

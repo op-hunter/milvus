@@ -34,7 +34,7 @@ class FaissBaseBinaryIndex {
     virtual void
     LoadImpl(const BinarySet& index_binary, const IndexType& type);
 
- public:
+ protected:
     std::shared_ptr<faiss::IndexBinary> index_ = nullptr;
 };
 

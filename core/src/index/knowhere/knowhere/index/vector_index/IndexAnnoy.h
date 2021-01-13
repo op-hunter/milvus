@@ -37,16 +37,6 @@ class IndexAnnoy : public VecIndex {
     void
     BuildAll(const DatasetPtr& dataset_ptr, const Config& config) override;
 
-    void
-    Train(const DatasetPtr& dataset_ptr, const Config& config) override {
-        KNOWHERE_THROW_MSG("Annoy not support build item dynamically, please invoke BuildAll interface.");
-    }
-
-    void
-    AddWithoutIds(const DatasetPtr&, const Config&) override {
-        KNOWHERE_THROW_MSG("Incremental index is not supported");
-    }
-
     DatasetPtr
     Query(const DatasetPtr& dataset_ptr, const Config& config) override;
 

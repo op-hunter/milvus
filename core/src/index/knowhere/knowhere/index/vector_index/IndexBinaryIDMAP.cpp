@@ -60,6 +60,21 @@ BinaryIDMAP::Query(const DatasetPtr& dataset_ptr, const Config& config) {
     return ret_ds;
 }
 
+DatasetPtr
+BinaryIDMAP::QueryByDistance(const DatasetPtr& dataset_ptr, const Config& config) {
+    if (!index_) {
+        KNOWHERE_THROW_MSG("index not initialize");
+    }
+    GETTENSOR(dataset_ptr)
+
+    float distance = config[meta::DISTANCE].get<int64_t>();
+
+    // todo
+
+    auto ret_ds = std::make_shared<Dataset>();
+    return ret_ds;
+}
+
 int64_t
 BinaryIDMAP::Count() {
     if (!index_) {

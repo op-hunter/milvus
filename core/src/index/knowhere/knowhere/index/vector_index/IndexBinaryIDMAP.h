@@ -46,6 +46,9 @@ class BinaryIDMAP : public VecIndex, public FaissBaseBinaryIndex {
     DatasetPtr
     Query(const DatasetPtr&, const Config&) override;
 
+    DatasetPtr
+    QueryByDistance(const DatasetPtr&, const Config&) override;
+
     int64_t
     Count() override;
 
@@ -63,6 +66,7 @@ class BinaryIDMAP : public VecIndex, public FaissBaseBinaryIndex {
  protected:
     virtual void
     QueryImpl(int64_t n, const uint8_t* data, int64_t k, float* distances, int64_t* labels, const Config& config);
+
 };
 
 using BinaryIDMAPPtr = std::shared_ptr<BinaryIDMAP>;
