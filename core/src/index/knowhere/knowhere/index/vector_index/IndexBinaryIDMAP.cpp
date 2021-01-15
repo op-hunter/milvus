@@ -60,19 +60,27 @@ BinaryIDMAP::Query(const DatasetPtr& dataset_ptr, const Config& config) {
     return ret_ds;
 }
 
-DatasetPtr
-BinaryIDMAP::QueryByDistance(const DatasetPtr& dataset_ptr, const Config& config) {
+void
+BinaryIDMAP::QueryByDistance(const DatasetPtr& dataset_ptr, const Config& config, std::vector<RangeSearchPartialResult*> &result) {
     if (!index_) {
         KNOWHERE_THROW_MSG("index not initialize");
     }
     GETTENSOR(dataset_ptr)
 
-    float distance = config[meta::DISTANCE].get<int64_t>();
-
-    // todo
-
-    auto ret_ds = std::make_shared<Dataset>();
-    return ret_ds;
+    auto default_type = index_->metric_type;
+    if (config.contains(Metric::TYPE))
+        index_->metric_type = GetMetricType(config[Metric::TYPE].get<std::string>());
+    std::vector<faiss::RangeSearchPartialResult*> res;
+    auto radius = config[meta::RANGE_SEARCH_RADIUS].get<float>();
+    auto buffer_size = config[meta::RANGE_SEARCH_BUFFER_SIZE].get<size_t>();
+    auto real_idx = dynamic_cast<faiss::IndexBinaryFlat*>(index_.get());
+    if (real_idx == nullptr) {
+        KNOWHERE_THROW_MSG("Cannot dynamic_cast the index to faiss::IndexBinaryFlat type!");
+    }
+    real_idx->range_search(rows, (uint8_t*)p_data, radius * radius, res, buffer_size, GetBlacklist());
+    ExchangeDataset(result, res);
+    MapUids(result, uids_);
+    index_->metric_type = default_type;
 }
 
 int64_t

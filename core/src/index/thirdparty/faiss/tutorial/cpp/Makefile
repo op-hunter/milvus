@@ -5,8 +5,9 @@
 
 -include ../../makefile.inc
 
-CPU_TARGETS = 1-Flat 2-IVFFlat 3-IVFPQ 9-BinaryFlat
-GPU_TARGETS = 4-GPU 5-Multiple-GPUs
+#CPU_TARGETS = 1-Flat 2-IVFFlat 3-IVFPQ 9-BinaryFlat
+CPU_TARGETS = FlatRangeSearch
+#GPU_TARGETS = 4-GPU 5-Multiple-GPUs
 
 default: cpu
 

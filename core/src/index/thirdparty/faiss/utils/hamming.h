@@ -28,6 +28,7 @@
 #include <stdint.h>
 
 #include <faiss/utils/Heap.h>
+#include <faiss/impl/AuxIndexStructures.h>
 #include <faiss/utils/ConcurrentBitset.h>
 
 /* The Hamming distance type */
@@ -193,6 +194,17 @@ void hamming_range_search (
     size_t ncodes,
     RangeSearchResult *result);
 
+/** same as hammings_knn except we are doing a range search with radius, milvus customized*/
+void hamming_range_search (
+    const uint8_t * a,
+    const uint8_t * b,
+    size_t na,
+    size_t nb,
+    int radius,
+    size_t ncodes,
+    std::vector<faiss::RangeSearchPartialResult*>& result,
+    size_t buffer_size,
+    faiss::ConcurrentBitsetPtr bitset = nullptr);
 
 /* Counting the number of matches or of cross-matches (without returning them)
    For use with function that assume pre-allocated memory */

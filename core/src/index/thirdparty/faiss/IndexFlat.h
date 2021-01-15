@@ -13,7 +13,7 @@
 #include <vector>
 
 #include <faiss/Index.h>
-
+#include <faiss/impl/AuxIndexStructures.h>
 
 namespace faiss {
 
@@ -49,6 +49,14 @@ struct IndexFlat: Index {
         float radius,
         RangeSearchResult* result,
         ConcurrentBitsetPtr bitset = nullptr) const override;
+
+    void range_search(
+        idx_t n,
+        const float* x,
+        float radius,
+        std::vector<RangeSearchPartialResult*> &res,
+        size_t buffer_size,
+        ConcurrentBitsetPtr bitset = nullptr); // const override
 
     void reconstruct(idx_t key, float* recons) const override;
 

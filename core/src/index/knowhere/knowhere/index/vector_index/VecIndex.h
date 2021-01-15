@@ -22,6 +22,7 @@
 #include "knowhere/common/Typedef.h"
 #include "knowhere/index/Index.h"
 #include "knowhere/index/vector_index/IndexType.h"
+#include "knowhere/index/vector_index/helpers/DynamicResultSet.h"
 
 namespace milvus {
 namespace knowhere {
@@ -47,8 +48,8 @@ class VecIndex : public Index {
     virtual DatasetPtr
     Query(const DatasetPtr& dataset, const Config& config) = 0;
 
-    virtual DatasetPtr
-    QueryByDistance(const DatasetPtr& dataset, const Config& config) {
+    virtual void
+    QueryByDistance(const DatasetPtr& dataset, const Config& config, std::vector<RangeSearchPartialResult*> &result) {
         KNOWHERE_THROW_MSG(index_type_ + " not support QueryByDistance");
     }
 

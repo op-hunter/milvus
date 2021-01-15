@@ -129,4 +129,14 @@ void IndexBinaryFlat::range_search(idx_t n, const uint8_t *x, int radius,
     hamming_range_search (x, xb.data(), n, ntotal, radius, code_size, result);
 }
 
+void IndexBinaryFlat::range_search(faiss::IndexBinary::idx_t n,
+                                   const uint8_t* x,
+                                   int radius,
+                                   std::vector<faiss::RangeSearchPartialResult*>& result,
+                                   size_t buffer_size,
+                                   faiss::ConcurrentBitsetPtr bitset)
+{
+    hamming_range_search (x, xb.data(), n, ntotal, radius, code_size, result, buffer_size, bitset);
+}
+
 }  // namespace faiss

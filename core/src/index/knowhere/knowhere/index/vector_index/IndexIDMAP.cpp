@@ -90,6 +90,31 @@ IDMAP::Query(const DatasetPtr& dataset_ptr, const Config& config) {
     return ret_ds;
 }
 
+void
+IDMAP::QueryByDistance(const DatasetPtr& dataset_ptr,
+                       const milvus::knowhere::Config& config,
+                       std::vector<milvus::knowhere::RangeSearchPartialResult*>& result) {
+    if (!index_) {
+        KNOWHERE_THROW_MSG("index not initialize");
+    }
+    GETTENSOR(dataset_ptr)
+
+    auto default_type = index_->metric_type;
+    if (config.contains(Metric::TYPE))
+        index_->metric_type = GetMetricType(config[Metric::TYPE].get<std::string>());
+    std::vector<faiss::RangeSearchPartialResult*> res;
+    auto radius = config[meta::RANGE_SEARCH_RADIUS].get<float>();
+    auto buffer_size = config[meta::RANGE_SEARCH_BUFFER_SIZE].get<size_t>();
+    auto real_idx = dynamic_cast<faiss::IndexFlat*>(index_.get());
+    if (real_idx == nullptr) {
+        KNOWHERE_THROW_MSG("Cannot dynamic_cast the index to faiss::IndexFlat type!");
+    }
+    real_idx->range_search(rows, reinterpret_cast<const float*>(p_data), radius * radius, res, buffer_size, GetBlacklist());
+    ExchangeDataset(result, res);
+    MapUids(result, uids_);
+    index_->metric_type = default_type;
+}
+
 int64_t
 IDMAP::Count() {
     if (!index_) {

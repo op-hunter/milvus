@@ -24,6 +24,8 @@ constexpr const char* ROWS = "rows";
 constexpr const char* IDS = "ids";
 constexpr const char* DISTANCE = "distance";
 constexpr const char* TOPK = "k";
+constexpr const char* RANGE_SEARCH_RADIUS = "range_search_radius";
+constexpr const char* RANGE_SEARCH_BUFFER_SIZE = "range_search_buffer_size";
 constexpr const char* DEVICEID = "gpu_id";
 };  // namespace meta
 

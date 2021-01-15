@@ -15,6 +15,7 @@
 #include <stdint.h>
 
 #include <faiss/utils/Heap.h>
+#include <faiss/impl/AuxIndexStructures.h>
 #include <faiss/utils/ConcurrentBitset.h>
 
 
@@ -240,7 +241,17 @@ void range_search_L2sqr (
         const float * y,
         size_t d, size_t nx, size_t ny,
         float radius,
-        RangeSearchResult *result);
+        RangeSearchResult *result,
+        ConcurrentBitsetPtr bitset = nullptr);
+
+void range_search_L2sqr (
+        const float * x,
+        const float * y,
+        size_t d, size_t nx, size_t ny,
+        float radius,
+        std::vector<RangeSearchPartialResult*> &res,
+        size_t buffer_size,
+        ConcurrentBitsetPtr bitset = nullptr);
 
 /// same as range_search_L2sqr for the inner product similarity
 void range_search_inner_product (
@@ -248,8 +259,17 @@ void range_search_inner_product (
         const float * y,
         size_t d, size_t nx, size_t ny,
         float radius,
-        RangeSearchResult *result);
+        RangeSearchResult *result,
+        ConcurrentBitsetPtr bitset = nullptr);
 
+void range_search_inner_product (
+    const float * x,
+    const float * y,
+    size_t d, size_t nx, size_t ny,
+    float radius,
+    std::vector<RangeSearchPartialResult*> &res,
+    size_t buffer_size,
+    ConcurrentBitsetPtr bitset = nullptr);
 
 /***************************************************************************
  * elkan

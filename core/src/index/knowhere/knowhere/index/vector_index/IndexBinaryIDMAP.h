@@ -46,8 +46,8 @@ class BinaryIDMAP : public VecIndex, public FaissBaseBinaryIndex {
     DatasetPtr
     Query(const DatasetPtr&, const Config&) override;
 
-    DatasetPtr
-    QueryByDistance(const DatasetPtr&, const Config&) override;
+    void
+    QueryByDistance(const DatasetPtr&, const Config&, std::vector<RangeSearchPartialResult*> &result) override;
 
     int64_t
     Count() override;
