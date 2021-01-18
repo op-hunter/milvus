@@ -758,6 +758,7 @@ void hamming_range_search_template (
     size_t buffer_size,
     faiss::ConcurrentBitsetPtr bitset = nullptr)
 {
+    printf("code_size = %d\n", code_size);
 
 #pragma omp parallel
     {
@@ -864,7 +865,7 @@ void hamming_range_search (
 
     switch(code_size) {
     case 4: HC(HammingComputer4); break;
-    case 8: HC(HammingComputer8); break;
+    case 8: HC(HammingComputer8); printf("HammingComputer8\n"); break;
     case 16: HC(HammingComputer16); break;
     case 32: HC(HammingComputer32); break;
     default:

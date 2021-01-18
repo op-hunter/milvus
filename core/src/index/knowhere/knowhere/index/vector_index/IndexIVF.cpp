@@ -117,6 +117,28 @@ IVF::Query(const DatasetPtr& dataset_ptr, const Config& config) {
     }
 }
 
+void
+IVF::QueryByDistance(const milvus::knowhere::DatasetPtr& dataset,
+                     const milvus::knowhere::Config& config,
+                     std::vector<milvus::knowhere::RangeSearchPartialResult*>& result) {
+    if (!index_ || !index_->is_trained) {
+        KNOWHERE_THROW_MSG("index not initialize or trained");
+    }
+
+    GETTENSOR(dataset);
+
+    try {
+        fiu_do_on("IVF.Search.throw_std_exception", throw std::exception());
+        fiu_do_on("IVF.Search.throw_faiss_exception", throw faiss::FaissException(""));
+
+        RangeQueryImpl(rows, (float*)p_data, result, config);
+    } catch (faiss::FaissException& e) {
+        KNOWHERE_THROW_MSG(e.what());
+    } catch (std::exception& e) {
+        KNOWHERE_THROW_MSG(e.what());
+    }
+}
+
 #if 0
 DatasetPtr
 IVF::QueryById(const DatasetPtr& dataset_ptr, const Config& config) {
@@ -308,6 +330,37 @@ IVF::QueryImpl(int64_t n, const float* data, int64_t k, float* distances, int64_
     stdclock::time_point after = stdclock::now();
     double search_cost = (std::chrono::duration<double, std::micro>(after - before)).count();
     LOG_KNOWHERE_DEBUG_ << "IVF search cost: " << search_cost
+                        << ", quantization cost: " << faiss::indexIVF_stats.quantization_time
+                        << ", data search cost: " << faiss::indexIVF_stats.search_time;
+    faiss::indexIVF_stats.quantization_time = 0;
+    faiss::indexIVF_stats.search_time = 0;
+}
+
+void
+IVF::RangeQueryImpl(int64_t n,
+                    const float* pquery,
+                    std::vector<milvus::knowhere::RangeSearchPartialResult*>& result,
+                    const milvus::knowhere::Config& config) {
+    auto params = GenParams(config);
+    auto radius = config[IndexParams::RANGE_SEARCH_RADIUS].get<float>();
+    auto buffer_size = config[IndexParams::RANGE_SEARCH_BUFFER_SIZE].get<size_t>();
+    auto ivf_index = dynamic_cast<faiss::IndexIVF*>(index_.get());
+    ivf_index->nprobe = std::min(params->nprobe, ivf_index->invlists->nlist);
+    stdclock::time_point before = stdclock::now();
+    if (params->nprobe > 1 && n <= 4) {
+        ivf_index->parallel_mode = 1;
+    } else {
+        ivf_index->parallel_mode = 0;
+    }
+    if (ivf_index->metric_type == faiss::MetricType::METRIC_L2)
+        radius *= radius;
+    std::vector<faiss::RangeSearchPartialResult*> res;
+    ivf_index->range_search(n, pquery, radius, res, buffer_size, GetBlacklist());
+    stdclock::time_point after = stdclock::now();
+    double search_cost = (std::chrono::duration<double, std::micro>(after - before)).count();
+    ExchangeDataset(result, res);
+    MapUids(result, uids_);
+    LOG_KNOWHERE_DEBUG_ << "IVF range search cost: " << search_cost
                         << ", quantization cost: " << faiss::indexIVF_stats.quantization_time
                         << ", data search cost: " << faiss::indexIVF_stats.search_time;
     faiss::indexIVF_stats.quantization_time = 0;

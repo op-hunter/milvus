@@ -24,8 +24,6 @@ constexpr const char* ROWS = "rows";
 constexpr const char* IDS = "ids";
 constexpr const char* DISTANCE = "distance";
 constexpr const char* TOPK = "k";
-constexpr const char* RANGE_SEARCH_RADIUS = "range_search_radius";
-constexpr const char* RANGE_SEARCH_BUFFER_SIZE = "range_search_buffer_size";
 constexpr const char* DEVICEID = "gpu_id";
 };  // namespace meta
 
@@ -50,6 +48,10 @@ constexpr const char* ef = "ef";
 // Annoy Params
 constexpr const char* n_trees = "n_trees";
 constexpr const char* search_k = "search_k";
+
+// Range Search Params
+constexpr const char* RANGE_SEARCH_RADIUS = "range_search_radius";
+constexpr const char* RANGE_SEARCH_BUFFER_SIZE = "range_search_buffer_size";
 }  // namespace IndexParams
 
 namespace Metric {

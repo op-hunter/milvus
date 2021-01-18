@@ -176,14 +176,20 @@ struct IVFFlatScanner: InvertedListScanner {
                            RangeQueryResult & res,
                            ConcurrentBitsetPtr bitset = nullptr) const override
     {
+        printf("enter IVFFlatScanner::scan_codes_range\n");
         const float *list_vecs = (const float*)codes;
         for (size_t j = 0; j < list_size; j++) {
-            const float * yj = list_vecs + d * j;
-            float dis = metric == METRIC_INNER_PRODUCT ?
-                fvec_inner_product (xi, yj, d) : fvec_L2sqr (xi, yj, d);
-            if (C::cmp (radius, dis)) {
-                int64_t id = store_pairs ? lo_build (list_no, j) : ids[j];
-                res.add (dis, id);
+            int64_t id = store_pairs ? lo_build (list_no, j) : ids[j];
+            if (id >= 100000) {
+                printf("Oh fuck the invalid id = %d, list_no = %d, j = %d, ids[j] = %d\n", id, list_no, j, ids[j]);
+            }
+            if (!bitset || !bitset->test(id)) {
+                const float * yj = list_vecs + d * j;
+                float dis = metric == METRIC_INNER_PRODUCT ?
+                            fvec_inner_product (xi, yj, d) : fvec_L2sqr (xi, yj, d);
+                if (C::cmp (radius, dis)) {
+                    res.add (dis, id);
+                }
             }
         }
     }

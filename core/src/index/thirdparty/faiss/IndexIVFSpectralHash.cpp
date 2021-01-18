@@ -288,10 +288,12 @@ struct IVFScanner: InvertedListScanner {
                            ConcurrentBitsetPtr bitset = nullptr) const override
     {
         for (size_t j = 0; j < list_size; j++) {
-            float dis = hc.hamming (codes);
-            if (dis < radius) {
-                int64_t id = store_pairs ? lo_build (list_no, j) : ids[j];
-                res.add (dis, id);
+            int64_t id = store_pairs ? lo_build (list_no, j) : ids[j];
+            if (!bitset || !bitset->test(id)) {
+                float dis = hc.hamming (codes);
+                if (dis < radius) {
+                    res.add (dis, id);
+                }
             }
             codes += code_size;
         }

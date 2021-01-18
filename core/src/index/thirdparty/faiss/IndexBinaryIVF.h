@@ -222,7 +222,8 @@ struct BinaryInvertedListScanner {
                                    const uint8_t *codes,
                                    const idx_t *ids,
                                    int radius,
-                                   RangeQueryResult &result) const = 0;
+                                   RangeQueryResult &result,
+                                   ConcurrentBitsetPtr bitset = nullptr) const = 0;
 
     virtual ~BinaryInvertedListScanner () {}
 

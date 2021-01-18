@@ -71,13 +71,15 @@ BinaryIDMAP::QueryByDistance(const DatasetPtr& dataset_ptr, const Config& config
     if (config.contains(Metric::TYPE))
         index_->metric_type = GetMetricType(config[Metric::TYPE].get<std::string>());
     std::vector<faiss::RangeSearchPartialResult*> res;
-    auto radius = config[meta::RANGE_SEARCH_RADIUS].get<float>();
-    auto buffer_size = config[meta::RANGE_SEARCH_BUFFER_SIZE].get<size_t>();
+    auto radius = config[IndexParams::RANGE_SEARCH_RADIUS].get<float>();
+    auto buffer_size = config[IndexParams::RANGE_SEARCH_BUFFER_SIZE].get<size_t>();
     auto real_idx = dynamic_cast<faiss::IndexBinaryFlat*>(index_.get());
     if (real_idx == nullptr) {
         KNOWHERE_THROW_MSG("Cannot dynamic_cast the index to faiss::IndexBinaryFlat type!");
     }
-    real_idx->range_search(rows, (uint8_t*)p_data, radius * radius, res, buffer_size, GetBlacklist());
+    if (index_->metric_type == faiss::MetricType::METRIC_L2)
+        radius *= radius;
+    real_idx->range_search(rows, (uint8_t*)p_data, radius, res, buffer_size, GetBlacklist());
     ExchangeDataset(result, res);
     MapUids(result, uids_);
     index_->metric_type = default_type;

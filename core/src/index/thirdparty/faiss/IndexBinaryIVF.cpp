@@ -393,14 +393,17 @@ struct IVFBinaryScannerL2: BinaryInvertedListScanner {
                            const uint8_t *codes,
                            const idx_t *ids,
                            int radius,
-                           RangeQueryResult &result) const
+                           RangeQueryResult &result,
+                           ConcurrentBitsetPtr bitset) const
     {
         size_t nup = 0;
         for (size_t j = 0; j < n; j++) {
-            uint32_t dis = hc.hamming (codes);
-            if (dis < radius) {
-                int64_t id = store_pairs ? lo_build (list_no, j) : ids[j];
-                result.add (dis, id);
+            int64_t id = store_pairs ? lo_build (list_no, j) : ids[j];
+            if (!bitset || !bitset->test(id)) {
+                uint32_t dis = hc.hamming (codes);
+                if (dis < radius) {
+                    result.add (dis, id);
+                }
             }
             codes += code_size;
         }
@@ -456,7 +459,8 @@ struct IVFBinaryScannerJaccard: BinaryInvertedListScanner {
                            const uint8_t *codes,
                            const idx_t *ids,
                            int radius,
-                           RangeQueryResult &result) const override {
+                           RangeQueryResult &result,
+                           ConcurrentBitsetPtr bitset) const override {
         // not yet
     }
 };
@@ -933,7 +937,7 @@ void IndexBinaryIVF::range_search(
             nlistv++;
             ndis += list_size;
             scanner->scan_codes_range (list_size, scodes.get(),
-                                       ids.get(), radius, qres);
+                                       ids.get(), radius, qres, bitset);
         };
 
 #pragma omp for

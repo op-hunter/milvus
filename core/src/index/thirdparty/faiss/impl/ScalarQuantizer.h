@@ -141,10 +141,12 @@ struct IVFSQScannerIP: InvertedListScanner {
                            ConcurrentBitsetPtr bitset = nullptr) const override
     {
         for (size_t j = 0; j < list_size; j++) {
-            float accu = accu0 + dc.query_to_code (codes);
-            if (accu > radius) {
-                int64_t id = store_pairs ? (list_no << 32 | j) : ids[j];
-                res.add (accu, id);
+            int64_t id = store_pairs ? (list_no << 32 | j) : ids[j];
+            if (!bitset || !bitset->test(id)) {
+                float accu = accu0 + dc.query_to_code (codes);
+                if (accu > radius) {
+                    res.add (accu, id);
+                }
             }
             codes += code_size;
         }
@@ -228,10 +230,12 @@ struct IVFSQScannerL2: InvertedListScanner {
                            ConcurrentBitsetPtr bitset = nullptr) const override
     {
         for (size_t j = 0; j < list_size; j++) {
-            float dis = dc.query_to_code (codes);
-            if (dis < radius) {
-                int64_t id = store_pairs ? (list_no << 32 | j) : ids[j];
-                res.add (dis, id);
+            int64_t id = store_pairs ? (list_no << 32 | j) : ids[j];
+            if (!bitset || !bitset->test(id)) {
+                float dis = dc.query_to_code (codes);
+                if (dis < radius) {
+                    res.add (dis, id);
+                }
             }
             codes += code_size;
         }

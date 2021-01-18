@@ -49,6 +49,9 @@ class IVF : public VecIndex, public FaissBaseIndex {
     DatasetPtr
     Query(const DatasetPtr&, const Config&) override;
 
+    void
+    QueryByDistance(const DatasetPtr& dataset, const Config& config, std::vector<RangeSearchPartialResult*>& result) override;
+
 #if 0
     DatasetPtr
     QueryById(const DatasetPtr& dataset, const Config& config) override;
@@ -83,6 +86,9 @@ class IVF : public VecIndex, public FaissBaseIndex {
 
     virtual void
     QueryImpl(int64_t, const float*, int64_t, float*, int64_t*, const Config&);
+
+    virtual void
+    RangeQueryImpl(int64_t, const float*, std::vector<RangeSearchPartialResult*>&, const Config&);
 
     void
     SealImpl() override;
