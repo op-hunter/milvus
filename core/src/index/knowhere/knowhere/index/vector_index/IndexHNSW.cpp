@@ -133,6 +133,8 @@ IndexHNSW::AddWithoutIds(const DatasetPtr& dataset_ptr, const Config& config) {
         auto lock = hnsw_stats->Lock();
         hnsw_stats->update_level_distribution(index_->maxlevel_, index_->level_stats_);
     }
+    index_->show_link_stats();
+    std::cout << "the number of strong connectivities is " << index_->strong_connectivities() << std::endl;
     //     LOG_KNOWHERE_DEBUG_ << "IndexHNSW::Train finished, show statistics:";
     //     LOG_KNOWHERE_DEBUG_ << GetStatistics()->ToString();
 }

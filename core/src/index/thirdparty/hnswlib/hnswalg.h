@@ -993,7 +993,66 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
             ret += linkLists_[i] ? size_links_per_element_ * element_levels_[i] : 0;
         }
         return ret;
-     }
+    }
+
+    void Gabow(int v, std::vector<int>& order, std::vector<int>& sc_id, int* p_stack1, int* p_stack2, int& cn, int& cnt) {
+        order[v] = cnt ++;
+        p_stack1[++ p_stack1[0]] = v;
+        p_stack2[++ p_stack2[0]] = v;
+        auto edge = get_linklist0(v);
+        for (auto i = 1; i <= *edge; ++ i) {
+            auto j = edge[i];
+            if (order[j] == -1)
+                Gabow(j, order, sc_id, p_stack1, p_stack2, cn, cnt);
+            else if (sc_id[j] == -1) {
+                while (order[p_stack2[p_stack2[0]]] > order[j])
+                    p_stack2[0] --;
+            }
+        }
+        if (v == p_stack2[p_stack2[0]]) {
+            p_stack2[0] --;
+            cn ++;
+            do {
+                sc_id[p_stack1[p_stack1[0]]] = cn;
+            } while (p_stack1[p_stack1[0] --] != v);
+        }
+    }
+
+    int strong_connectivities() {
+        std::vector<int> order(cur_element_count, -1);
+        std::vector<int> sc_id(cur_element_count, -1);
+        auto p_stack1 = (int*) malloc(sizeof(int) *(cur_element_count + 1));
+        auto p_stack2 = (int*) malloc(sizeof(int) *(cur_element_count + 1));
+        printf("p_stack1 = %p, p_stack2 = %p\n", p_stack1, p_stack2);
+        memset(p_stack1, 0, sizeof(int) * (cur_element_count + 1));
+        memset(p_stack2, 0, sizeof(int) * (cur_element_count + 1));
+        int component_num = 0;
+        int order_cnt = 0;
+
+        for (int i = 0; i < cur_element_count; ++ i) {
+            if (order[i] == -1)
+                Gabow(i, order, sc_id, p_stack1, p_stack2, component_num, order_cnt);
+        }
+
+        free(p_stack1);
+        free(p_stack2);
+
+        return component_num;
+    }
+
+    void show_link_stats() {
+        std::vector<int> stats(maxM0_ + 1, 0);
+        int64_t m_total = 0;
+        for (auto i = 0;i < cur_element_count; ++ i) {
+            auto link = get_linklist0(i);
+            m_total += *link;
+            stats[*link] ++;
+        }
+        printf("the average degree of level0 is: %.2f\n", (double)m_total / cur_element_count / maxM0_);
+        printf("the distribution of degrees on level0:\n");
+        for (auto i = 0; i <= maxM0_; ++ i)
+            printf("%d: %d\n", i, stats[i]);
+    }
 
     };
 
