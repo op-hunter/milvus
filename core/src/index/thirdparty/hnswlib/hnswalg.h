@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <unordered_set>
 #include <list>
+#include <stack>
 
 #include "knowhere/index/vector_index/helpers/FaissIO.h"
 
@@ -1018,12 +1019,55 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
         }
     }
 
+    void Gabow2(int v, std::vector<int>& order, std::vector<int>& sc_id, int* p_stack1, int* p_stack2, int& cn, int& cnt) {
+        std::stack<int> node_stack;
+        std::stack<int> loop_stack;
+        node_stack.push(v);
+        loop_stack.push(1);
+        while (!node_stack.empty()) {
+            auto cur_v = node_stack.top();
+            auto j = loop_stack.top();
+            if (order[cur_v] == -1) {
+                order[cur_v] = cnt ++;
+                p_stack1[++ p_stack1[0]] = cur_v;
+                p_stack2[++ p_stack2[0]] = cur_v;
+            }
+            auto edge = get_linklist0(cur_v);
+            bool continuee = false;
+            for (; j <= *edge; ++ j) {
+                auto u = edge[j];
+                if (order[u] == -1) {
+                    loop_stack.pop();
+                    loop_stack.push(j + 1);
+                    node_stack.push(u);
+                    loop_stack.push(1);
+                    continuee = true;
+                    break;
+                } else if (sc_id[u] == -1) {
+                    while (order[p_stack2[p_stack2[0]]] > order[u])
+                        p_stack2[0] --;
+                }
+            }
+            if (!continuee) {
+                if (cur_v == p_stack2[p_stack2[0]]) {
+                    p_stack2[0] --;
+                    cn ++;
+                    do {
+                        sc_id[p_stack1[p_stack1[0]]] = cn;
+                    } while (p_stack1[p_stack1[0] --] != cur_v);
+                }
+                node_stack.pop();
+                loop_stack.pop();
+            }
+        }
+    }
+
     int strong_connectivities() {
         std::vector<int> order(cur_element_count, -1);
         std::vector<int> sc_id(cur_element_count, -1);
         auto p_stack1 = (int*) malloc(sizeof(int) *(cur_element_count + 1));
         auto p_stack2 = (int*) malloc(sizeof(int) *(cur_element_count + 1));
-        printf("p_stack1 = %p, p_stack2 = %p\n", p_stack1, p_stack2);
+//        printf("p_stack1 = %p, p_stack2 = %p\n", p_stack1, p_stack2);
         memset(p_stack1, 0, sizeof(int) * (cur_element_count + 1));
         memset(p_stack2, 0, sizeof(int) * (cur_element_count + 1));
         int component_num = 0;
@@ -1031,7 +1075,7 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
 
         for (int i = 0; i < cur_element_count; ++ i) {
             if (order[i] == -1)
-                Gabow(i, order, sc_id, p_stack1, p_stack2, component_num, order_cnt);
+                Gabow2(i, order, sc_id, p_stack1, p_stack2, component_num, order_cnt);
         }
 
         free(p_stack1);
