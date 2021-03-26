@@ -137,8 +137,16 @@ IVF_NM::AddWithoutIds(const DatasetPtr& dataset_ptr, const Config& config) {
     index_->add_without_codes(rows, reinterpret_cast<const float*>(p_data));
 }
 
+int query_cnt = 0;
+std::vector<long> rq;
+std::vector<long> lq;
+std::vector<long> querySpan;
+
 DatasetPtr
 IVF_NM::Query(const DatasetPtr& dataset_ptr, const Config& config, const faiss::ConcurrentBitsetPtr& bitset) {
+    auto start = std::chrono::system_clock::now();
+    std::cout << "enter IVF_NM::Query, unix timestamp is: "
+              << std::chrono::duration_cast<std::chrono::milliseconds>(start.time_since_epoch()).count() << std::endl;
     if (!index_ || !index_->is_trained) {
         KNOWHERE_THROW_MSG("index not initialize or trained");
     }
@@ -161,6 +169,11 @@ IVF_NM::Query(const DatasetPtr& dataset_ptr, const Config& config, const faiss::
         auto ret_ds = std::make_shared<Dataset>();
         ret_ds->Set(meta::IDS, p_id);
         ret_ds->Set(meta::DISTANCE, p_dist);
+        auto end = std::chrono::system_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+        std::cout << "leave IVF_NM::Query, unix timestamp is: "
+                  << std::chrono::duration_cast<std::chrono::milliseconds>(end.time_since_epoch()).count()
+                  << ", totally costs " << duration.count() << " ms" << std::endl;
         return ret_ds;
     } catch (faiss::FaissException& e) {
         KNOWHERE_THROW_MSG(e.what());
@@ -307,6 +320,10 @@ IVF_NM::GenParams(const Config& config) {
 void
 IVF_NM::QueryImpl(int64_t n, const float* query, int64_t k, float* distances, int64_t* labels, const Config& config,
                   const faiss::ConcurrentBitsetPtr& bitset) {
+    auto start = std::chrono::system_clock::now();
+    std::cout << "enter IVF_NM::QueryImpl, unix timestamp is: "
+              << std::chrono::duration_cast<std::chrono::milliseconds>(start.time_since_epoch()).count() << std::endl;
+    rq.push_back(std::chrono::duration_cast<std::chrono::milliseconds>(start.time_since_epoch()).count());
     auto params = GenParams(config);
     auto ivf_index = dynamic_cast<faiss::IndexIVF*>(index_.get());
     ivf_index->nprobe = params->nprobe;
@@ -331,8 +348,52 @@ IVF_NM::QueryImpl(int64_t n, const float* query, int64_t k, float* distances, in
     LOG_KNOWHERE_DEBUG_ << "IVF_NM search cost: " << search_cost
                         << ", quantization cost: " << faiss::indexIVF_stats.quantization_time
                         << ", data search cost: " << faiss::indexIVF_stats.search_time;
+    std::cout << "IVF_NM search cost: " << search_cost
+                        << ", quantization cost: " << faiss::indexIVF_stats.quantization_time
+                        << ", data search cost: " << faiss::indexIVF_stats.search_time << std::endl;
     faiss::indexIVF_stats.quantization_time = 0;
     faiss::indexIVF_stats.search_time = 0;
+    auto end = std::chrono::system_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    std::cout << "leave IVF_NM::QueryImpl, unix timestamp is: "
+              << std::chrono::duration_cast<std::chrono::milliseconds>(end.time_since_epoch()).count()
+              << ", totally costs " << duration.count() << " ms" << std::endl;
+    lq.push_back(std::chrono::duration_cast<std::chrono::milliseconds>(end.time_since_epoch()).count());
+    querySpan.push_back(duration.count());
+    query_cnt ++;
+    if (query_cnt == 60) {
+        std::cout << "output QueryImpl timestamps:" << std::endl;
+        std::cout << "in QueryImpl timestamps:" << std::endl;
+        if (rq.size() != 60) {
+            std::cout << "in QueryImpl timestamps not enough" << std::endl;
+        } else {
+            for (auto i = 0; i < 60; i ++) {
+                std::cout << rq[i] << std::endl;
+            }
+            std::cout << std::endl;
+        }
+        std::cout << "out QueryImpl timestamps:" << std::endl;
+        if (rq.size() != 60) {
+            std::cout << "out QueryImpl timestamps not enough" << std::endl;
+        } else {
+            for (auto i = 0; i < 60; i ++) {
+                std::cout << lq[i] << std::endl;
+            }
+            std::cout << std::endl;
+        }
+        std::vector<std::vector<long>> qs(6, std::vector<long>(10, 0));
+        for (auto i = 0; i < 60; i ++) {
+            qs[i % 6][i / 6] = querySpan[i];
+        }
+        for (auto i = 0; i < 6; i ++) {
+            std::sort(qs[i].begin(), qs[i].end());
+            long sum = 0;
+            for (auto j = 1; j < 9; j ++)
+                sum += qs[i][j];
+            std::cout << "the " << i + 1 << "th query, QueryImpl.min = " << qs[i][0] << ", QueryImpl.max = " << qs[i][9]
+                      << ", QueryImpl.avg = " << sum / 8.0 << std::endl;
+        }
+    }
 }
 
 void

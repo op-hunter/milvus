@@ -1765,9 +1765,17 @@ GrpcRequestHandler::DeserializeJsonToBoolQuery(
     }
 }
 
+int query_cnt = 0;
+std::vector<long> ints;
+std::vector<long> outts;
+
 ::grpc::Status
 GrpcRequestHandler::Search(::grpc::ServerContext* context, const ::milvus::grpc::SearchParam* request,
                            ::milvus::grpc::QueryResult* response) {
+    auto start = std::chrono::system_clock::now();
+    std::cout << "enter GrpcRequestHandler::Search, unix timestamp in ms is: "
+              << std::chrono::duration_cast<std::chrono::milliseconds>(start.time_since_epoch()).count() << std::endl;
+    ints.push_back(std::chrono::duration_cast<std::chrono::milliseconds>(start.time_since_epoch()).count());
     CHECK_NULLPTR_RETURN(request);
     LOG_SERVER_INFO_ << LogOut("Request [%s] %s begin.", GetContext(context)->ReqID().c_str(), __func__);
 
@@ -1858,6 +1866,34 @@ GrpcRequestHandler::Search(::grpc::ServerContext* context, const ::milvus::grpc:
 
     LOG_SERVER_INFO_ << LogOut("Request [%s] %s end.", GetContext(context)->ReqID().c_str(), __func__);
     SET_RESPONSE(response->mutable_status(), status, context);
+    auto end = std::chrono::system_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    std::cout << "leave GrpcRequestHandler::Search, totally costs " << duration.count() << " ms. "
+              << " unix timestamp in ms is: "
+              << std::chrono::duration_cast<std::chrono::milliseconds>(end.time_since_epoch()).count() << std::endl;
+    outts.push_back(std::chrono::duration_cast<std::chrono::milliseconds>(end.time_since_epoch()).count());
+    query_cnt += 1;
+    if (query_cnt == 60) {
+        std::cout << "output grpc timestamps:" << std::endl;
+        std::cout << "in timestamps:" << std::endl;
+        if (ints.size() != 60) {
+            std::cout << "in timestamps not enough!" << std::endl;
+        } else {
+            for (auto i = 0; i < 60; ++ i) {
+                std::cout << ints[i] << std::endl;
+            }
+            std::cout << std::endl;
+        }
+        std::cout << "out timestamps:" << std::endl;
+        if (outts.size() != 60) {
+            std::cout << "out timestamps not enough!" << std::endl;
+        } else {
+            for (auto i = 0; i < 60; ++ i) {
+                std::cout << outts[i] << std::endl;
+            }
+            std::cout << std::endl;
+        }
+    }
 
     return ::grpc::Status::OK;
 }
