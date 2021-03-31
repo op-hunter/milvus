@@ -16,6 +16,7 @@
 #include <memory>
 #include <iostream>
 #include <sstream>
+#include <chrono>
 
 #include <faiss/utils/utils.h>
 #include <faiss/utils/hamming.h>
@@ -836,12 +837,18 @@ void IndexIVF::train (idx_t n, const float *x)
     if (verbose)
         printf ("Training level-1 quantizer\n");
 
+//    auto start_train_q1  = std::chrono::system_clock::now();
     train_q1 (n, x, verbose, metric_type);
+//    auto end_train_q1 = std::chrono::system_clock::now();
+//    std::cout << "train_q1 totally costs " << double(std::chrono::duration_cast<std::chrono::milliseconds>(end_train_q1 - start_train_q1).count()) << " ms." << std::endl;
 
     if (verbose)
         printf ("Training IVF residual\n");
 
+//    auto start_train_residual  = std::chrono::system_clock::now();
     train_residual (n, x);
+//    auto end_train_residual  = std::chrono::system_clock::now();
+//    std::cout << "train_residual totally costs " << double(std::chrono::duration_cast<std::chrono::milliseconds>(end_train_residual - start_train_residual).count()) << " ms." << std::endl;
     is_trained = true;
 
 }

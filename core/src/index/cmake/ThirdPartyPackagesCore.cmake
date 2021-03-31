@@ -513,7 +513,7 @@ macro(build_faiss)
     set(FAISS_CONFIGURE_ARGS
             "--prefix=${FAISS_PREFIX}"
             "CFLAGS=${EP_C_FLAGS}"
-            "CXXFLAGS=${EP_CXX_FLAGS} -mf16c -O3"
+            "CXXFLAGS=${EP_CXX_FLAGS} -mf16c "
             --without-python)
 
     if (FAISS_WITH_MKL)

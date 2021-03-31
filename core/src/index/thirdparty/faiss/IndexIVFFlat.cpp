@@ -58,6 +58,70 @@ void IndexIVFFlat::add_core (idx_t n, const float * x, const int64_t *xids,
         idx = idx0;
     }
     int64_t n_add = 0;
+    std::vector<int64_t> n_adds(omp_get_num_threads() + 1, 0);
+#pragma omp parallel
+    {
+        int nt = omp_get_num_threads();
+        int rank = omp_get_thread_num();
+        // this thread is taking care of centroids c0:c1
+        size_t c0 = (nlist * rank) / nt;
+        size_t c1 = (nlist* (rank + 1)) / nt;
+#pragma omp critical
+        {
+            printf("thread %d deal [%d, %d)\n", omp_get_thread_num(), c0, c1);
+        }
+        for (size_t i = 0; i < n; i ++) {
+            idx_t list_no = idx[i];
+            if (list_no >= c0 && list_no < c1) {
+                idx_t id = xids ? xids[i] : ntotal + i;
+                size_t offset;
+                if (list_no >= 0) {
+                    const float *xi = x + i * d;
+                    offset = invlists->add_entry (
+                        list_no, id, (const uint8_t*) xi);
+                    n_adds[rank]++;
+                } else {
+                    offset = 0;
+                }
+            }
+        }
+    }
+    if (DirectMap::Type::NoMap != direct_map.type) {
+        for (auto i = 0; i < nlist; i ++) {
+            auto idsi = invlists->get_ids(i);
+            auto sizei = invlists->list_size(i);
+            for (auto j = 0; j < sizei; j ++)
+                direct_map.add_single_id(idsi[j], i, j);
+        }
+    }
+    for (auto i = 0; i < n_adds.size(); i ++)
+        n_add += n_adds[i];
+    // todo: invlists doesnot support concurrence, but can merge before add
+    /*
+    std::vector<idx_t> ida;
+    idx_t list_no;
+    for (size_t i = 0; i < n; ) {
+        ida.clear();
+        do {
+            ida.push_back(xids ? xids[i] : ntotal + i);
+            list_no = idx [i];
+            i ++;
+        } while (i < n && idx[i] == list_no);
+        size_t offset;
+        size_t len = i - ida.size();
+        if (list_no >= 0) {
+            const float *xi = x + (i - ida.size()) * d;
+            offset = invlists->add_entries(list_no, ida.size(), ida.data(), (const uint8_t*)xi);
+            n_add += ida.size();
+        } else {
+            offset = 0;
+        }
+        direct_map.add_ids(ida.size(), ida.data(), list_no, offset);
+    }
+    */
+//    printf("IndexIVFFlat::add_core: added %ld / %ld vectors\n",
+//           n_add, n);
+    /*
     for (size_t i = 0; i < n; i++) {
         idx_t id = xids ? xids[i] : ntotal + i;
         idx_t list_no = idx [i];
@@ -73,6 +137,7 @@ void IndexIVFFlat::add_core (idx_t n, const float * x, const int64_t *xids,
         }
         direct_map.add_single_id (id, list_no, offset);
     }
+    */
 
     if (verbose) {
         printf("IndexIVFFlat::add_core: added %ld / %ld vectors\n",

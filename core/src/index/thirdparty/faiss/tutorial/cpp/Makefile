@@ -5,16 +5,13 @@
 
 -include ../../makefile.inc
 
-CPU_TARGETS = 1-Flat 2-IVFFlat 3-IVFPQ 9-BinaryFlat
-GPU_TARGETS = 4-GPU 5-Multiple-GPUs
+CPU_TARGETS = ivfflat-profile
 
 default: cpu
 
-all: cpu gpu
+all: cpu 
 
 cpu: $(CPU_TARGETS)
-
-gpu: $(GPU_TARGETS)
 
 %: %.cpp ../../libfaiss.a
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $@ $^ $(LDFLAGS) -I../../ $(LIBS)
@@ -22,4 +19,4 @@ gpu: $(GPU_TARGETS)
 clean:
 	rm -f $(CPU_TARGETS) $(GPU_TARGETS)
 
-.PHONY: all cpu default gpu clean
+.PHONY: all cpu default clean

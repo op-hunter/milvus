@@ -69,6 +69,9 @@ struct DirectMap {
     /// non thread-safe version
     void add_single_id (idx_t id, idx_t list_no, size_t offset);
 
+    /// non thread-safe version
+    void add_ids (idx_t n, idx_t *ids, idx_t list_no, size_t offset);
+
     /// remove all entries
     void clear();
 

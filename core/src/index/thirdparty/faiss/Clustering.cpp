@@ -10,9 +10,11 @@
 #include <faiss/Clustering.h>
 #include <faiss/impl/AuxIndexStructures.h>
 
+#include <iostream>
 #include <cmath>
 #include <cstdio>
 #include <cstring>
+#include <chrono>
 
 #include <omp.h>
 
@@ -409,7 +411,9 @@ void Clustering::train_encoded (idx_t nx, const uint8_t *x_in,
         }
 
         if (!index.is_trained) {
+//            printf("quantizer is not trained, do IndexFlatL2.train\n");
             index.train (k, centroids.data());
+//            printf("quantizer is not trained, IndexFlatL2.train done\n");
         }
 
         index.add (k, centroids.data());
@@ -417,12 +421,21 @@ void Clustering::train_encoded (idx_t nx, const uint8_t *x_in,
         // k-means iterations
 
         float err = 0;
+        double assign_tot = 0.0;
+        double compute_centroids_tot = 0.0;
+        double nsplit_tot = 0.0;
         for (int i = 0; i < niter; i++) {
             double t0s = getmillisecs();
 
             if (!codec) {
+//                auto start_addi = std::chrono::system_clock::now();
                 index.assign (nx, reinterpret_cast<const float *>(x),
                               assign.get(), dis.get());
+//                auto end_addi = std::chrono::system_clock::now();
+//                auto durationi = double(std::chrono::duration_cast<std::chrono::milliseconds>(end_addi - start_addi).count());
+//                std::cout << "the " << i + 1 << "th iteration.quantizer.assign totally costs "
+//                          << durationi << " ms." << std::endl;
+//                assign_tot += durationi;
             } else {
                 // search by blocks of decode_block_size vectors
                 size_t code_size = codec->sa_code_size ();
@@ -449,16 +462,28 @@ void Clustering::train_encoded (idx_t nx, const uint8_t *x_in,
             std::vector<float> hassign (k);
 
             size_t k_frozen = frozen_centroids ? n_input_centroids : 0;
+//            auto start_cci = std::chrono::system_clock::now();
             compute_centroids (
                   d, k, nx, k_frozen,
                   x, codec, assign.get(), weights,
                   hassign.data(), centroids.data()
             );
+//            auto end_cci = std::chrono::system_clock::now();
+//            auto durationcci = double(std::chrono::duration_cast<std::chrono::milliseconds>(end_cci - start_cci).count());
+//            std::cout << "the " << i + 1 << "th iteration.compute_centroids totally costs "
+//                      << durationcci << " ms." << std::endl;
+//            compute_centroids_tot += durationcci;
 
+//            auto start_spliti = std::chrono::system_clock::now();
             int nsplit = split_clusters (
                   d, k, nx, k_frozen,
                   hassign.data(), centroids.data()
             );
+//            auto end_spliti = std::chrono::system_clock::now();
+//            auto durationspliti = double(std::chrono::duration_cast<std::chrono::milliseconds>(end_cci - start_cci).count());
+//            std::cout << "the " << i + 1 << "th iteration.nsplit totally costs "
+//                      << durationspliti << " ms." << std::endl;
+//            nsplit_tot += durationspliti;
 
             // collect statistics
             ClusteringIterationStats stats =
@@ -507,6 +532,19 @@ void Clustering::train_encoded (idx_t nx, const uint8_t *x_in,
         index.reset();
         index.add(k, best_centroids.data());
     }
+//    int ii = 0;
+//    std::cout << "show Clustering::train_encoded stastics:" << std::endl;
+//    for (auto &stat : iteration_stats) {
+//        std::cout << "the " << ii + 1 << "th iteration statistics:" << std::endl;
+//        std::cout << "obj = " << stat.obj << ", "
+//                  << "time = " << stat.time << ", "
+//                  << "time_search = " << stat.time_search << ", "
+//                  << "imbalance_factor = " << stat.imbalance_factor << ", "
+//                  << "nsplit = " << stat.nsplit << ", "
+//                  << std::endl;
+//        ii ++;
+//    }
+//    std::cout << "Clustering::train_encoded totally costs: " << getmillisecs() - t0 << " ms." << std::endl;
 
 }
 

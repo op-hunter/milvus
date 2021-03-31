@@ -11,6 +11,7 @@
 
 #include <cstdio>
 #include <numeric>
+#include <malloc.h>
 
 #include <faiss/utils/utils.h>
 #include <faiss/impl/FaissAssert.h>

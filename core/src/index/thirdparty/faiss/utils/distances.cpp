@@ -9,10 +9,12 @@
 
 #include <faiss/utils/distances.h>
 
+#include <iostream>
 #include <cstdio>
 #include <cassert>
 #include <cstring>
 #include <cmath>
+#include <chrono>
 
 #include <omp.h>
 #include <faiss/BuilderSuspend.h>
@@ -1009,18 +1011,22 @@ void pairwise_L2sqr (int64_t d,
 }
 
 void elkan_L2_sse (
-        const float * x,
-        const float * y,
-        size_t d, size_t nx, size_t ny,
+        const float * x, /*trainset*/
+        const float * y, /*centroids*/
+        size_t d, size_t nx, size_t ny/*nlist*/,
         int64_t *ids, float *val) {
 
     if (nx == 0 || ny == 0) {
         return;
     }
 
+//    printf("in elkan_L2_sse: nlist = %d, size of train set = %d\n", ny, nx);
     const size_t bs_y = 1024;
     float *data = (float *) malloc((bs_y * (bs_y - 1) / 2) * sizeof (float));
 
+//    int64_t pre_cal = 0;
+//    std::vector<int64_t> less_cnt(20, 0);
+//    std::vector<int64_t> act_cnt(20, 0);
     for (size_t j0 = 0; j0 < ny; j0 += bs_y) {
         BuilderSuspend::check_wait();
 
@@ -1033,32 +1039,45 @@ void elkan_L2_sse (
             return (i > j) ? data[j + i * (i - 1) / 2] : data[i + j * (j - 1) / 2];
         };
 
+//        pre_cal += (j1 - j0) * (j1 - j0 - 1) / 2;
+//        auto start_prec = std::chrono::system_clock::now();
 #pragma omp parallel for
         for (size_t i = j0 + 1; i < j1; i++) {
             const float *y_i = y + i * d;
             for (size_t j = j0; j < i; j++) {
                 const float *y_j = y + j * d;
-                Y(i, j) = sqrt(fvec_L2sqr(y_i, y_j, d));
+                Y(i, j) = fvec_L2sqr(y_i, y_j, d);
             }
         }
+//        auto end_prec = std::chrono::system_clock::now();
+//        std::cout << "matrix calculate costs: "
+//                  << double(std::chrono::duration_cast<std::chrono::milliseconds>(end_prec - start_prec).count())
+//                  << " ms" << std::endl;
 
+//        auto start_minc = std::chrono::system_clock::now();
 #pragma omp parallel for
         for (size_t i = 0; i < nx; i++) {
             const float *x_i = x + i * d;
 
             int64_t ids_i = j0;
-            float val_i = sqrt(fvec_L2sqr(x_i, y + j0 * d, d));
-            float val_i_2 = val_i * 2;
+            float val_i = fvec_L2sqr(x_i, y + j0 * d, d);
+//            act_cnt[omp_get_thread_num()] ++;
+            float val_i_2 = val_i * 4;
             for (size_t j = j0 + 1; j < j1; j++) {
                 if (val_i_2 <= Y(ids_i, j)) {
+//                    less_cnt[omp_get_thread_num()] ++;
                     continue;
                 }
                 const float *y_j = y + j * d;
-                float disij = sqrt(fvec_L2sqr(x_i, y_j, d));
+                float disij = fvec_L2sqr(x_i, y_j, d / 2);
+                if (disij >= val_i)
+                    continue;
+                disij += fvec_L2sqr(x_i + d / 2, y_j + d / 2, d - d / 2);
+//                act_cnt[omp_get_thread_num()] ++;
                 if (disij < val_i) {
                     ids_i = j;
                     val_i = disij;
-                    val_i_2 = val_i * 2;
+                    val_i_2 = val_i * 4;
                 }
             }
 
@@ -1067,7 +1086,20 @@ void elkan_L2_sse (
                 ids[i] = ids_i;
             }
         }
+//        auto end_minc = std::chrono::system_clock::now();
+//        std::cout << "min value calculate costs: "
+//                  << double(std::chrono::duration_cast<std::chrono::milliseconds>(end_minc - start_minc).count())
+//                  << " ms" << std::endl;
     }
+//    int64_t sum_lc = 0;
+//    for (auto &lc : less_cnt)
+//        sum_lc += lc;
+//    int64_t sum_ac = 0;
+//    for (auto &ac : act_cnt)
+//        sum_ac += ac;
+//    std::cout << "elkan totally pre-calculate " << pre_cal << " times, less calculate " << sum_lc << " times" << std::endl;
+//    int64_t summ = (int64_t)nx * ny;
+//    printf("elkan totally pre-calculate %ld times, should be %ld times, actually calculate %ld times, less calclulate %ld times, diff(sum - sumlc) = %ld\n", pre_cal, summ, sum_ac, sum_lc, summ - sum_lc);
 
     free(data);
 }

@@ -107,6 +107,29 @@ void DirectMap::add_single_id (idx_t id, idx_t list_no, size_t offset)
 
 }
 
+void DirectMap::add_ids(faiss::DirectMap::idx_t n,
+                        faiss::DirectMap::idx_t* ids,
+                        faiss::DirectMap::idx_t list_no,
+                        size_t offset) {
+    if (NoMap == type) return;
+
+    if (Array == type) {
+        assert (*ids == array.size());
+        if (list_no >= 0) {
+            for (auto i = 0; i < n; i ++)
+                array.push_back(lo_build(list_no, offset + i));
+        } else {
+            for (auto i = 0; i < n; i ++)
+                array.push_back(-1);
+        }
+    } else if (Hashtable == type) {
+        if (list_no >= 0) {
+            for (auto i = 0; i < n; i ++)
+                hashtable[*(ids + i)] = lo_build(list_no, offset + i);
+        }
+    }
+}
+
 void DirectMap::check_can_add (const idx_t *ids) {
     if (type == Array && ids) {
         FAISS_THROW_MSG ("cannot have array direct map and add with ids");
