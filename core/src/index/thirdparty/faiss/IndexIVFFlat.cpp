@@ -58,8 +58,7 @@ void IndexIVFFlat::add_core (idx_t n, const float * x, const int64_t *xids,
         idx = idx0;
     }
     int64_t n_add = 0;
-    std::vector<int64_t> n_adds(omp_get_num_threads() + 1, 0);
-#pragma omp parallel
+#pragma omp parallel reduction(+:n_add)
     {
         int nt = omp_get_num_threads();
         int rank = omp_get_thread_num();
@@ -73,13 +72,16 @@ void IndexIVFFlat::add_core (idx_t n, const float * x, const int64_t *xids,
         for (size_t i = 0; i < n; i ++) {
             idx_t list_no = idx[i];
             if (list_no >= c0 && list_no < c1) {
+                if (c0 == 0) {
+                    printf("current thread: %d, list_no = %d\n", omp_get_thread_num(), list_no);
+                }
                 idx_t id = xids ? xids[i] : ntotal + i;
                 size_t offset;
                 if (list_no >= 0) {
                     const float *xi = x + i * d;
                     offset = invlists->add_entry (
                         list_no, id, (const uint8_t*) xi);
-                    n_adds[rank]++;
+                    n_add++;
                 } else {
                     offset = 0;
                 }
@@ -94,8 +96,7 @@ void IndexIVFFlat::add_core (idx_t n, const float * x, const int64_t *xids,
                 direct_map.add_single_id(idsi[j], i, j);
         }
     }
-    for (auto i = 0; i < n_adds.size(); i ++)
-        n_add += n_adds[i];
+
     // todo: invlists doesnot support concurrence, but can merge before add
     /*
     std::vector<idx_t> ida;
