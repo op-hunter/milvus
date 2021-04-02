@@ -448,6 +448,14 @@ size_t OnDiskInvertedLists::add_entries (
     return o;
 }
 
+size_t OnDiskInvertedLists::add_entries_without_resize (
+           size_t list_no, size_t n_entry,
+           const idx_t* ids, const uint8_t *code, size_t ofs)
+{
+    FAISS_THROW_MSG ("not implemented");
+    return 0;
+}
+
 void OnDiskInvertedLists::resize (size_t list_no, size_t new_size)
 {
     FAISS_THROW_IF_NOT (!read_only);

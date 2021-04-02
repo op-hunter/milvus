@@ -58,6 +58,47 @@ void IndexIVFFlat::add_core (idx_t n, const float * x, const int64_t *xids,
         idx = idx0;
     }
     int64_t n_add = 0;
+    std::vector<int> hist(nlist, 0);
+#pragma omp parallel
+    {
+        int nt = omp_get_num_threads();
+        int rank = omp_get_thread_num();
+        for (size_t i = 0; i < n; i ++) {
+            idx_t list_no = idx[i];
+            if (list_no % nt == rank && list_no >= 0 && list_no < nlist)
+                hist[list_no] ++;
+        }
+    }
+    for (auto i = 0; i < nlist; i ++) {
+        invlists->resize(i, hist[i]);
+        hist[i] = 0;
+    }
+    /*
+    auto ail = dynamic_cast<ArrayInvertedLists*>(invlists);
+    if (ail != nullptr) {
+        for (auto i = 0; i < nlist; i ++) {
+            ail->ids[i].clear();
+            ail->ids[i].reserve(hist[i]);
+            ail->codes[i].clear();
+            ail->codes[i].reserve(hist[i]);
+        }
+    }
+    */
+#pragma omp parallel reduction(+: n_add)
+    {
+        int nt = omp_get_num_threads();
+        int rank = omp_get_thread_num();
+        for (size_t i = 0; i < n; i ++) {
+            idx_t list_no = idx[i];
+            size_t ofs = 0;
+            if (list_no >= 0 && list_no % nt == rank) {
+                idx_t id = xids ? xids[i] : ntotal + i;
+                ofs = invlists->add_entry_without_resize(list_no, id, (const uint8_t*) x + i * d, hist[list_no] ++);
+                n_add ++;
+            }
+        }
+    }
+    /*
 #pragma omp parallel reduction(+:n_add)
     {
         int nt = omp_get_num_threads();
@@ -88,6 +129,7 @@ void IndexIVFFlat::add_core (idx_t n, const float * x, const int64_t *xids,
             }
         }
     }
+    */
     if (DirectMap::Type::NoMap != direct_map.type) {
         for (auto i = 0; i < nlist; i ++) {
             auto idsi = invlists->get_ids(i);

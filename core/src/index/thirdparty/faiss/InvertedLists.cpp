@@ -109,6 +109,12 @@ size_t InvertedLists::add_entry (size_t list_no, idx_t theid,
     return add_entries (list_no, 1, &theid, code);
 }
 
+size_t InvertedLists::add_entry_without_resize (size_t list_no, idx_t theid,
+                                 const uint8_t *code, size_t ofs)
+{
+    return add_entries_without_resize (list_no, 1, &theid, code, ofs);
+}
+
 void InvertedLists::update_entry (size_t list_no, size_t offset,
                                         idx_t id, const uint8_t *code)
 {
@@ -209,6 +215,17 @@ size_t ArrayInvertedLists::add_entries (
     codes [list_no].resize ((o + n_entry) * code_size);
     memcpy (&codes[list_no][o * code_size], code, code_size * n_entry);
     return o;
+}
+
+size_t ArrayInvertedLists::add_entries_without_resize (
+    size_t list_no, size_t n_entry,
+    const idx_t* ids_in, const uint8_t *code, size_t ofs)
+{
+    if (n_entry == 0) return 0;
+    assert (list_no < nlist);
+    memcpy (&ids[list_no][ofs], ids_in, sizeof (ids_in[0]) * n_entry);
+    memcpy (&codes[list_no][ofs * code_size], code, code_size * n_entry);
+    return ofs;
 }
 
 size_t ArrayInvertedLists::list_size(size_t list_no) const
@@ -362,6 +379,13 @@ size_t ReadOnlyArrayInvertedLists::add_entries (
     FAISS_THROW_MSG ("not implemented");
 }
 
+size_t ReadOnlyArrayInvertedLists::add_entries_without_resize (
+        size_t , size_t ,
+        const idx_t* , const uint8_t *, size_t)
+{
+    FAISS_THROW_MSG ("not implemented");
+}
+
 void ReadOnlyArrayInvertedLists::update_entries (size_t, size_t , size_t ,
                                                  const idx_t *, const uint8_t *)
 {
@@ -433,6 +457,12 @@ bool ReadOnlyArrayInvertedLists::is_readonly() const {
  * Meta-inverted list implementations
  *****************************************************************/
 
+size_t ReadOnlyInvertedLists::add_entries_without_resize (
+           size_t , size_t ,
+           const idx_t* , const uint8_t *, size_t)
+{
+    FAISS_THROW_MSG ("not implemented");
+}
 
 size_t ReadOnlyInvertedLists::add_entries (
            size_t , size_t ,
