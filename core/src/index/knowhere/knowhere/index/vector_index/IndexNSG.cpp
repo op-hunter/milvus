@@ -10,7 +10,9 @@
 // or implied. See the License for the specific language governing permissions and limitations under the License
 
 #include <fiu-local.h>
+#include <iostream>
 #include <string>
+#include <chrono>
 
 #include "knowhere/common/Exception.h"
 #include "knowhere/common/Timer.h"
@@ -91,8 +93,12 @@ NSG::Query(const DatasetPtr& dataset_ptr, const Config& config) {
         s_params.search_length = config[IndexParams::search_length];
         s_params.k = config[meta::TOPK];
         {
+            auto t0 = std::chrono::system_clock::now();
             index_->Search((float*)p_data, rows, dim, config[meta::TOPK].get<int64_t>(), p_dist, p_id, s_params,
                            blacklist);
+            auto t1 = std::chrono::system_clock::now();
+            auto dur1 = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
+            std::cout << "nsg search " << rows << " queries costs: " << dur1 << " ms." << std::endl;
         }
 
         MapOffsetToUid(p_id, static_cast<size_t>(elems));
@@ -114,6 +120,7 @@ NSG::BuildAll(const DatasetPtr& dataset_ptr, const Config& config) {
     impl::Graph knng;
     const float* raw_data = idmap->GetRawVectors();
     const int64_t k = config[IndexParams::knng].get<int64_t>();
+    auto t0 = std::chrono::system_clock::now();
 #ifdef MILVUS_GPU_VERSION
     const int64_t device_id = config[knowhere::meta::DEVICEID].get<int64_t>();
     if (device_id == -1) {
@@ -129,9 +136,18 @@ NSG::BuildAll(const DatasetPtr& dataset_ptr, const Config& config) {
 #else
     auto preprocess_index = std::make_shared<IVF>();
     preprocess_index->Train(dataset_ptr, config);
+    auto tt1 = std::chrono::system_clock::now();
+    std::cout << "preprocess_index->Train costs: " << std::chrono::duration_cast<std::chrono::milliseconds>(tt1 - t0).count() << " ms." << std::endl;
     preprocess_index->AddWithoutIds(dataset_ptr, config);
+    auto tt2 = std::chrono::system_clock::now();
+    std::cout << "preprocess_index->AddWithoutIds costs: " << std::chrono::duration_cast<std::chrono::milliseconds>(tt2 - tt1).count() << " ms." << std::endl;
     preprocess_index->GenGraph(raw_data, k, knng, config);
+    auto tt3 = std::chrono::system_clock::now();
+    std::cout << "preprocess_index->GenGraph costs: " << std::chrono::duration_cast<std::chrono::milliseconds>(tt3 - tt2).count() << " ms." << std::endl;
 #endif
+    auto t1 = std::chrono::system_clock::now();
+    auto dur1 = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
+    std::cout << "build knng costs: " << dur1 << " ms." << std::endl;
 
     impl::BuildParams b_params;
     b_params.candidate_pool_size = config[IndexParams::candidate];
@@ -152,7 +168,11 @@ NSG::BuildAll(const DatasetPtr& dataset_ptr, const Config& config) {
 
     index_ = std::make_shared<impl::NsgIndex>(dim, rows, metric);
     index_->SetKnnGraph(knng);
+    auto t2 = std::chrono::system_clock::now();
     index_->Build(rows, (float*)p_data, nullptr, b_params);
+    auto t3 = std::chrono::system_clock::now();
+    auto dur2 = std::chrono::duration_cast<std::chrono::milliseconds>(t3 - t2).count();
+    std::cout << "nsg build costs: " << dur2 << " ms." << std::endl;
 }
 
 int64_t

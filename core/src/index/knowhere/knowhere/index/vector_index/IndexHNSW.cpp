@@ -99,6 +99,7 @@ IndexHNSW::AddWithoutIds(const DatasetPtr& dataset_ptr, const Config& config) {
 
     GETTENSOR(dataset_ptr)
 
+    auto t0 = std::chrono::system_clock::now();
     if (rows > 0) {
         index_->addPoint(p_data, 0);
 #pragma omp parallel for
@@ -107,6 +108,9 @@ IndexHNSW::AddWithoutIds(const DatasetPtr& dataset_ptr, const Config& config) {
             index_->addPoint(((float*)p_data + dim * i), i);
         }
     }
+    auto t1 = std::chrono::system_clock::now();
+    auto dur1 = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
+    std::cout << "hnsw bulid costs: " << dur1 << " ms." << std::endl;
 }
 
 DatasetPtr
@@ -127,6 +131,7 @@ IndexHNSW::Query(const DatasetPtr& dataset_ptr, const Config& config) {
     faiss::ConcurrentBitsetPtr blacklist = GetBlacklist();
     bool transform = (index_->metric_type_ == 1);  // InnerProduct: 1
 
+    auto t0 = std::chrono::system_clock::now();
 #pragma omp parallel for
     for (unsigned int i = 0; i < rows; ++i) {
         auto single_query = (float*)p_data + i * dim;
@@ -150,6 +155,9 @@ IndexHNSW::Query(const DatasetPtr& dataset_ptr, const Config& config) {
             p_single_id[idx] = -1;
         }
     }
+    auto t1 = std::chrono::system_clock::now();
+    auto dur1 = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
+    std::cout << "hnsw search " << rows << " queries costs: " << dur1 << " ms." << std::endl;
 
     auto ret_ds = std::make_shared<Dataset>();
     ret_ds->Set(meta::IDS, p_id);
